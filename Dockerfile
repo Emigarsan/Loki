@@ -18,10 +18,11 @@ COPY backend/src ./backend/src
 COPY --from=frontend-build /app/frontend/dist ./backend/src/main/resources/static
 RUN mvn -f backend/pom.xml clean package -DskipTests
 
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 COPY --from=backend-build /app/backend/target/counter-backend-0.0.1-SNAPSHOT.jar app.jar
+ENV JAVA_TOOL_OPTIONS="-Xms128m -Xmx256m -XX:+UseSerialGC"
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

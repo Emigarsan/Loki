@@ -19,19 +19,22 @@ class CounterServiceTest {
     @Test
     void primaryCounterCanIncreaseAndDecrease() {
         CounterState afterIncrement = counterService.incrementPrimary(5);
-        assertThat(afterIncrement.primary()).isEqualTo(105);
+        assertThat(afterIncrement.primary()).isEqualTo(1797);
 
         CounterState afterDecrement = counterService.decrementPrimary(8);
-        assertThat(afterDecrement.primary()).isEqualTo(97);
+        assertThat(afterDecrement.primary()).isEqualTo(1789);
+
+        CounterState afterLargeDecrement = counterService.decrementPrimary(5000);
+        assertThat(afterLargeDecrement.primary()).isZero();
     }
 
     @Test
     void initialValuesMatchConfiguredDefaults() {
         CounterState initial = counterService.getState();
 
-        assertThat(initial.primary()).isEqualTo(100);
-        assertThat(initial.secondary()).isEqualTo(28);
-        assertThat(initial.tertiary()).isEqualTo(120);
+        assertThat(initial.primary()).isEqualTo(1792);
+        assertThat(initial.secondary()).isEqualTo(128);
+        assertThat(initial.tertiary()).isEqualTo(640);
     }
 
     @Test
@@ -52,8 +55,9 @@ class CounterServiceTest {
 
         CounterState updated = counterService.decrementSecondary(1);
 
-        assertThat(updated.secondary()).isZero();
+        assertThat(updated.secondary()).isEqualTo(128);
         assertThat(updated.secondaryImageIndex()).isEqualTo(1);
+        assertThat(updated.tertiary()).isEqualTo(9);
     }
 
     @Test
@@ -72,8 +76,9 @@ class CounterServiceTest {
 
         CounterState updated = counterService.decrementSecondary(5);
 
-        assertThat(updated.secondary()).isZero();
+        assertThat(updated.secondary()).isEqualTo(128);
         assertThat(updated.tertiary()).isEqualTo(8);
+        assertThat(updated.secondaryImageIndex()).isEqualTo(1);
     }
 
     @Test
@@ -85,21 +90,5 @@ class CounterServiceTest {
 
         assertThat(updated.secondary()).isZero();
         assertThat(updated.tertiary()).isEqualTo(10);
-        counterService.reset(0);
-    }
-
-    @Test
-    void incrementIncreasesValue() {
-        int updated = counterService.increment(5);
-        assertThat(updated).isEqualTo(5);
-        assertThat(counterService.getCurrentValue()).isEqualTo(5);
-    }
-
-    @Test
-    void decrementDecreasesValue() {
-        counterService.increment(10);
-        int updated = counterService.decrement(3);
-        assertThat(updated).isEqualTo(7);
-        assertThat(counterService.getCurrentValue()).isEqualTo(7);
     }
 }

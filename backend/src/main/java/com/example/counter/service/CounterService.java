@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CounterService {
     public static final int SECONDARY_IMAGE_COUNT = 7;
-    private static final int PRIMARY_DEFAULT_VALUE = 100;
-    private static final int SECONDARY_DEFAULT_VALUE = 28;
-    private static final int TERTIARY_DEFAULT_VALUE = 120;
+    private static final int PRIMARY_DEFAULT_VALUE = 1792;
+    private static final int SECONDARY_DEFAULT_VALUE = 128;
+    private static final int TERTIARY_DEFAULT_VALUE = 640;
 
     private int primary = PRIMARY_DEFAULT_VALUE;
     private int secondary = SECONDARY_DEFAULT_VALUE;
@@ -25,7 +25,7 @@ public class CounterService {
     }
 
     public synchronized CounterState decrementPrimary(int amount) {
-        primary -= sanitize(amount);
+        primary = Math.max(0, primary - sanitize(amount));
         return snapshot();
     }
 
@@ -48,7 +48,15 @@ public class CounterService {
             }
 
             if (secondary == 0) {
-                advanceSecondaryImage();
+                // If we are not on the last image, advance and reset.
+                if (secondaryImageIndex < SECONDARY_IMAGE_COUNT - 1) {
+                    advanceSecondaryImage();
+                    secondary = SECONDARY_DEFAULT_VALUE;
+                } else {
+                    // On the last image (7th), stay at 0 and do not advance/reset.
+                    // This allows the frontend to lock and display the alert.
+                }
+                break;
             }
         }
         return snapshot();
@@ -74,6 +82,28 @@ public class CounterService {
         return snapshot();
     }
 
+    // New setters for exact values (used by Admin)
+    public synchronized CounterState setPrimary(int value) {
+        primary = Math.max(0, value);
+        return snapshot();
+    }
+
+    public synchronized CounterState setSecondary(int value) {
+        secondary = Math.max(0, value);
+        return snapshot();
+    }
+
+    public synchronized CounterState setTertiary(int value) {
+        tertiary = Math.max(0, value);
+        return snapshot();
+    }
+
+    public synchronized CounterState setSecondaryImageIndex(int index) {
+        int normalized = ((index % SECONDARY_IMAGE_COUNT) + SECONDARY_IMAGE_COUNT) % SECONDARY_IMAGE_COUNT;
+        secondaryImageIndex = normalized;
+        return snapshot();
+    }
+
     private void advanceSecondaryImage() {
         secondaryImageIndex = (secondaryImageIndex + 1) % SECONDARY_IMAGE_COUNT;
     }
@@ -84,28 +114,5 @@ public class CounterService {
 
     private int sanitize(int amount) {
         return Math.max(0, amount);
-import org.springframework.stereotype.Service;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-@Service
-public class CounterService {
-    private final AtomicInteger counter = new AtomicInteger();
-
-    public int getCurrentValue() {
-        return counter.get();
-    }
-
-    public int increment(int amount) {
-        return counter.addAndGet(amount);
-    }
-
-    public int decrement(int amount) {
-        return counter.addAndGet(-amount);
-    }
-
-    public int reset(int value) {
-        counter.set(value);
-        return counter.get();
     }
 }

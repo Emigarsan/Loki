@@ -1,67 +1,103 @@
-# Railway Counter App
+## MODOK Control Center
 
-Aplicación full-stack pensada para desplegarse en Railway. El backend usa Spring Boot y mantiene en memoria tres contadores enlazados;
-el frontend en React (Vite) los muestra junto con ilustraciones asociadas.
+MODOK es una aplicación full-stack pensada para gestionar en vivo las mesas de juego y los contadores globales de un evento temático. El backend (Spring Boot) guarda el estado en memoria y expone una API REST; el frontend (React + Vite) ofrece vistas específicas para registro, seguimiento y operaciones administrativas.
 
-- **M.O.D.O.K**: contador principal con controles para sumar o restar 1, 5 y 10.
-- **Fases dinámicas**: contador secundario acompañado por una secuencia de 7 imágenes que avanza cada vez que el valor llega a 0.
-- **Reserva vinculada**: contador terciario que se reduce automáticamente en 1 por cada decremento aplicado al contador secundario.
+---
 
-Los valores iniciales de los contadores son 100, 28 y 120 respectivamente.
+### Estructura del repositorio
 
-## Estructura del proyecto
+| Carpeta / archivo | Descripción |
+| --- | --- |
+| `backend/` | Servicio Spring Boot. Expone APIs para contadores globales, administración, mesas y snapshots. |
+| `frontend/` | Aplicación React. Los artefactos principales están en `src/pages` (vistas), `src/App.jsx` (EventView compartido) y `src/styles.css`. |
+| `start.sh` | Script de desarrollo local: compila el frontend, copia el build al backend y ejecuta el JAR resultante. |
+| `Dockerfile` | Build multi-stage que produce una imagen con backend + frontend listos para producción. |
 
-- `backend/`: servicio Spring Boot con los endpoints REST `GET /api/counter`,
-  `POST /api/counter/{primary|secondary|tertiary}/increment` y `POST /api/counter/{primary|secondary|tertiary}/decrement`.
-- `frontend/`: interfaz React que consume la API, renderiza la imagen correspondiente a cada contador y ofrece controles independientes.
+---
 
-## Puesta en marcha rápida
+### Vistas del frontend
+
+1. **`/register` – Registro de mesas del evento principal**
+   - **Crear mesa**: define número de mesa, nombre opcional, dificultad, número de jugadores y los datos de cada jugador (personaje + aspecto). Tras crear, redirige a `/mesa/:mesaId`.
+   - **Unirse**: lista las mesas existentes y permite entrar usando el código generado al crear la mesa.
+   - **Límites**: número de jugadores entre 1 y 4; la mesa no puede repetirse.
+   - Cada campo muestra un icono `?` con ayudas flotantes que aclaran restricciones y sugerencias.
+
+2. **`/mesa/:mesaId` – Panel de contadores por mesa**
+   - Reutiliza `EventView` (M.O.D.O.K, Contadores secundarios y terciarios) pero anota cada acción en `/api/mesas/:mesaId`.
+   - Incluye botón **Volver** (redirecciona a `/register`).
+
+3. **`/freegame` – Registro de mesas libres**
+   - Similar a la vista de registro: número, nombre, dificultad, reto inevitable, jugadores y sus datos (incluye legado).
+   - Tras crear o unirse, redirige a `/freegame/:mesaId`.
+   - El reto inevitable `(Ninguno)` deja la puntuación total en 0 y bloquea los puntos de victoria.
+   - Los campos numéricos muestran spinners y botones de ayuda `?` con explicaciones breves.
+
+4. **`/freegame/:mesaId` – Ficha de mesa libre**
+   - Muestra información de la mesa, desglose de puntuación (base, legados, puntos de victoria).
+   - Botón **Volver** → `/freegame`.
+   - Permite fijar “Puntos de Victoria”; al enviar se marca como definitivo.
+
+5. **`/event` – Panel de contadores globales**
+   - Usa `EventView` para operar los contadores centrales; acepta `?mesa=N` para registrar eventos también como mesa.
+
+6. **`/display` – Visualización pública**
+   - Muestra los contadores activos sin controles (modo display).
+
+7. **`/admin` – Consola administrativa**
+   - Requiere `X-Admin-Secret`. Permite ajustar contadores, consultar mesas de evento y libres, descargar/exportar datos, gestionar backups (snapshot ahora, listar, descargar, restaurar, purgar, etc.).
+
+---
+
+### API destacada del backend
+
+| Endpoint | Descripción |
+| --- | --- |
+| `GET /api/counter` | Estado actual de los contadores globales. |
+| `POST /api/counter/{primary|secondary|tertiary}/{increment|decrement}` | Ajusta contadores globales. |
+| `POST /api/mesas/{mesaId}/contador/{1|2|3}` | Registra eventos de mesa. |
+| `GET /api/mesas/summary` | Totales consolidados por mesa. |
+| `POST /api/tables/register/create` | Crea mesa del evento. |
+| `POST /api/tables/freegame/create` | Crea mesa libre (incluye reto inevitable y puntuación). |
+| `GET /api/tables/freegame/by-number/{mesa}` | Recupera una mesa libre específica. |
+| `POST /api/admin/backup/*` | Endpoints para snapshots (crear, listar, restaurar, borrar, etc.). |
+
+---
+
+### Puesta en marcha local
 
 ```bash
+# Requisitos: Node 18+, Java 17+, Maven
 ./start.sh
+# webpack dev server: cd frontend && npm install && npm run dev
+# backend dev:       cd backend && mvn spring-boot:run
 ```
 
-El script construye el frontend, copia los archivos generados al backend, compila el JAR de Spring Boot y ejecuta la aplicación en `http://localhost:8080`.
+- `/frontend/vite.config.js` ya incluye proxy a `/api` → `http://localhost:8080`.
+- Durante el build, el frontend queda embebido en `backend/src/main/resources/static`.
 
-## Despliegue con Docker
+---
 
-Se incluye un `Dockerfile` multi-stage que combina el frontend y el backend en una sola imagen lista para producción.
+### Despliegue con Docker / Railway
 
 ```bash
-# Construir la imagen
-docker build -t railway-counter .
-
-# Ejecutar el contenedor
-docker run -p 8080:8080 railway-counter
+docker build -t modok-control .
+docker run -p 8080:8080 modok-control
 ```
 
-Esto compilará el frontend, lo incluirá como recursos estáticos dentro del JAR de Spring Boot y expondrá la aplicación desde el contenedor en el puerto 8080.
+- Para Railway: añadir `BACKUP_DIR`, `BACKUP_EVERY_MS`, `ADMIN_SECRET`, etc. según necesidad.
+- El contenedor arranca el jar `app.jar` con el frontend servidos desde Spring Boot.
+- La imagen fija `JAVA_TOOL_OPTIONS` con `-Xms128m -Xmx256m -XX:+UseSerialGC`; si necesitas más margen puedes sobrescribir la variable en Railway.
+- `spring.main.lazy-initialization=true` viene activado para reducir memoria en reposo; desactívalo si detectas efectos secundarios en arranques muy frecuentes.
 
-## Scripts útiles durante el desarrollo
-Aplicación full-stack sencilla pensada para desplegarse en Railway. El backend usa Spring Boot y expone un contador en memoria que puede incrementarse o decrementarse. El frontend está construido con React (Vite) y consume la API para mostrar un número central acompañado de una imagen y controles para modificar su valor.
+---
 
-## Estructura del proyecto
+### Notas operativas
 
-- `backend/`: servicio Spring Boot con los endpoints REST `GET /api/counter`, `POST /api/counter/increment` y `POST /api/counter/decrement`.
-- `frontend/`: interfaz React con Vite que muestra la imagen central, el valor actual y botones para sumar o restar 1, 5 y 10.
+- **Snapshots**: se guardan como `app-YYYYMMDD-HHmmss.json`; puedes listarlos y restaurarlos vía `/api/admin/backup/*`.
+- **Reto inevitable**: si es `(Ninguno)`, la puntuación de la mesa libre permanece en 0 (no se contabiliza legado ni VP).
+- **Volver**: `/mesa/:id` → `/register`, `/freegame/:id` → `/freegame`.
+- **Seguridad**: Ajusta `admin.secret` vía variable de entorno `ADMIN_SECRET`; restringe el acceso a `/admin/*`.
 
-## Scripts útiles
+Con estas piezas podrás mantener la aplicación informada y operativa durante el evento, sea en local o desplegada en Railway.
 
-### Backend
-
-```bash
-cd backend
-./mvnw spring-boot:run # si el wrapper está disponible
-# o usando Maven instalado
-mvn spring-boot:run
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Durante el desarrollo, la configuración de Vite redirige las peticiones a `/api` hacia el backend que corre en `http://localhost:8080`.
