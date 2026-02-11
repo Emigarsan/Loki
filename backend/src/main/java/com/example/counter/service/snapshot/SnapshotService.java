@@ -182,6 +182,9 @@ public class SnapshotService {
             counterService.setSecondary(Math.max(0, data.counter.secondary()));
             counterService.setTertiary(Math.max(0, data.counter.tertiary()));
             counterService.setSecondaryImageIndex(Math.max(0, data.counter.secondaryImageIndex()));
+            Integer rawMax = data.counter.tertiaryMax();
+            int normalizedMax = rawMax == null ? CounterService.TERTIARY_MAX_DEFAULT_VALUE : Math.max(0, rawMax);
+            counterService.setTertiaryMax(normalizedMax);
         }
         mesaService.restore(data.mesaTotals, data.mesaEvents);
         tablesService.restore(data.registerTables, data.freeGameTables);

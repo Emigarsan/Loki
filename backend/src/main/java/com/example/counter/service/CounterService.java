@@ -9,11 +9,13 @@ public class CounterService {
     private static final int PRIMARY_DEFAULT_VALUE = 1792;
     private static final int SECONDARY_DEFAULT_VALUE = 128;
     private static final int TERTIARY_DEFAULT_VALUE = 640;
+    public static final int TERTIARY_MAX_DEFAULT_VALUE = 0;
 
     private int primary = PRIMARY_DEFAULT_VALUE;
     private int secondary = SECONDARY_DEFAULT_VALUE;
     private int tertiary = TERTIARY_DEFAULT_VALUE;
     private int secondaryImageIndex = 0;
+    private int tertiaryMax = TERTIARY_MAX_DEFAULT_VALUE;
 
     public synchronized CounterState getState() {
         return snapshot();
@@ -98,6 +100,11 @@ public class CounterService {
         return snapshot();
     }
 
+    public synchronized CounterState setTertiaryMax(int value) {
+        tertiaryMax = Math.max(0, value);
+        return snapshot();
+    }
+
     public synchronized CounterState setSecondaryImageIndex(int index) {
         int normalized = ((index % SECONDARY_IMAGE_COUNT) + SECONDARY_IMAGE_COUNT) % SECONDARY_IMAGE_COUNT;
         secondaryImageIndex = normalized;
@@ -109,7 +116,7 @@ public class CounterService {
     }
 
     private CounterState snapshot() {
-        return new CounterState(primary, secondary, tertiary, secondaryImageIndex);
+        return new CounterState(primary, secondary, tertiary, secondaryImageIndex, tertiaryMax);
     }
 
     private int sanitize(int amount) {

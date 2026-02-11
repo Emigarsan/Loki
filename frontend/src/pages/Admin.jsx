@@ -9,9 +9,8 @@ export default function AdminPage() {
   const [amountSecondary, setAmountSecondary] = useState(1);
   const [amountTertiary, setAmountTertiary] = useState(1);
   const [pVal, setPVal] = useState('');
-  const [sVal, setSVal] = useState('');
   const [tVal, setTVal] = useState('');
-  const [imgIdx, setImgIdx] = useState(''); // 1..7 for UI
+  const [maxThreatVal, setMaxThreatVal] = useState('');
   const [adminKey, setAdminKey] = useState('');
   const [isAuthed, setIsAuthed] = useState(false);
   const [tables, setTables] = useState({ register: [], freegame: [] });
@@ -171,13 +170,12 @@ export default function AdminPage() {
     }).then(fetchState);
   };
 
-  const setImageIndex = () => {
-    const idx = Math.max(1, Math.min(7, parseInt(imgIdx, 10) || 1));
-    const index0 = idx - 1;
-    fetch(`${API_BASE}/secondary/imageIndex`, {
+  const setTertiaryMax = () => {
+    const n = Math.max(0, parseInt(maxThreatVal, 10) || 0);
+    fetch(`${API_BASE}/tertiary/max/set`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
-      body: JSON.stringify({ index: index0 })
+      body: JSON.stringify({ value: n })
     }).then(fetchState);
   };
 
@@ -279,35 +277,6 @@ export default function AdminPage() {
             </section>
 
             <section className="counter-card">
-              <h3>Celdas de Contención</h3>
-              <div className="counter-value">{state.secondary}</div>
-              <div className="form">
-                <label>
-                  Fijar a
-                  <input type="number" inputMode="numeric" placeholder="0" value={sVal} min={0} onChange={(e) => setSVal(e.target.value)} />
-                </label>
-                <button onClick={setExact('secondary', sVal)}>Guardar</button>
-              </div>
-              <div className="form">
-                <label>
-                  Imagen secundaria (1..7)
-                  <input type="number" inputMode="numeric" placeholder="1..7" min={1} max={7} value={imgIdx} onChange={(e) => setImgIdx(e.target.value)} />
-                </label>
-                <button onClick={setImageIndex}>Guardar imagen</button>
-              </div>
-              <div className="form">
-                <label>
-                  Cantidad
-                  <input type="number" min={0} value={amountSecondary} onChange={(e) => setAmountSecondary(Number(e.target.value))} />
-                </label>
-              </div>
-              <div className="button-grid">
-                <button onClick={update('secondary', +1)}>+</button>
-                <button onClick={update('secondary', -1)}>- </button>
-              </div>
-            </section>
-
-            <section className="counter-card">
               <h3>Entrenamiento especializado</h3>
               <div className="counter-value">{state.tertiary}</div>
               <div className="form">
@@ -325,6 +294,18 @@ export default function AdminPage() {
               <div className="button-grid">
                 <button onClick={update('tertiary', +1)}>+</button>
                 <button onClick={update('tertiary', -1)}>-</button>
+              </div>
+            </section>
+
+            <section className="counter-card">
+              <h3>Amenaza maxima</h3>
+              <div className="counter-value">{state.tertiaryMax ?? 0}</div>
+              <div className="form">
+                <label>
+                  Fijar a
+                  <input type="number" inputMode="numeric" placeholder="0" value={maxThreatVal} min={0} onChange={(e) => setMaxThreatVal(e.target.value)} />
+                </label>
+                <button onClick={setTertiaryMax}>Guardar</button>
               </div>
             </section>
           </div>

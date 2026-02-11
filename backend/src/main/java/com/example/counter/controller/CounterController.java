@@ -94,6 +94,14 @@ public class CounterController {
         return ResponseEntity.ok(counterService.setTertiary(value));
     }
 
+    @PostMapping("/tertiary/max/set")
+    public ResponseEntity<CounterState> setTertiaryMax(@RequestBody Map<String, Integer> payload,
+                                                       @org.springframework.web.bind.annotation.RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        int value = sanitizeValue(payload);
+        return ResponseEntity.ok(counterService.setTertiaryMax(value));
+    }
+
     @PostMapping("/secondary/imageIndex")
     public ResponseEntity<CounterState> setSecondaryImageIndex(@RequestBody Map<String, Integer> payload,
                                                               @org.springframework.web.bind.annotation.RequestHeader(value = "X-Admin-Secret", required = false) String secret) {

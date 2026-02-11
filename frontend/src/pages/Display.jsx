@@ -6,7 +6,8 @@ const initialState = {
   primary: 1792,
   secondary: 128,
   tertiary: 640,
-  secondaryImageIndex: 0
+  secondaryImageIndex: 0,
+  tertiaryMax: 0
 };
 
 export default function DisplayPage() {
@@ -29,7 +30,8 @@ export default function DisplayPage() {
         primary: sanitizeCounter(data.primary, initialState.primary),
         secondary: sanitizeCounter(data.secondary, initialState.secondary),
         tertiary: sanitizeCounter(data.tertiary, initialState.tertiary),
-        secondaryImageIndex: initialState.secondaryImageIndex
+        secondaryImageIndex: initialState.secondaryImageIndex,
+        tertiaryMax: sanitizeCounter(data.tertiaryMax, initialState.tertiaryMax)
       };
     },
     []
@@ -62,7 +64,7 @@ export default function DisplayPage() {
 
   const primaryImage = '/55027a.png';
   const secondaryOverlayImage = '/55028b.png';
-  const tertiaryMaxLabel = initialState.tertiary;
+  const tertiaryMaxLabel = state.tertiaryMax;
 
   return (
     <div className="display-layout">
