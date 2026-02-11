@@ -1,0 +1,15 @@
+{
+  "counter" : {
+    "primary" : 1792,
+    "secondary" : 128,
+    "tertiary" : 640,
+    "secondaryImageIndex" : 0
+  },
+  "registerTables" : [ ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1770830956390
+}

@@ -30,7 +30,7 @@ function PageWrapper({ children }) {
 function SiteHeader() {
   return (
     <header>
-      <h1>InevitableCON 2025 Sevilla</h1>
+      <h1>Interocio 2026</h1>
     </header>
   );
 }

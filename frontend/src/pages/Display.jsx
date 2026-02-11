@@ -1,14 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import centralImage from '../assets/50103a.png';
-import celda1 from '../assets/secondary/5A Entorno Celda 1.jpg';
-import celda2 from '../assets/secondary/6A Entorno Celda 2.jpg';
-import celda3 from '../assets/secondary/7A Entorno Celda 3.jpg';
-import celda4 from '../assets/secondary/8A Entorno Celda 4.jpg';
-import celda5 from '../assets/secondary/9A Entorno Celda 5.jpg';
-import celda6 from '../assets/secondary/10A Entorno Celda 6.jpg';
-import celda7 from '../assets/secondary/11A Entorno Celda 7.jpg';
-import celda7Accesorio from '../assets/secondary/11B Accesorio Masivo.jpg';
-import tertiaryCore from '../assets/43021.png';
 
 const API_BASE = '/api/counter';
 
@@ -24,11 +14,6 @@ export default function DisplayPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const secondaryImages = useMemo(
-    () => [celda1, celda2, celda3, celda4, celda5, celda6, celda7],
-    []
-  );
-
   const normalizeState = useCallback(
     (data) => {
       if (!data || typeof data !== 'object') {
@@ -40,17 +25,14 @@ export default function DisplayPage() {
         const normalized = withFallback(value, fallback);
         return Math.max(0, Math.trunc(normalized));
       };
-      const rawIndex = withFallback(data.secondaryImageIndex, initialState.secondaryImageIndex);
-      const normalizedIndex =
-        ((Math.trunc(rawIndex) % secondaryImages.length) + secondaryImages.length) % secondaryImages.length;
       return {
         primary: sanitizeCounter(data.primary, initialState.primary),
         secondary: sanitizeCounter(data.secondary, initialState.secondary),
         tertiary: sanitizeCounter(data.tertiary, initialState.tertiary),
-        secondaryImageIndex: normalizedIndex
+        secondaryImageIndex: initialState.secondaryImageIndex
       };
     },
-    [secondaryImages]
+    []
   );
 
   const fetchState = useCallback(() => {
@@ -78,54 +60,39 @@ export default function DisplayPage() {
     return () => clearInterval(id);
   }, [fetchState]);
 
-  const onLastImage = state.secondaryImageIndex === secondaryImages.length - 1;
-  const secondaryLocked = onLastImage && state.secondary === 0;
-  const primaryRevealed = secondaryLocked;
-  const displayedSecondaryImage = secondaryLocked
-    ? celda7Accesorio
-    : (secondaryImages[state.secondaryImageIndex] ?? secondaryImages[initialState.secondaryImageIndex]);
-  const secondaryTitle = secondaryLocked ? 'Accesorio M.Y.T.H.O.S.' : 'Celdas de Contención';
-  const secondaryNumberLabel = `Celda ${state.secondaryImageIndex + 1}`;
+  const primaryImage = '/55027a.png';
+  const secondaryOverlayImage = '/55028b.png';
+  const tertiaryMaxLabel = initialState.tertiary;
 
   return (
     <div className="display-layout">
       <div className="dashboard">
-      {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error}</p>}
 
-      {primaryRevealed && (
         <section className="counter-card">
-          <h2>Vida M.O.D.O.K.</h2>
-          <img src={centralImage} alt="M.O.D.O.K" className="counter-art" />
-          <div className="counter-value">{state.primary}</div>
-        </section>
-      )}
-
-      <section className="counter-card">
-        <h2>{secondaryTitle}</h2>
-        <div className="counter-subtitle">{secondaryNumberLabel}</div>
-        <img
-          src={displayedSecondaryImage}
-          alt={`Celda ${state.secondaryImageIndex + 1}`}
-          className="counter-art"
-        />
-        {!secondaryLocked && <div className="counter-value">{state.secondary}</div>}
-      </section>
-
-      {state.tertiary > 0 && (
-        <section className="counter-card">
-          <h2>Entrenamiento especializado</h2>
-          <img src={tertiaryCore} alt="Entrenamiento Especializado" className="counter-art" />
-          <div className="counter-value">{state.tertiary}</div>
-        </section>
-      )}
-
-      {initialLoading && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <p>Cargando estado...</p>
+          <h2>Loki, Dios de las mentiras</h2>
+          <div className="image-overlay image-overlay--loki">
+            <img src={primaryImage} alt="Loki, Dios de las mentiras" />
+            <div className="image-overlay-badge image-overlay-badge--center">{state.primary}</div>
           </div>
-        </div>
-      )}
+        </section>
+
+        <section className="counter-card">
+          <h2>Mundos en Colision</h2>
+          <div className="image-overlay image-overlay--mundos">
+            <img src={secondaryOverlayImage} alt="Mundos en Colision" />
+            <div className="image-overlay-badge image-overlay-badge--max">{tertiaryMaxLabel}</div>
+            <div className="image-overlay-badge">{state.tertiary}</div>
+          </div>
+        </section>
+
+        {initialLoading && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <p>Cargando estado...</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
