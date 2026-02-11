@@ -42,12 +42,30 @@ Start-Process -FilePath "powershell" -WorkingDirectory $backendDir -ArgumentList
     "mvn spring-boot:run"
 )
 
+Write-Host "Esperando a que el backend este listo..."
+$backendReady = $false
+for ($i = 0; $i -lt 60; $i++) {
+    try {
+        Invoke-WebRequest -Uri "http://localhost:8080/api/counter" -UseBasicParsing -TimeoutSec 2 | Out-Null
+        $backendReady = $true
+        break
+    }
+    catch {
+        Start-Sleep -Seconds 2
+    }
+}
+
+if (-not $backendReady) {
+    Write-Host "Backend no respondio en 120 segundos. Revisa la consola del backend."
+}
+
 Write-Host "Arrancando frontend (Vite)..."
 Start-Process -FilePath "powershell" -WorkingDirectory $frontendDir -ArgumentList @(
     "-NoExit",
     "-Command",
     "npm run dev"
 )
+
 
 Write-Host "Listo. Backend en http://localhost:8080 y frontend en http://localhost:5173"
 Write-Host "Usa -SkipInstall si no quieres ejecutar npm install."

@@ -130,7 +130,7 @@ header {
 }
 
 header h1 {
-  font-size: 5rem;
+  font-size: 4.5rem;
   letter-spacing: 0.4rem;
   margin: 0;
   color: var(--color-text-secondary);
@@ -154,6 +154,304 @@ header p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.75rem;
+}
+
+.dashboard--mesa {
+  align-items: stretch;
+}
+
+.dashboard--mesa .counter-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.25rem 1rem;
+}
+
+.dashboard--mesa .counter-value {
+  font-size: clamp(0.9rem, 5.5vw, 1.6rem);
+  padding: clamp(0.2rem, 1.1vw, 0.45rem) clamp(0.45rem, 1.8vw, 0.85rem);
+  min-width: 0;
+  min-height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard--mesa .mesa-actions {
+  width: 100%;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dashboard--mesa .mesa-action {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 0.85rem;
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-primary-variant);
+}
+
+.dashboard--mesa .indicator-list {
+  width: 100%;
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.dashboard--mesa .indicator-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.dashboard--mesa .indicator-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.dashboard--mesa .indicator-controls {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr 2.25rem;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.dashboard--mesa .indicator-controls button {
+  padding: 0.4rem 0;
+  border-radius: 0.6rem;
+}
+
+.dashboard--mesa .indicator-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.6rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-divider);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dashboard--mesa .indicator-note {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  opacity: 0.85;
+}
+
+.indicators-by-mesa {
+  width: 100%;
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+}
+
+.mesa-indicators-group {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-divider);
+  border-radius: 0.8rem;
+  padding: 0.6rem 0.7rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.mesa-indicators-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mesa-indicators-group .indicator-list {
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.mesa-indicators-group .indicator-row {
+  gap: 0.3rem;
+}
+
+.mesa-indicators-group .indicator-toggle {
+  font-size: 0.85rem;
+}
+
+.mesa-indicators-group .indicator-label {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.mesa-indicators-group .indicator-controls {
+  grid-template-columns: 1.8rem 1fr 1.8rem;
+  gap: 0.25rem;
+}
+
+.mesa-indicators-group .indicator-controls button {
+  font-size: 0.85rem;
+  padding: 0.2rem 0;
+}
+
+.mesa-indicators-group .indicator-value {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.35rem;
+}
+
+.counter-card--sector {
+  margin-top: 1rem;
+}
+
+.counter-card--sector h2 {
+  margin-bottom: 0.75rem;
+}
+
+.sector-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.sector-tile {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-divider);
+  border-radius: 0.9rem;
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sector-tile-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sector-tile .indicator-list {
+  width: 100%;
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.sector-tile .indicator-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sector-tile .indicator-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sector-tile .indicator-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--color-text-primary);
+}
+
+.sector-tile .indicator-toggle span {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.sector-tile .indicator-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.sector-tile .indicator-controls {
+  display: grid;
+  grid-template-columns: 1.8rem 1fr 1.8rem;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.sector-tile .indicator-controls button {
+  padding: 0.25rem 0;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.sector-tile .indicator-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.4rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.sector-tile .indicator-note {
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+.sector-tile .indicator-defeated {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.3rem;
+  background: var(--color-warning);
+  color: var(--color-surface);
+  font-weight: 700;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.sector-tile--active {
+  background: rgba(100, 180, 130, 0.2);
+  color: var(--color-text-primary);
+  padding: 0.75rem 0.8rem;
+}
+
+.sector-tile--active .indicator-list {
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+.sector-tile--active .indicator-toggle {
+  font-size: 0.8rem;
+}
+
+.sector-tile--active .indicator-controls {
+  grid-template-columns: 2rem 1fr 2rem;
+  gap: 0.25rem;
+}
+
+.sector-tile--active .indicator-controls button {
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.sector-tile--active .indicator-value {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.4rem;
 }
 
 /* Generic form + tabs styling used by Register and Freegame */
@@ -408,6 +706,27 @@ header p {
   .player-row {
     grid-template-columns: 1fr;
   }
+
+  .dashboard--mesa {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .dashboard--mesa .counter-card {
+    padding: 1.1rem 0.85rem;
+  }
+
+  .dashboard--mesa .counter-value {
+    font-size: clamp(1.1rem, 7.5vw, 1.9rem);
+    padding: clamp(0.25rem, 1.6vw, 0.5rem) clamp(0.5rem, 2.4vw, 0.9rem);
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* Admin enhancements */
@@ -559,12 +878,18 @@ header p {
   right: 40%;
   background: var(--color-surface);
   color: var(--color-text-primary);
-  border: 4px solid var(--color-divider);
-  border-radius: 20px;
-  padding: 1rem 1.25rem;
+  border: clamp(2px, 0.6vw, 4px) solid var(--color-divider);
+  border-radius: clamp(12px, 2vw, 20px);
+  padding: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
   min-width: 5rem;
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 2rem);
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
 }
 
@@ -578,10 +903,10 @@ header p {
 
 .image-overlay-badge--max {
   top: 20%;
-  left: 3%;
+  left: 2.5%;
   right: auto;
   bottom: auto;
-  font-size: 1.5rem;
+  font-size: 1.33rem;
   padding: 0.45rem 0.9rem;
   min-width: 4rem;
 }
@@ -594,6 +919,11 @@ header p {
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   color: var(--color-text-secondary);
+}
+
+.dashboard--mesa .counter-card h2 {
+  font-size: 0.8rem;
+  letter-spacing: 0.16rem;
 }
 
 .counter-subtitle {
@@ -691,7 +1021,7 @@ button[aria-disabled="true"] {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--color-background);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -959,7 +1289,7 @@ button[aria-disabled="true"] {
 }
 
 .display-header h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.8rem, 3.6vw, 2.7rem);
   margin: 0;
   width: 100%;
 }

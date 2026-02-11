@@ -1,19 +1,20 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import lokiHalfPlaceholder from '../assets/loki-half-placeholder.svg';
 
 const API_BASE = '/api/counter';
 
 const initialState = {
-  primary: 1792,
-  secondary: 128,
-  tertiary: 640,
-  secondaryImageIndex: 0,
-  tertiaryMax: 0
+  primary: 4000,
+  tertiary: 0,
+  tertiaryMax: 400
 };
 
 export default function DisplayPage() {
   const [state, setState] = useState(initialState);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [primaryHalfTriggered, setPrimaryHalfTriggered] = useState(false);
 
   const normalizeState = useCallback(
     (data) => {
@@ -28,9 +29,7 @@ export default function DisplayPage() {
       };
       return {
         primary: sanitizeCounter(data.primary, initialState.primary),
-        secondary: sanitizeCounter(data.secondary, initialState.secondary),
         tertiary: sanitizeCounter(data.tertiary, initialState.tertiary),
-        secondaryImageIndex: initialState.secondaryImageIndex,
         tertiaryMax: sanitizeCounter(data.tertiaryMax, initialState.tertiaryMax)
       };
     },
@@ -62,8 +61,18 @@ export default function DisplayPage() {
     return () => clearInterval(id);
   }, [fetchState]);
 
-  const primaryImage = '/55027a.png';
-  const secondaryOverlayImage = '/55028b.png';
+  useEffect(() => {
+    const primaryHalf = Math.floor(initialState.primary / 2);
+    if (!primaryHalfTriggered && state.primary <= primaryHalf) {
+      setPrimaryHalfTriggered(true);
+    }
+  }, [primaryHalfTriggered, state.primary]);
+
+  const primaryImage = primaryHalfTriggered ? lokiHalfPlaceholder : '/55027a.png';
+  const primaryAlt = primaryHalfTriggered
+    ? 'Loki, Dios de las mentiras (mitad)'
+    : 'Loki, Dios de las mentiras';
+  const mundosOverlayImage = '/55028b.png';
   const tertiaryMaxLabel = state.tertiaryMax;
 
   return (
@@ -74,15 +83,15 @@ export default function DisplayPage() {
         <section className="counter-card">
           <h2>Loki, Dios de las mentiras</h2>
           <div className="image-overlay image-overlay--loki">
-            <img src={primaryImage} alt="Loki, Dios de las mentiras" />
+            <img src={primaryImage} alt={primaryAlt} />
             <div className="image-overlay-badge image-overlay-badge--center">{state.primary}</div>
           </div>
         </section>
 
         <section className="counter-card">
-          <h2>Mundos en Colision</h2>
+          <h2>Mundos en Colisión</h2>
           <div className="image-overlay image-overlay--mundos">
-            <img src={secondaryOverlayImage} alt="Mundos en Colision" />
+            <img src={mundosOverlayImage} alt="Mundos en Colisión" />
             <div className="image-overlay-badge image-overlay-badge--max">{tertiaryMaxLabel}</div>
             <div className="image-overlay-badge">{state.tertiary}</div>
           </div>

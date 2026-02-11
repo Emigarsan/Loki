@@ -33,42 +33,6 @@ public class CounterController {
         return ResponseEntity.ok(counterService.getState());
     }
 
-    @PostMapping("/primary/increment")
-    public ResponseEntity<CounterState> incrementPrimary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.incrementPrimary(amount));
-    }
-
-    @PostMapping("/primary/decrement")
-    public ResponseEntity<CounterState> decrementPrimary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.decrementPrimary(amount));
-    }
-
-    @PostMapping("/secondary/increment")
-    public ResponseEntity<CounterState> incrementSecondary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.incrementSecondary(amount));
-    }
-
-    @PostMapping("/secondary/decrement")
-    public ResponseEntity<CounterState> decrementSecondary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.decrementSecondary(amount));
-    }
-
-    @PostMapping("/tertiary/increment")
-    public ResponseEntity<CounterState> incrementTertiary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.incrementTertiary(amount));
-    }
-
-    @PostMapping("/tertiary/decrement")
-    public ResponseEntity<CounterState> decrementTertiary(@RequestBody Map<String, Integer> payload) {
-        int amount = sanitizeAmount(payload);
-        return ResponseEntity.ok(counterService.decrementTertiary(amount));
-    }
-
     // --- Exact setters for Admin ---
     @PostMapping("/primary/set")
     public ResponseEntity<CounterState> setPrimary(@RequestBody Map<String, Integer> payload,
@@ -76,14 +40,6 @@ public class CounterController {
         if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         int value = sanitizeValue(payload);
         return ResponseEntity.ok(counterService.setPrimary(value));
-    }
-
-    @PostMapping("/secondary/set")
-    public ResponseEntity<CounterState> setSecondary(@RequestBody Map<String, Integer> payload,
-                                                     @org.springframework.web.bind.annotation.RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
-        if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        int value = sanitizeValue(payload);
-        return ResponseEntity.ok(counterService.setSecondary(value));
     }
 
     @PostMapping("/tertiary/set")
@@ -100,18 +56,6 @@ public class CounterController {
         if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         int value = sanitizeValue(payload);
         return ResponseEntity.ok(counterService.setTertiaryMax(value));
-    }
-
-    @PostMapping("/secondary/imageIndex")
-    public ResponseEntity<CounterState> setSecondaryImageIndex(@RequestBody Map<String, Integer> payload,
-                                                              @org.springframework.web.bind.annotation.RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
-        if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        int index = payload.getOrDefault("index", 0);
-        return ResponseEntity.ok(counterService.setSecondaryImageIndex(index));
-    }
-
-    private int sanitizeAmount(Map<String, Integer> payload) {
-        return Math.max(0, payload.getOrDefault("amount", 1));
     }
 
     private int sanitizeValue(Map<String, Integer> payload) {

@@ -5,9 +5,6 @@ const API_BASE = '/api/counter';
 export default function AdminPage() {
   const [state, setState] = useState(null);
   const [error, setError] = useState(null);
-  const [amountPrimary, setAmountPrimary] = useState(1);
-  const [amountSecondary, setAmountSecondary] = useState(1);
-  const [amountTertiary, setAmountTertiary] = useState(1);
   const [pVal, setPVal] = useState('');
   const [tVal, setTVal] = useState('');
   const [maxThreatVal, setMaxThreatVal] = useState('');
@@ -147,20 +144,6 @@ export default function AdminPage() {
       });
   }, [adminKey, fetchBackups, isAuthed]);
 
-  const update = (segment, sign) => () => {
-    const endpoint = sign > 0 ? 'increment' : 'decrement';
-    const amt = (() => {
-      if (segment === 'primary') return Math.max(0, Number(amountPrimary) || 1);
-      if (segment === 'secondary') return Math.max(0, Number(amountSecondary) || 1);
-      return Math.max(0, Number(amountTertiary) || 1);
-    })();
-    fetch(`${API_BASE}/${segment}/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: amt })
-    }).then(fetchState);
-  };
-
   const setExact = (segment, value) => () => {
     const n = Math.max(0, parseInt(value, 10) || 0);
     fetch(`${API_BASE}/${segment}/set`, {
@@ -255,7 +238,7 @@ export default function AdminPage() {
 
           <div className="admin-grid" style={{ display: tab === 'mod' ? 'grid' : 'none' }}>
             <section className="counter-card">
-              <h3>Vida M.O.D.O.K.</h3>
+              <h3>Vida Loki Dios de las Mentiras</h3>
               <div className="counter-value">{state.primary}</div>
               <div className="form">
                 <label>
@@ -264,20 +247,10 @@ export default function AdminPage() {
                 </label>
                 <button onClick={setExact('primary', pVal)}>Guardar</button>
               </div>
-              <div className="form">
-                <label>
-                  Cantidad
-                  <input type="number" min={0} value={amountPrimary} onChange={(e) => setAmountPrimary(Number(e.target.value))} />
-                </label>
-              </div>
-              <div className="button-grid">
-                <button onClick={update('primary', +1)}>+</button>
-                <button onClick={update('primary', -1)}>-</button>
-              </div>
             </section>
 
             <section className="counter-card">
-              <h3>Entrenamiento especializado</h3>
+              <h3>Mundos en Colisión</h3>
               <div className="counter-value">{state.tertiary}</div>
               <div className="form">
                 <label>
@@ -285,15 +258,6 @@ export default function AdminPage() {
                   <input type="number" inputMode="numeric" placeholder="0" value={tVal} min={0} onChange={(e) => setTVal(e.target.value)} />
                 </label>
                 <button onClick={setExact('tertiary', tVal)}>Guardar</button>
-              </div><div className="form">
-                <label>
-                  Cantidad
-                  <input type="number" min={0} value={amountTertiary} onChange={(e) => setAmountTertiary(Number(e.target.value))} />
-                </label>
-              </div>
-              <div className="button-grid">
-                <button onClick={update('tertiary', +1)}>+</button>
-                <button onClick={update('tertiary', -1)}>-</button>
               </div>
             </section>
 

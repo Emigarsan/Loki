@@ -8,6 +8,8 @@ import com.example.counter.service.mesa.MesaCounterService.TotalesMesa;
 import com.example.counter.service.model.CounterState;
 import com.example.counter.service.model.FreeGameTable;
 import com.example.counter.service.model.RegisterTable;
+import com.example.counter.service.sector.SectorService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
@@ -34,7 +36,10 @@ public class SnapshotService {
     private final CounterService counterService;
     private final TablesService tablesService;
     private final MesaCounterService mesaService;
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final SectorService sectorService;
+        private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final Path backupDir;
     private final long backupEveryMs;
@@ -50,6 +55,7 @@ public class SnapshotService {
     public SnapshotService(CounterService counterService,
                            TablesService tablesService,
                            MesaCounterService mesaService,
+                           SectorService sectorService,
                            @Value("${backup.dir:backups}") String backupDir,
                            @Value("${backup.every.ms:60000}") long backupEveryMs,
                            @Value("${backup.retention.min:60}") int backupRetentionMin,
@@ -61,6 +67,7 @@ public class SnapshotService {
         this.counterService = counterService;
         this.tablesService = tablesService;
         this.mesaService = mesaService;
+        this.sectorService = sectorService;
         this.backupDir = Paths.get(backupDir);
         this.backupEveryMs = backupEveryMs;
         this.backupRetentionMin = backupRetentionMin;
@@ -77,6 +84,7 @@ public class SnapshotService {
         public List<FreeGameTable> freeGameTables;
         public Map<Integer, TotalesMesa> mesaTotals;
         public List<Event> mesaEvents;
+        public Map<Integer, SectorService.MesaIndicators> sectorStates;
         public boolean qrEventEnabled;
         public boolean qrFreegameEnabled;
         public long ts;
@@ -141,6 +149,7 @@ public class SnapshotService {
         data.qrFreegameEnabled = tablesService.isFreegameQrEnabled();
         data.mesaTotals = mesaService.getTotalesSnapshot();
         data.mesaEvents = mesaService.getEventosSnapshot();
+        data.sectorStates = sectorService.getSnapshot();
         data.ts = System.currentTimeMillis();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(out.toFile(), data);
         lastSnapshotPath = out;
@@ -179,14 +188,13 @@ public class SnapshotService {
         if (data == null) return;
         if (data.counter != null) {
             counterService.setPrimary(Math.max(0, data.counter.primary()));
-            counterService.setSecondary(Math.max(0, data.counter.secondary()));
             counterService.setTertiary(Math.max(0, data.counter.tertiary()));
-            counterService.setSecondaryImageIndex(Math.max(0, data.counter.secondaryImageIndex()));
             Integer rawMax = data.counter.tertiaryMax();
             int normalizedMax = rawMax == null ? CounterService.TERTIARY_MAX_DEFAULT_VALUE : Math.max(0, rawMax);
             counterService.setTertiaryMax(normalizedMax);
         }
         mesaService.restore(data.mesaTotals, data.mesaEvents);
+        sectorService.restore(data.sectorStates);
         tablesService.restore(data.registerTables, data.freeGameTables);
         tablesService.setEventQrEnabled(data.qrEventEnabled);
         tablesService.setFreegameQrEnabled(data.qrFreegameEnabled);

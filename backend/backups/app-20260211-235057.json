@@ -1,0 +1,69 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ {
+    "id" : "00ce9f33-ed36-4faa-8fb6-b753c468cd47",
+    "tableNumber" : 1,
+    "tableName" : "a",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Iron Man",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "A94D49",
+    "createdAt" : 1770850226.090431400
+  }, {
+    "id" : "523a3471-3ebd-4d7a-89bf-7f1eaad28074",
+    "tableNumber" : 2,
+    "tableName" : "eee",
+    "difficulty" : "Experto",
+    "players" : 1,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Protección"
+    } ],
+    "code" : "196747",
+    "createdAt" : 1770850240.073490400
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "1" : {
+      "mesaId" : 1,
+      "mangog" : {
+        "key" : "mangog",
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "2" : {
+      "mesaId" : 2,
+      "mangog" : {
+        "key" : "mangog",
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1770850257005
+}

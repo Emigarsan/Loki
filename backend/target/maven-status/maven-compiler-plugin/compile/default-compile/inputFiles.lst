@@ -1,5 +1,6 @@
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\model\FreeGamePlayerInfo.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\CounterService.java
+D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\SectorController.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\QrDisplayController.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\model\RegisterTable.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\TablesController.java
@@ -7,6 +8,7 @@ D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\coun
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\AdminController.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\model\CounterState.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\CounterApplication.java
+D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\sector\SectorService.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\CounterController.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\controller\SpaController.java
 D:\Usuarios\Emilio\Documentos\GitHub\Loki\backend\src\main\java\com\example\counter\service\mesa\MesaCounterService.java

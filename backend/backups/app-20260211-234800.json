@@ -1,0 +1,29 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "1" : {
+      "mesaId" : 1,
+      "mangog" : {
+        "key" : "mangog",
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1770850080061
+}
