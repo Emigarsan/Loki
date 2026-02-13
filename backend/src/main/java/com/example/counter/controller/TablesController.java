@@ -52,6 +52,14 @@ public class TablesController {
         return ResponseEntity.ok(tablesService.listRegister());
     }
 
+    @GetMapping("/register/by-number/{tableNumber}")
+    public ResponseEntity<RegisterTable> getRegisterByNumber(@PathVariable("tableNumber") int tableNumber) {
+        var t = tablesService.findRegisterByNumber(tableNumber);
+        if (t == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(t);
+    }
+
     @GetMapping("/register/characters")
     public ResponseEntity<List<String>> listRegisterCharacters() {
         return ResponseEntity.ok(tablesService.getRegisterCharacters());
@@ -69,7 +77,8 @@ public class TablesController {
 
     @SuppressWarnings("unchecked")
     @PostMapping("/freegame/create")
-    public ResponseEntity<com.example.counter.service.model.FreeGameTable> createFreeGame(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<com.example.counter.service.model.FreeGameTable> createFreeGame(
+            @RequestBody Map<String, Object> payload) {
         int tableNumber = ((Number) payload.getOrDefault("tableNumber", 0)).intValue();
         String name = String.valueOf(payload.getOrDefault("name", "Mesa Libre"));
         String difficulty = String.valueOf(payload.getOrDefault("difficulty", "Normal"));
@@ -87,7 +96,8 @@ public class TablesController {
         if (tablesService.isFreeGameTableNumberUsed(tableNumber)) {
             return ResponseEntity.status(409).build();
         }
-        return ResponseEntity.ok(tablesService.createFreeGame(tableNumber, name, difficulty, inevitableChallenge, players, info, scenarioCleared));
+        return ResponseEntity.ok(tablesService.createFreeGame(tableNumber, name, difficulty, inevitableChallenge,
+                players, info, scenarioCleared));
     }
 
     @PostMapping("/freegame/join")
@@ -103,9 +113,11 @@ public class TablesController {
     }
 
     @GetMapping("/freegame/by-number/{tableNumber}")
-    public ResponseEntity<com.example.counter.service.model.FreeGameTable> getFreeGameByNumber(@PathVariable("tableNumber") int tableNumber) {
+    public ResponseEntity<com.example.counter.service.model.FreeGameTable> getFreeGameByNumber(
+            @PathVariable("tableNumber") int tableNumber) {
         var t = tablesService.findFreeGameByNumber(tableNumber);
-        if (t == null) return ResponseEntity.notFound().build();
+        if (t == null)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(t);
     }
 
@@ -113,7 +125,8 @@ public class TablesController {
     public ResponseEntity<Map<String, Object>> setFreeGameVictoryPoints(@RequestBody Map<String, Object> payload) {
         String id = String.valueOf(payload.getOrDefault("id", ""));
         int vp = ((Number) payload.getOrDefault("victoryPoints", 0)).intValue();
-        Boolean scenarioCleared = payload.containsKey("scenarioCleared") ? parseBoolean(payload.get("scenarioCleared")) : null;
+        Boolean scenarioCleared = payload.containsKey("scenarioCleared") ? parseBoolean(payload.get("scenarioCleared"))
+                : null;
         boolean ok = tablesService.setFreeGameVictoryPoints(id, vp, scenarioCleared);
         return ResponseEntity.ok(Map.of("ok", ok));
     }

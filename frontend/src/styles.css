@@ -149,6 +149,14 @@ header p {
   font-weight: 600;
 }
 
+.avatar-name {
+  margin: 0.5rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 .dashboard {
   width: 100%;
   display: grid;
@@ -812,6 +820,7 @@ header p {
   padding: 0.25rem 0.4rem;
   text-align: center;
   font-size: 0.95rem;
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -1029,6 +1038,17 @@ button[aria-disabled="true"] {
   z-index: 20;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 20;
+}
+
 .modal {
   background: var(--color-surface-2);
   border: 1px solid var(--color-divider);
@@ -1051,6 +1071,163 @@ button[aria-disabled="true"] {
 .modal button {
   align-self: center;
   min-width: 160px;
+}
+
+.modal.trigger-notice {
+  max-width: min(90vw, 520px);
+}
+
+.modal.trigger-notice img {
+  width: min(50vw, 200px);
+  height: auto;
+  object-fit: contain;
+  align-self: center;
+}
+
+.modal.defeat-modal {
+  max-width: min(90vw, 550px);
+  gap: 1.5rem;
+}
+
+.modal.defeat-modal h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--color-secondary);
+}
+
+.modal.defeat-modal img {
+  width: min(50vw, 180px);
+  height: auto;
+  object-fit: contain;
+  align-self: center;
+}
+
+.defeat-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.defeat-form-group label {
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.ruptura-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.ruptura-input button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 1.3rem;
+  border: 1px solid var(--color-divider);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  align-self: auto;
+}
+
+.ruptura-input button:hover {
+  background: var(--color-primary);
+}
+
+.ruptura-input input {
+  width: 80px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1rem;
+  border: 1px solid var(--color-divider);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: 0.5rem;
+}
+
+.ruptura-input input:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+.defeat-form-group select {
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-divider);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.defeat-form-group select:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+.defeat-form-group select option {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.defeat-info {
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.defeat-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.defeat-info strong {
+  color: var(--color-secondary);
+  font-weight: 700;
+}
+
+.defeat-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.defeat-actions button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-divider);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-variant);
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-2);
 }
 
 /* Display page: scale up for large screens */

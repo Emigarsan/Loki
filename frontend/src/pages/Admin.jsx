@@ -162,6 +162,7 @@ export default function AdminPage() {
     }).then(fetchState);
   };
 
+
   const download = (path, filename) => {
     fetch(path, { headers: { 'X-Admin-Secret': adminKey } })
       .then((r) => r.ok ? r.blob() : Promise.reject(new Error('No autorizado')))
@@ -272,6 +273,7 @@ export default function AdminPage() {
                 <button onClick={setTertiaryMax}>Guardar</button>
               </div>
             </section>
+
           </div>
           {tab === 'backup' && (
             <div className="admin-grid" style={{ gridTemplateColumns: '1fr' }}>
@@ -531,26 +533,26 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                  {(tables.freegame || [])
-                    .slice()
-                    .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
-                    .map((t) => {
-                      const noCh = !t?.inevitableChallenge || t.inevitableChallenge === '(Ninguno)'; const base = noCh ? 0 : (t?.difficulty === 'Experto' ? 5 : 3);
-                      const legacyCount = noCh ? 0 : (Array.isArray(t?.playersInfo) ? t.playersInfo.filter(p => p.legacy && String(p.legacy) !== 'Ninguno').length : 0);
-                      const vp = noCh ? 0 : (typeof t?.victoryPoints === 'number' ? t.victoryPoints : 0);
-                      const total = noCh ? 0 : (base + legacyCount + vp);
-                      return (
-                        <tr key={t.id + '-score'}>
-                          <td>{t.tableNumber}</td>
-                          <td>{t.difficulty || 'Normal'}</td>
-                          <td>{t.inevitableChallenge || '(Ninguno)'}</td>
-                          <td>{base}</td>
-                          <td>{legacyCount}</td>
-                          <td>{vp}</td>
-                          <td>{total}</td>
-                        </tr>
-                      );
-                    })}
+                    {(tables.freegame || [])
+                      .slice()
+                      .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
+                      .map((t) => {
+                        const noCh = !t?.inevitableChallenge || t.inevitableChallenge === '(Ninguno)'; const base = noCh ? 0 : (t?.difficulty === 'Experto' ? 5 : 3);
+                        const legacyCount = noCh ? 0 : (Array.isArray(t?.playersInfo) ? t.playersInfo.filter(p => p.legacy && String(p.legacy) !== 'Ninguno').length : 0);
+                        const vp = noCh ? 0 : (typeof t?.victoryPoints === 'number' ? t.victoryPoints : 0);
+                        const total = noCh ? 0 : (base + legacyCount + vp);
+                        return (
+                          <tr key={t.id + '-score'}>
+                            <td>{t.tableNumber}</td>
+                            <td>{t.difficulty || 'Normal'}</td>
+                            <td>{t.inevitableChallenge || '(Ninguno)'}</td>
+                            <td>{base}</td>
+                            <td>{legacyCount}</td>
+                            <td>{vp}</td>
+                            <td>{total}</td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </section>

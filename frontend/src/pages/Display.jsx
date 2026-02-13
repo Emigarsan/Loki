@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import lokiHalfPlaceholder from '../assets/loki-half-placeholder.svg';
-
 const API_BASE = '/api/counter';
 
 const initialState = {
@@ -68,7 +66,7 @@ export default function DisplayPage() {
     }
   }, [primaryHalfTriggered, state.primary]);
 
-  const primaryImage = primaryHalfTriggered ? lokiHalfPlaceholder : '/55027a.png';
+  const primaryImage = primaryHalfTriggered ? '/55027b.png' : '/55027a.png';
   const primaryAlt = primaryHalfTriggered
     ? 'Loki, Dios de las mentiras (mitad)'
     : 'Loki, Dios de las mentiras';

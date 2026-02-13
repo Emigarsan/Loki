@@ -37,7 +37,7 @@ public class SnapshotService {
     private final TablesService tablesService;
     private final MesaCounterService mesaService;
     private final SectorService sectorService;
-        private final ObjectMapper objectMapper = new ObjectMapper()
+    private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -53,17 +53,17 @@ public class SnapshotService {
     private volatile Path lastSnapshotPath = null;
 
     public SnapshotService(CounterService counterService,
-                           TablesService tablesService,
-                           MesaCounterService mesaService,
-                           SectorService sectorService,
-                           @Value("${backup.dir:backups}") String backupDir,
-                           @Value("${backup.every.ms:60000}") long backupEveryMs,
-                           @Value("${backup.retention.min:60}") int backupRetentionMin,
-                           @Value("${drive.backup.dir:}") String driveDir,
-                           @Value("${drive.every.ms:600000}") long driveEveryMs,
-                           @Value("${drive.keep.copies:6}") int driveKeepCopies,
-                           @Value("${backup.initial:true}") boolean backupInitial,
-                           @Value("${restore.onstart:true}") boolean restoreOnStart) {
+            TablesService tablesService,
+            MesaCounterService mesaService,
+            SectorService sectorService,
+            @Value("${backup.dir:backups}") String backupDir,
+            @Value("${backup.every.ms:60000}") long backupEveryMs,
+            @Value("${backup.retention.min:60}") int backupRetentionMin,
+            @Value("${drive.backup.dir:}") String driveDir,
+            @Value("${drive.every.ms:600000}") long driveEveryMs,
+            @Value("${drive.keep.copies:6}") int driveKeepCopies,
+            @Value("${backup.initial:true}") boolean backupInitial,
+            @Value("${restore.onstart:true}") boolean restoreOnStart) {
         this.counterService = counterService;
         this.tablesService = tablesService;
         this.mesaService = mesaService;
@@ -93,12 +93,15 @@ public class SnapshotService {
     @EventListener(ApplicationReadyEvent.class)
     public void onReady() {
         ensureDir(backupDir);
-        log.info("Snapshot config -> backup.dir={}, backup.every.ms={}, backup.retention.min={}, drive.dir={}, drive.every.ms={}, drive.keep.copies={}, backup.initial={}, restore.onstart={}",
-                backupDir, backupEveryMs, backupRetentionMin, driveDir, driveEveryMs, driveKeepCopies, backupInitial, restoreOnStart);
+        log.info(
+                "Snapshot config -> backup.dir={}, backup.every.ms={}, backup.retention.min={}, drive.dir={}, drive.every.ms={}, drive.keep.copies={}, backup.initial={}, restore.onstart={}",
+                backupDir, backupEveryMs, backupRetentionMin, driveDir, driveEveryMs, driveKeepCopies, backupInitial,
+                restoreOnStart);
         if (restoreOnStart) {
             restoreLatest();
         }
-        // Trigger an initial snapshot to have a base file, but do it async to avoid blocking startup
+        // Trigger an initial snapshot to have a base file, but do it async to avoid
+        // blocking startup
         if (backupInitial) {
             Thread t = new Thread(() -> {
                 try {
@@ -124,11 +127,13 @@ public class SnapshotService {
 
     @Scheduled(fixedDelayString = "${drive.every.ms:600000}")
     public void scheduledDriveCopy() {
-        if (driveDir == null) return;
+        if (driveDir == null)
+            return;
         try {
             ensureDir(driveDir);
             Path latest = getLatestLocalSnapshot();
-            if (latest == null) return;
+            if (latest == null)
+                return;
             Path dest = driveDir.resolve(latest.getFileName());
             Files.copy(latest, dest, StandardCopyOption.REPLACE_EXISTING);
             pruneDrive();
@@ -138,7 +143,8 @@ public class SnapshotService {
     }
 
     private void writeSnapshot() throws IOException {
-        String ts = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(ZoneId.systemDefault()).format(Instant.now());
+        String ts = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(ZoneId.systemDefault())
+                .format(Instant.now());
         String file = "app-" + ts + ".json";
         Path out = backupDir.resolve(file);
         SnapshotData data = new SnapshotData();
@@ -176,7 +182,8 @@ public class SnapshotService {
     private void restoreLatest() {
         try {
             Path latest = getLatestLocalSnapshot();
-            if (latest == null) return;
+            if (latest == null)
+                return;
             SnapshotData data = objectMapper.readValue(latest.toFile(), SnapshotData.class);
             applySnapshot(data);
         } catch (Exception e) {
@@ -185,7 +192,8 @@ public class SnapshotService {
     }
 
     private void applySnapshot(SnapshotData data) {
-        if (data == null) return;
+        if (data == null)
+            return;
         if (data.counter != null) {
             counterService.setPrimary(Math.max(0, data.counter.primary()));
             counterService.setTertiary(Math.max(0, data.counter.tertiary()));
@@ -202,10 +210,13 @@ public class SnapshotService {
 
     public synchronized boolean restoreFromFileName(String name) {
         try {
-            if (name == null || name.isBlank()) return false;
-            if (!name.startsWith("app-") || !name.endsWith(".json")) return false;
+            if (name == null || name.isBlank())
+                return false;
+            if (!name.startsWith("app-") || !name.endsWith(".json"))
+                return false;
             Path file = backupDir.resolve(name).normalize();
-            if (!file.startsWith(backupDir.normalize()) || !Files.exists(file)) return false;
+            if (!file.startsWith(backupDir.normalize()) || !Files.exists(file))
+                return false;
             SnapshotData data = objectMapper.readValue(file.toFile(), SnapshotData.class);
             applySnapshot(data);
             lastSnapshotPath = file;
@@ -217,9 +228,11 @@ public class SnapshotService {
     }
 
     private Path getLatestLocalSnapshot() throws IOException {
-        if (!Files.exists(backupDir)) return null;
+        if (!Files.exists(backupDir))
+            return null;
         try (var s = Files.list(backupDir)) {
-            List<Path> files = s.filter(p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
+            List<Path> files = s.filter(
+                    p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
                     .sorted(Comparator.comparingLong(this::safeMtime).reversed())
                     .collect(Collectors.toList());
             return files.isEmpty() ? null : files.get(0);
@@ -236,34 +249,45 @@ public class SnapshotService {
 
     private void pruneLocal() throws IOException {
         long cutoff = System.currentTimeMillis() - (backupRetentionMin * 60L * 1000L);
-        if (!Files.exists(backupDir)) return;
+        if (!Files.exists(backupDir))
+            return;
         try (var s = Files.list(backupDir)) {
-            List<Path> files = s.filter(p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
+            List<Path> files = s.filter(
+                    p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
                     .sorted(Comparator.comparingLong(this::safeMtime).reversed())
                     .collect(Collectors.toList());
             for (Path p : files) {
                 if (safeMtime(p) < cutoff) {
-                    try { Files.deleteIfExists(p); } catch (Exception ignored) {}
+                    try {
+                        Files.deleteIfExists(p);
+                    } catch (Exception ignored) {
+                    }
                 }
             }
         }
     }
 
     private void pruneDrive() throws IOException {
-        if (driveDir == null || !Files.exists(driveDir)) return;
+        if (driveDir == null || !Files.exists(driveDir))
+            return;
         try (var s = Files.list(driveDir)) {
-            List<Path> files = s.filter(p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
+            List<Path> files = s.filter(
+                    p -> p.getFileName().toString().startsWith("app-") && p.getFileName().toString().endsWith(".json"))
                     .sorted(Comparator.comparingLong(this::safeMtime).reversed())
                     .collect(Collectors.toList());
             for (int i = driveKeepCopies; i < files.size(); i++) {
-                try { Files.deleteIfExists(files.get(i)); } catch (Exception ignored) {}
+                try {
+                    Files.deleteIfExists(files.get(i));
+                } catch (Exception ignored) {
+                }
             }
         }
     }
 
     private void ensureDir(Path dir) {
         try {
-            if (!Files.exists(dir)) Files.createDirectories(dir);
+            if (!Files.exists(dir))
+                Files.createDirectories(dir);
         } catch (Exception e) {
             log.warn("Cannot create dir {}: {}", dir, e.getMessage());
         }

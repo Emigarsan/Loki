@@ -12,13 +12,46 @@ const indicatorDefs = [
   { key: 'gate', label: 'Puerta entre mundos' }
 ];
 
+const AVATARS = {
+  0: { name: 'granuja', imagePath: '/55029a.png' },
+  1: { name: 'bribón', imagePath: '/55030a.png' },
+  2: { name: 'bellaco', imagePath: '/55031a.png' },
+  3: { name: 'canalla', imagePath: '/55032a.png' }
+};
+
+const GROUP_NAMES = {
+  0: 'Frente único',
+  1: 'Resistencia pertinaz',
+  2: 'Fuerza dominante',
+  3: 'Retirada fingida'
+};
+
+const getAvatarData = (index) => {
+  if (index === null || index === undefined) return AVATARS[0];
+  const idx = parseInt(index, 10);
+  if (isNaN(idx) || idx < 0 || idx > 3) return AVATARS[0];
+  return AVATARS[idx];
+};
+
+const getGroupName = (avatarIndex) => {
+  return GROUP_NAMES[avatarIndex] || 'Entorno Y';
+};
+
 export function EventView({ mesaId = null } = {}) {
   const [state, setState] = useState(initialState);
   const [error, setError] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
+  const [primaryNoticeVisible, setPrimaryNoticeVisible] = useState(false);
+  const [primaryNoticeShown, setPrimaryNoticeShown] = useState(false);
   const [tertiaryLocked, setTertiaryLocked] = useState(false);
   const [sectorState, setSectorState] = useState(null);
   const [sectorError, setSectorError] = useState(null);
+  const [mesaDifficulty, setMesaDifficulty] = useState('Normal');
+  const [mesaDifficultyLoaded, setMesaDifficultyLoaded] = useState(false);
+  const [mesaAvatar, setMesaAvatar] = useState(null);
+  const [avatarModalVisible, setAvatarModalVisible] = useState(false);
+  const [defeatModalVisible, setDefeatModalVisible] = useState(false);
+  const [defeatRupturaValue, setDefeatRupturaValue] = useState(0);
 
   const normalizeState = useCallback(
     (data) => {
@@ -58,7 +91,7 @@ export function EventView({ mesaId = null } = {}) {
         console.error(err);
         setError('No se pudo cargar el estado de los contadores.');
       })
-      .finally(() => {});
+      .finally(() => { });
   }, [normalizeState]);
 
   // Initial load only once
@@ -69,12 +102,53 @@ export function EventView({ mesaId = null } = {}) {
   // Background refresh every 3s, paused when a modal is open
   useEffect(() => {
     const id = setInterval(() => {
-      if (!modalMessage) {
+      if (!modalMessage && !primaryNoticeVisible) {
         fetchState();
       }
     }, 3000);
     return () => clearInterval(id);
-  }, [fetchState, modalMessage]);
+  }, [fetchState, modalMessage, primaryNoticeVisible]);
+
+  useEffect(() => {
+    if (!mesaId) return;
+    setPrimaryNoticeVisible(false);
+    setPrimaryNoticeShown(false);
+    setMesaDifficultyLoaded(false);
+    setMesaAvatar(null);
+    setAvatarModalVisible(false);
+    fetch(`/api/tables/register/by-number/${encodeURIComponent(mesaId)}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Mesa no encontrada');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const difficulty = data && typeof data.difficulty === 'string' ? data.difficulty : 'Normal';
+        const normalized = String(difficulty || '').trim().toLowerCase();
+        setMesaDifficulty(normalized === 'experto' ? 'Experto' : 'Normal');
+
+        // Validar avatar: debe ser un número 0-3
+        let avatar = null;
+        if (data && data.avatar !== undefined) {
+          const avatarVal = String(data.avatar).trim();
+          const avatarNum = parseInt(avatarVal, 10);
+          if (!isNaN(avatarNum) && avatarNum >= 0 && avatarNum <= 3) {
+            avatar = avatarNum;
+          }
+        }
+
+        setMesaAvatar(avatar);
+        if (avatar !== null) {
+          setAvatarModalVisible(true);
+        }
+        setMesaDifficultyLoaded(true);
+      })
+      .catch(() => {
+        setMesaDifficulty('Normal');
+        setMesaDifficultyLoaded(true);
+      });
+  }, [mesaId]);
 
   const fetchSectorState = useCallback(() => {
     if (!mesaId) return;
@@ -115,16 +189,82 @@ export function EventView({ mesaId = null } = {}) {
     }
   }, [state.tertiary]);
 
+  useEffect(() => {
+    if (!mesaId) return;
+    if (!mesaDifficultyLoaded) return;
+    const primaryHalf = Math.floor(initialState.primary / 2);
+    if (!primaryNoticeShown && state.primary <= primaryHalf) {
+      setPrimaryNoticeVisible(true);
+      setPrimaryNoticeShown(true);
+    }
+  }, [mesaId, mesaDifficultyLoaded, primaryNoticeShown, state.primary]);
+
   const closeModal = useCallback(() => {
     setModalMessage(null);
   }, []);
+
+  const closePrimaryNotice = useCallback(() => {
+    setPrimaryNoticeVisible(false);
+  }, []);
+
+  const closeAvatarModal = useCallback(() => {
+    setAvatarModalVisible(false);
+  }, []);
+
+  const getRandomAvatarExcluding = useCallback((currentAvatar) => {
+    const validAvatars = [0, 1, 2, 3].filter((idx) => idx !== currentAvatar);
+    const randomIdx = Math.floor(Math.random() * validAvatars.length);
+    return validAvatars[randomIdx];
+  }, []);
+
+  const openAvatarDefeatModal = useCallback(() => {
+    setDefeatRupturaValue(0);
+    setDefeatModalVisible(true);
+  }, []);
+
+  const closeAvatarDefeatModal = useCallback(() => {
+    setDefeatModalVisible(false);
+    // Seleccionar nuevo avatar aleatorio
+    if (mesaAvatar !== null) {
+      const newAvatar = getRandomAvatarExcluding(mesaAvatar);
+      setMesaAvatar(newAvatar);
+      setAvatarModalVisible(true);
+    }
+  }, [mesaAvatar, getRandomAvatarExcluding]);
+
+  const handleAvatarDefeatSubmit = useCallback(() => {
+    // Reducir contador primario por los contadores de Ruptura
+    if (defeatRupturaValue > 0) {
+      fetch(`${API_BASE}/primary/reduce`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ delta: defeatRupturaValue })
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Error al actualizar el contador');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setState(normalizeState(data));
+          closeAvatarDefeatModal();
+        })
+        .catch((err) => {
+          console.error(err);
+          setError('No se pudo actualizar el contador primario');
+        });
+    } else {
+      closeAvatarDefeatModal();
+    }
+  }, [defeatRupturaValue, normalizeState]);
 
   const previousDefeated = useRef({});
 
   useEffect(() => {
     if (!sectorState?.indicatorsByMesa || !sectorState?.mesas) return;
     const defeatKey = (mesaId, indicator) => `${mesaId}-${indicator}`;
-    
+
     sectorState.mesas.forEach((targetMesaId) => {
       const mesaInds = sectorState.indicatorsByMesa[targetMesaId];
       if (!mesaInds) return;
@@ -189,11 +329,11 @@ export function EventView({ mesaId = null } = {}) {
           const mesaInds = sectorState.indicatorsByMesa[targetMesaId];
           if (!mesaInds) return null;
           const isMyMesa = targetMesaId === mesaId;
-          
+
           // Para mi mesa: siempre mostrar. Para otras: solo si hay activos/derrotados
           const shouldShowGroup = isMyMesa || Object.values(mesaInds).some((ind) => ind.activeMesaId != null || ind.defeated);
           if (!shouldShowGroup) return null;
-          
+
           return (
             <div key={`mesa-${targetMesaId}`} className="mesa-indicators-group">
               <div className="mesa-indicators-title">Mesa {targetMesaId}</div>
@@ -202,10 +342,10 @@ export function EventView({ mesaId = null } = {}) {
                   const current = mesaInds[indicator.key] || {};
                   const isActive = current.activeMesaId != null;
                   const isDefeated = !!current.defeated;
-                  
+
                   // Para mi mesa: siempre mostrar. Para otras: solo si activo o derrotado
                   if (!isMyMesa && !isActive && !isDefeated) return null;
-                  
+
                   return (
                     <div key={`${targetMesaId}-${indicator.key}`} className="indicator-row">
                       {isMyMesa && (
@@ -250,21 +390,21 @@ export function EventView({ mesaId = null } = {}) {
     const mesaInds = sectorState.indicatorsByMesa[targetMesaId];
     if (!mesaInds) return null;
     const isMyMesa = targetMesaId === mesaId;
-    
+
     // Para mi mesa: siempre mostrar. Para otras: mostrar si activo o derrotado
     const shouldShow = isMyMesa || Object.values(mesaInds).some((ind) => ind.activeMesaId != null || ind.defeated);
     if (!shouldShow) return null;
-    
+
     return (
       <div className="indicator-list">
         {indicatorDefs.map((indicator) => {
           const current = mesaInds[indicator.key] || {};
           const isActive = current.activeMesaId != null;
           const isDefeated = !!current.defeated;
-          
+
           // Para mi mesa: siempre mostrar. Para otras: mostrar si activo o derrotado
           if (!isMyMesa && !isActive && !isDefeated) return null;
-          
+
           return (
             <div key={`${targetMesaId}-${indicator.key}`} className="indicator-row">
               <div className="indicator-header">
@@ -309,8 +449,11 @@ export function EventView({ mesaId = null } = {}) {
         <section className="counter-card">
           <h2>Loki, Dios de las mentiras</h2>
           <div className="counter-value">{state.primary}</div>
+          {mesaAvatar !== null && (
+            <p className="avatar-name">Loki el {getAvatarData(mesaAvatar).name}</p>
+          )}
           <div className="mesa-actions">
-            <button type="button" className="mesa-action">Avatar Derrotado</button>
+            <button type="button" className="mesa-action" onClick={openAvatarDefeatModal}>Avatar Derrotado</button>
           </div>
         </section>
 
@@ -353,6 +496,77 @@ export function EventView({ mesaId = null } = {}) {
             <button type="button" onClick={closeModal}>
               Cerrar
             </button>
+          </div>
+        </div>
+      )}
+      {primaryNoticeVisible && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal trigger-notice">
+            <img
+              src={mesaDifficulty === 'Experto' ? '/55034b.png' : '/55034a.png'}
+              alt="Aviso de accesorio"
+            />
+            <p>
+              {mesaDifficulty === 'Experto'
+                ? 'Dale la vuelta al accesorio Concentración intensa vinculada a tu Avatar para ponerlo por la cara Concentración total.'
+                : 'Vincula el accessorio Concentración intensa a tu Avatar.'}
+            </p>
+            <button type="button" onClick={closePrimaryNotice}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+      {avatarModalVisible && mesaAvatar !== null && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal trigger-notice">
+            <img
+              src={getAvatarData(mesaAvatar).imagePath}
+              alt={`Avatar: Loki el ${getAvatarData(mesaAvatar).name}`}
+            />
+            <p>Enfréntate a Loki el {getAvatarData(mesaAvatar).name}.</p>
+            <button type="button" onClick={closeAvatarModal}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+      {defeatModalVisible && mesaAvatar !== null && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal defeat-modal">
+            <img
+              src={getAvatarData(mesaAvatar).imagePath.replace('a.png', 'b.png')}
+              alt={`Avatar derrotado: Loki el ${getAvatarData(mesaAvatar).name}`}
+            />
+            <h3>Has derrotado a Loki {getAvatarData(mesaAvatar).name}.</h3>
+
+            <div className="defeat-form-group">
+              <label htmlFor="ruptura-input">¿Cuántos contadores de Ruptura tenía el Avatar sobre él?</label>
+              <div className="ruptura-input">
+                <button type="button" onClick={() => setDefeatRupturaValue(Math.max(0, defeatRupturaValue - 1))}>−</button>
+                <input
+                  id="ruptura-input"
+                  type="number"
+                  min="0"
+                  value={defeatRupturaValue}
+                  onChange={(e) => setDefeatRupturaValue(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                />
+                <button type="button" onClick={() => setDefeatRupturaValue(defeatRupturaValue + 1)}>+</button>
+              </div>
+            </div>
+
+            <div className="defeat-info">
+              <p>Elige un grupo de tu sector y pon tantos contadores de Sinergia como jugadores hay en ese grupo en el entorno <strong>{getGroupName(mesaAvatar)}</strong>.</p>
+            </div>
+
+            <div className="defeat-actions">
+              <button type="button" className="btn-primary" onClick={handleAvatarDefeatSubmit}>
+                Confirmar
+              </button>
+              <button type="button" className="btn-secondary" onClick={() => setDefeatModalVisible(false)}>
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}

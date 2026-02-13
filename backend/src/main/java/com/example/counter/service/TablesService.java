@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.UUID;
 
 @Service
@@ -111,8 +112,9 @@ public class TablesService {
             playersInfo = List.of();
         List<PlayerInfo> sanitized = sanitizeRegisterPlayers(playersInfo);
         int tn = Math.max(0, tableNumber);
+        String avatar = String.valueOf(ThreadLocalRandom.current().nextInt(4));
         RegisterTable t = new RegisterTable(id, tn, tableName, difficulty, Math.max(0, players), sanitized, code,
-                Instant.now());
+                Instant.now(), avatar);
         registerTables.add(t);
         return t;
     }
@@ -173,6 +175,16 @@ public class TablesService {
 
     public synchronized List<RegisterTable> listRegister() {
         return Collections.unmodifiableList(new ArrayList<>(registerTables));
+    }
+
+    public synchronized RegisterTable findRegisterByNumber(int tableNumber) {
+        int tn = Math.max(0, tableNumber);
+        for (RegisterTable t : registerTables) {
+            if (t.tableNumber() == tn) {
+                return t;
+            }
+        }
+        return null;
     }
 
     public synchronized List<FreeGameTable> listFreeGame() {
