@@ -67,6 +67,12 @@ public class CounterController {
         return ResponseEntity.ok(counterService.reducePrimary(delta));
     }
 
+    @PostMapping("/tertiary/increase")
+    public ResponseEntity<CounterState> increaseTertiary(@RequestBody Map<String, Integer> payload) {
+        int delta = Math.max(0, payload.getOrDefault("delta", 0));
+        return ResponseEntity.ok(counterService.increaseTertiary(delta));
+    }
+
     private int sanitizeValue(Map<String, Integer> payload) {
         return Math.max(0, payload.getOrDefault("value", 0));
     }

@@ -9,7 +9,7 @@ const initialState = {
 
 const indicatorDefs = [
   { key: 'mangog', label: 'Mangog' },
-  { key: 'gate', label: 'Puerta entre mundos' }
+  { key: 'gate', label: 'Portal entre dos mundos' }
 ];
 
 const AVATARS = {
@@ -43,15 +43,19 @@ export function EventView({ mesaId = null } = {}) {
   const [modalMessage, setModalMessage] = useState(null);
   const [primaryNoticeVisible, setPrimaryNoticeVisible] = useState(false);
   const [primaryNoticeShown, setPrimaryNoticeShown] = useState(false);
-  const [tertiaryLocked, setTertiaryLocked] = useState(false);
   const [sectorState, setSectorState] = useState(null);
   const [sectorError, setSectorError] = useState(null);
   const [mesaDifficulty, setMesaDifficulty] = useState('Normal');
   const [mesaDifficultyLoaded, setMesaDifficultyLoaded] = useState(false);
   const [mesaAvatar, setMesaAvatar] = useState(null);
+  const [lastDefeatedAvatar, setLastDefeatedAvatar] = useState(null);
+  const [mesaHeroes, setMesaHeroes] = useState([]);
+  const [selectedHero, setSelectedHero] = useState('');
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [defeatModalVisible, setDefeatModalVisible] = useState(false);
   const [defeatRupturaValue, setDefeatRupturaValue] = useState(0);
+  const [heroDefeatModalVisible, setHeroDefeatModalVisible] = useState(false);
+  const [planCompleteModalVisible, setPlanCompleteModalVisible] = useState(false);
 
   const normalizeState = useCallback(
     (data) => {
@@ -115,7 +119,11 @@ export function EventView({ mesaId = null } = {}) {
     setPrimaryNoticeShown(false);
     setMesaDifficultyLoaded(false);
     setMesaAvatar(null);
+    setMesaHeroes([]);
+    setSelectedHero('');
     setAvatarModalVisible(false);
+    setHeroDefeatModalVisible(false);
+    setPlanCompleteModalVisible(false);
     fetch(`/api/tables/register/by-number/${encodeURIComponent(mesaId)}`)
       .then((response) => {
         if (!response.ok) {
@@ -139,6 +147,12 @@ export function EventView({ mesaId = null } = {}) {
         }
 
         setMesaAvatar(avatar);
+        const playersInfo = Array.isArray(data?.playersInfo) ? data.playersInfo : [];
+        const heroes = playersInfo
+          .map((p) => (p && typeof p.character === 'string' ? p.character.trim() : ''))
+          .filter((name) => name);
+        setMesaHeroes([...new Set(heroes)]);
+        setSelectedHero(heroes[0] || '');
         if (avatar !== null) {
           setAvatarModalVisible(true);
         }
@@ -176,18 +190,6 @@ export function EventView({ mesaId = null } = {}) {
     return () => clearInterval(id);
   }, [fetchSectorState, mesaId]);
 
-  const previousTertiary = useRef(initialState.tertiary);
-
-  useEffect(() => {
-    if (previousTertiary.current !== state.tertiary) {
-      if (state.tertiary === 0) {
-        // Lock tertiary immediately when it reaches 0 and open modal
-        setTertiaryLocked(true);
-        setModalMessage('Alto, habeis derrotado el Plan Secundario, escucha las instrucciones de los coordinadores');
-      }
-      previousTertiary.current = state.tertiary;
-    }
-  }, [state.tertiary]);
 
   useEffect(() => {
     if (!mesaId) return;
@@ -211,8 +213,19 @@ export function EventView({ mesaId = null } = {}) {
     setAvatarModalVisible(false);
   }, []);
 
-  const getRandomAvatarExcluding = useCallback((currentAvatar) => {
-    const validAvatars = [0, 1, 2, 3].filter((idx) => idx !== currentAvatar);
+  const getRandomAvatarExcluding = useCallback((avatarToExclude) => {
+    // Ensure we have a valid numeric avatar index to exclude
+    const avatarToExcludeNum = typeof avatarToExclude === 'number' && avatarToExclude >= 0 && avatarToExclude <= 3 
+      ? avatarToExclude 
+      : -1;
+    
+    let validAvatars = [0, 1, 2, 3].filter((idx) => idx !== avatarToExcludeNum);
+    
+    // Safety check: if somehow all avatars got filtered, use all
+    if (validAvatars.length === 0) {
+      validAvatars = [0, 1, 2, 3];
+    }
+    
     const randomIdx = Math.floor(Math.random() * validAvatars.length);
     return validAvatars[randomIdx];
   }, []);
@@ -222,23 +235,144 @@ export function EventView({ mesaId = null } = {}) {
     setDefeatModalVisible(true);
   }, []);
 
-  const closeAvatarDefeatModal = useCallback(() => {
+  const closeAvatarDefeatModal = useCallback((defeatedAvatarIndex) => {
     setDefeatModalVisible(false);
-    // Seleccionar nuevo avatar aleatorio
-    if (mesaAvatar !== null) {
-      const newAvatar = getRandomAvatarExcluding(mesaAvatar);
+    // Guardar el avatar derrotado
+    setLastDefeatedAvatar(defeatedAvatarIndex);
+    // Seleccionar nuevo avatar aleatorio excluyendo el que se acaba de derrotar
+    if (typeof defeatedAvatarIndex === 'number' && defeatedAvatarIndex >= 0 && defeatedAvatarIndex <= 3) {
+      const newAvatar = getRandomAvatarExcluding(defeatedAvatarIndex);
       setMesaAvatar(newAvatar);
       setAvatarModalVisible(true);
     }
-  }, [mesaAvatar, getRandomAvatarExcluding]);
+  }, [getRandomAvatarExcluding]);
+
+  const increaseTertiary = useCallback((delta = 1) => {
+    return fetch(`${API_BASE}/tertiary/increase`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ delta })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al actualizar el contador');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setState(normalizeState(data));
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo actualizar el contador de Mundos en Colisión.');
+        throw err;
+      });
+  }, [normalizeState]);
+
+  const recordHeroDefeat = useCallback(() => {
+    if (!mesaId || !selectedHero) {
+      return Promise.resolve();
+    }
+    return fetch('/api/tables/register/hero-defeated', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tableNumber: mesaId, hero: selectedHero })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al guardar el héroe derrotado');
+        }
+        return response.json();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo guardar el héroe derrotado.');
+        throw err;
+      });
+  }, [mesaId, selectedHero]);
+
+  const recordAvatarDefeatMetrics = useCallback((rupturaDelta) => {
+    if (!mesaId || mesaAvatar === null || mesaAvatar === undefined) {
+      return Promise.resolve();
+    }
+    return fetch('/api/mesas/avatar-defeated', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mesaId, avatarIndex: mesaAvatar, ruptura: rupturaDelta })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al guardar la derrota del avatar');
+        }
+        return response.json();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo guardar la derrota del avatar.');
+        throw err;
+      });
+  }, [mesaAvatar, mesaId]);
+
+  const recordThreatAdded = useCallback((delta = 1, source) => {
+    if (!mesaId) {
+      return Promise.resolve();
+    }
+    return fetch('/api/mesas/threat-added', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mesaId, delta, source })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al guardar la amenaza añadida');
+        }
+        return response.json();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo guardar la amenaza añadida.');
+        throw err;
+      });
+  }, [mesaId]);
+
+  const openHeroDefeatModal = useCallback(() => {
+    setHeroDefeatModalVisible(true);
+  }, []);
+
+  const closeHeroDefeatModal = useCallback(() => {
+    setHeroDefeatModalVisible(false);
+  }, []);
+
+  const handleHeroDefeatConfirm = useCallback(() => {
+    if (mesaHeroes.length > 0 && !selectedHero) return;
+    recordHeroDefeat()
+      .then(() => recordThreatAdded(1, 'hero'))
+      .then(() => increaseTertiary(1))
+      .then(() => setHeroDefeatModalVisible(false))
+      .catch(() => { });
+  }, [increaseTertiary, mesaHeroes.length, recordHeroDefeat, recordThreatAdded, selectedHero]);
+
+  const handlePlanComplete = useCallback(() => {
+    recordThreatAdded(1, 'plan')
+      .then(() => increaseTertiary(1))
+      .then(() => setPlanCompleteModalVisible(true))
+      .catch(() => { });
+  }, [increaseTertiary, recordThreatAdded]);
+
+  const closePlanCompleteModal = useCallback(() => {
+    setPlanCompleteModalVisible(false);
+  }, []);
 
   const handleAvatarDefeatSubmit = useCallback(() => {
-    // Reducir contador primario por los contadores de Ruptura
-    if (defeatRupturaValue > 0) {
-      fetch(`${API_BASE}/primary/reduce`, {
+    const rupturaDelta = Math.max(0, defeatRupturaValue);
+    const updatePrimary = () => {
+      if (rupturaDelta <= 0) {
+        return Promise.resolve();
+      }
+      return fetch(`${API_BASE}/primary/reduce`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ delta: defeatRupturaValue })
+        body: JSON.stringify({ delta: rupturaDelta })
       })
         .then((response) => {
           if (!response.ok) {
@@ -248,16 +382,22 @@ export function EventView({ mesaId = null } = {}) {
         })
         .then((data) => {
           setState(normalizeState(data));
-          closeAvatarDefeatModal();
-        })
-        .catch((err) => {
-          console.error(err);
-          setError('No se pudo actualizar el contador primario');
         });
-    } else {
-      closeAvatarDefeatModal();
-    }
-  }, [defeatRupturaValue, normalizeState]);
+    };
+
+    // Guardar el avatar que se va a derrotar ANTES de cualquier async operation
+    const defeatedAvatarIndex = mesaAvatar;
+
+    Promise.all([
+      recordAvatarDefeatMetrics(rupturaDelta),
+      updatePrimary()
+    ])
+      .then(() => closeAvatarDefeatModal(defeatedAvatarIndex))
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo registrar la derrota del avatar');
+      });
+  }, [defeatRupturaValue, normalizeState, recordAvatarDefeatMetrics, mesaAvatar]);
 
   const previousDefeated = useRef({});
 
@@ -457,16 +597,14 @@ export function EventView({ mesaId = null } = {}) {
           </div>
         </section>
 
-        {!tertiaryLocked && (
-          <section className="counter-card">
-            <h2>Mundos en Colisión</h2>
-            <div className="counter-value">{state.tertiary}</div>
-            <div className="mesa-actions">
-              <button type="button" className="mesa-action">Héroe derrotado</button>
-              <button type="button" className="mesa-action">Plan principal completado</button>
-            </div>
-          </section>
-        )}
+        <section className="counter-card">
+          <h2>Mundos en Colisión</h2>
+          <div className="counter-value">{state.tertiary}</div>
+          <div className="mesa-actions">
+            <button type="button" className="mesa-action" onClick={openHeroDefeatModal}>Héroe derrotado</button>
+            <button type="button" className="mesa-action" onClick={handlePlanComplete}>Plan principal completado</button>
+          </div>
+        </section>
 
       </div>
 
@@ -489,6 +627,66 @@ export function EventView({ mesaId = null } = {}) {
 
       {sectorError && <p className="error">{sectorError}</p>}
 
+      {heroDefeatModalVisible && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal">
+            <h3>Héroe derrotado</h3>
+            {mesaHeroes.length > 0 ? (
+              <label className="form" style={{ gap: 8 }}>
+                Selecciona el héroe derrotado
+                <select
+                  value={selectedHero}
+                  onChange={(event) => setSelectedHero(event.target.value)}
+                >
+                  {mesaHeroes.map((hero) => (
+                    <option key={hero} value={hero}>
+                      {hero}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : (
+              <p style={{ opacity: 0.8 }}>No hay héroes disponibles en esta mesa.</p>
+            )}
+            <p>
+              Cambia este Superhéroe a su identidad de Alter ego y fija su medidor de Vida en 1.
+              <br />
+              <br />
+              Se ha añadido 1 de Amenaza a Mundos en Colisión.
+            </p>
+            <div className="defeat-actions">
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={handleHeroDefeatConfirm}
+                disabled={mesaHeroes.length === 0 || !selectedHero}
+              >
+                Confirmar
+              </button>
+              <button type="button" className="btn-secondary" onClick={closeHeroDefeatModal}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {planCompleteModalVisible && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal">
+            <p>
+              Quita toda la Amenaza que haya sobre Maldad y Alevosía.
+              <br />
+              <br />
+              Se ha añadido 1 de Amenaza a Mundos en Colisión.
+            </p>
+            <button type="button" onClick={closePlanCompleteModal}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+
       {modalMessage && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal">
@@ -508,8 +706,8 @@ export function EventView({ mesaId = null } = {}) {
             />
             <p>
               {mesaDifficulty === 'Experto'
-                ? 'Dale la vuelta al accesorio Concentración intensa vinculada a tu Avatar para ponerlo por la cara Concentración total.'
-                : 'Vincula el accessorio Concentración intensa a tu Avatar.'}
+                ? 'Dale la vuelta al Accesorio Concentración intensa vinculada a tu Avatar para ponerlo por la cara Concentración total.'
+                : 'Vincula el Accesorio Concentración intensa a tu Avatar.'}
             </p>
             <button type="button" onClick={closePrimaryNotice}>
               Cerrar
@@ -517,7 +715,7 @@ export function EventView({ mesaId = null } = {}) {
           </div>
         </div>
       )}
-      {avatarModalVisible && mesaAvatar !== null && (
+      {avatarModalVisible && mesaAvatar !== null && !primaryNoticeVisible && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
           <div className="modal trigger-notice">
             <img

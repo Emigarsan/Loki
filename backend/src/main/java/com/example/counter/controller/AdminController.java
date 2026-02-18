@@ -74,16 +74,20 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         Map<Integer, MesaCounterService.TotalesMesa> map = mesaCounterService.getTotalesSnapshot();
         StringJoiner sj = new StringJoiner("\n");
-        sj.add("mesa,c1,c2,c3");
+        sj.add("mesa,granuja,bribon,bellaco,canalla,rupturaTotal,amenazaHeroe,amenazaPlan");
         map.entrySet().stream()
                 .sorted((a, b) -> Integer.compare(a.getKey(), b.getKey()))
                 .forEach(e -> {
                     var t = e.getValue();
                     sj.add(String.join(",",
                             String.valueOf(e.getKey()),
-                            String.valueOf(t == null ? 0 : t.c1),
-                            String.valueOf(t == null ? 0 : t.c2),
-                            String.valueOf(t == null ? 0 : t.c3)));
+                    String.valueOf(t == null ? 0 : t.avatar0),
+                    String.valueOf(t == null ? 0 : t.avatar1),
+                    String.valueOf(t == null ? 0 : t.avatar2),
+                    String.valueOf(t == null ? 0 : t.avatar3),
+                    String.valueOf(t == null ? 0 : t.rupturaTotal),
+                    String.valueOf(t == null ? 0 : t.threatFromHeroes),
+                    String.valueOf(t == null ? 0 : t.threatFromPlan)));
                 });
         String csv = sj.toString() + "\n";
         return csvResponse(csv, "mesas_totales.csv");
@@ -159,10 +163,11 @@ public class AdminController {
     private String buildRegisterCsv(List<RegisterTable> reg) {
         StringJoiner sj = new StringJoiner("\n");
         // One row per player; repeat table info
-        sj.add("id,tableNumber,tableName,difficulty,players,code,createdAt,avatar,playerIndex,character,aspect");
+        sj.add("id,tableNumber,tableName,difficulty,players,code,createdAt,defeatedHeroCount,playerIndex,character,aspect");
         DateTimeFormatter fmt = DateTimeFormatter.ISO_INSTANT;
         for (RegisterTable t : reg) {
             List<com.example.counter.service.model.PlayerInfo> list = t.playersInfo();
+            Map<String, Integer> defeatedHeroes = t.defeatedHeroes();
             if (list == null || list.isEmpty()) {
                 sj.add(String.join(",",
                         escape(t.id()),
@@ -172,7 +177,7 @@ public class AdminController {
                         String.valueOf(t.players()),
                         escape(t.code()),
                         escape(fmt.format(t.createdAt())),
-                        escape(t.avatar() != null ? t.avatar() : ""),
+                        "",
                         "",
                         "",
                         ""));
@@ -180,6 +185,10 @@ public class AdminController {
             }
             for (int i = 0; i < list.size(); i++) {
                 var pi = list.get(i);
+                String character = pi == null ? "" : pi.character();
+                int defeatedCount = (character == null || character.isBlank() || defeatedHeroes == null)
+                        ? 0
+                        : Math.max(0, defeatedHeroes.getOrDefault(character, 0));
                 sj.add(String.join(",",
                         escape(t.id()),
                         String.valueOf(t.tableNumber()),
@@ -188,10 +197,10 @@ public class AdminController {
                         String.valueOf(t.players()),
                         escape(t.code()),
                         escape(fmt.format(t.createdAt())),
-                        escape(t.avatar() != null ? t.avatar() : ""),
+                        String.valueOf(defeatedCount),
                         String.valueOf(i + 1),
-                        escape(pi.character()),
-                        escape(pi.aspect())));
+                        escape(character),
+                        escape(pi == null ? "" : pi.aspect())));
             }
         }
         return sj.toString() + "\n";

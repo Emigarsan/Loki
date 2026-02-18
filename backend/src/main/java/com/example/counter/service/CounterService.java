@@ -38,6 +38,11 @@ public class CounterService {
         return snapshot();
     }
 
+    public synchronized CounterState increaseTertiary(int delta) {
+        tertiary = Math.max(0, tertiary + Math.max(0, delta));
+        return snapshot();
+    }
+
     private CounterState snapshot() {
         return new CounterState(primary, tertiary, tertiaryMax);
     }

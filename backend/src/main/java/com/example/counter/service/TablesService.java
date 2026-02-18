@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.UUID;
 
@@ -114,7 +116,7 @@ public class TablesService {
         int tn = Math.max(0, tableNumber);
         String avatar = String.valueOf(ThreadLocalRandom.current().nextInt(4));
         RegisterTable t = new RegisterTable(id, tn, tableName, difficulty, Math.max(0, players), sanitized, code,
-                Instant.now(), avatar);
+            Instant.now(), avatar, new HashMap<>());
         registerTables.add(t);
         return t;
     }
@@ -182,6 +184,36 @@ public class TablesService {
         for (RegisterTable t : registerTables) {
             if (t.tableNumber() == tn) {
                 return t;
+            }
+        }
+        return null;
+    }
+
+    public synchronized RegisterTable recordHeroDefeat(int tableNumber, String hero) {
+        int tn = Math.max(0, tableNumber);
+        String normalizedHero = safeTrim(hero);
+        if (normalizedHero == null || normalizedHero.isBlank()) {
+            return null;
+        }
+        for (int i = 0; i < registerTables.size(); i++) {
+            RegisterTable t = registerTables.get(i);
+            if (t.tableNumber() == tn) {
+                Map<String, Integer> current = t.defeatedHeroes() == null ? new HashMap<>() : new HashMap<>(t.defeatedHeroes());
+                int next = Math.max(0, current.getOrDefault(normalizedHero, 0) + 1);
+                current.put(normalizedHero, next);
+                RegisterTable updated = new RegisterTable(
+                        t.id(),
+                        t.tableNumber(),
+                        t.tableName(),
+                        t.difficulty(),
+                        t.players(),
+                        t.playersInfo(),
+                        t.code(),
+                        t.createdAt(),
+                        t.avatar(),
+                        current);
+                registerTables.set(i, updated);
+                return updated;
             }
         }
         return null;

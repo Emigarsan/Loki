@@ -1,0 +1,126 @@
+{
+  "counter" : {
+    "primary" : 3952,
+    "tertiary" : 11,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ {
+    "id" : "1334577a-4566-46ee-843a-e47664470e39",
+    "tableNumber" : 34,
+    "tableName" : "Mesa 14",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Viuda Negra",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "564773",
+    "createdAt" : 1771454822.501046200,
+    "avatar" : "0",
+    "defeatedHeroes" : {
+      "Hulk" : 3,
+      "Viuda Negra" : 2
+    }
+  }, {
+    "id" : "812e73ee-44dd-41b5-ba9c-6ebe6689c3ba",
+    "tableNumber" : 2,
+    "tableName" : "sda",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Dr. Extraño",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Ms. Marvel",
+      "aspect" : "Protección"
+    } ],
+    "code" : "BA4842",
+    "createdAt" : 1771454882.789898800,
+    "avatar" : "0",
+    "defeatedHeroes" : {
+      "Dr. Extraño" : 1,
+      "Ms. Marvel" : 3
+    }
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : {
+    "2" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 2,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 33,
+      "threatFromHeroes" : 4,
+      "threatFromPlan" : 0
+    },
+    "34" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 15,
+      "threatFromHeroes" : 5,
+      "threatFromPlan" : 2
+    }
+  },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "34" : {
+      "mesaId" : 34,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "2" : {
+      "mesaId" : 2,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "12" : {
+      "mesaId" : 12,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771456249443
+}

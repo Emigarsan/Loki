@@ -1,0 +1,120 @@
+{
+  "counter" : {
+    "primary" : 3946,
+    "tertiary" : 0,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ {
+    "id" : "de3e8d26-1560-4797-b924-e808153037bc",
+    "tableNumber" : 34,
+    "tableName" : "aaaa",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "7CB723",
+    "createdAt" : 1771457508.059155100,
+    "avatar" : "3",
+    "defeatedHeroes" : { }
+  }, {
+    "id" : "088f3ace-dde6-484a-bee3-80c9ad29b351",
+    "tableNumber" : 35,
+    "tableName" : "a",
+    "difficulty" : "Normal",
+    "players" : 1,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "AB0086",
+    "createdAt" : 1771457670.127382900,
+    "avatar" : "3",
+    "defeatedHeroes" : { }
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : {
+    "34" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 2,
+      "avatar1" : 2,
+      "avatar2" : 1,
+      "avatar3" : 3,
+      "rupturaTotal" : 54,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0
+    }
+  },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "34" : {
+      "mesaId" : 34,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : 34,
+        "value" : 0,
+        "defeated" : true
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "2" : {
+      "mesaId" : 2,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "35" : {
+      "mesaId" : 35,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : 35,
+        "value" : 0,
+        "defeated" : true
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : 35,
+        "value" : 0,
+        "defeated" : true
+      }
+    },
+    "3" : {
+      "mesaId" : 3,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771458070842
+}

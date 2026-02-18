@@ -1,0 +1,177 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ {
+    "id" : "5b9e00b3-2562-4230-88f6-137436a72ee1",
+    "tableNumber" : 22,
+    "tableName" : "22",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "3E6D47",
+    "createdAt" : 1771458194.881940200,
+    "avatar" : "2",
+    "defeatedHeroes" : { }
+  }, {
+    "id" : "743884a3-d63e-4bba-b97a-ba4bc44543bf",
+    "tableNumber" : 11,
+    "tableName" : "aaa",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Dr. Extraño",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Ms. Marvel",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "23A22F",
+    "createdAt" : 1771458234.391803700,
+    "avatar" : "0",
+    "defeatedHeroes" : { }
+  }, {
+    "id" : "b39896dc-7af5-4087-8a1d-f2df5db9df24",
+    "tableNumber" : 3,
+    "tableName" : "aaawww",
+    "difficulty" : "Experto",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Hulka",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitana Marvel",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "A31254",
+    "createdAt" : 1771458252.313457900,
+    "avatar" : "3",
+    "defeatedHeroes" : { }
+  }, {
+    "id" : "953cad69-09df-4dd0-ad5b-7c284770839f",
+    "tableNumber" : 23,
+    "tableName" : "aaa",
+    "difficulty" : "Normal",
+    "players" : 1,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Peter Parker)",
+      "aspect" : "Protección"
+    } ],
+    "code" : "869218",
+    "createdAt" : 1771458325.516102600,
+    "avatar" : "3",
+    "defeatedHeroes" : { }
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "34" : {
+      "mesaId" : 34,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "3" : {
+      "mesaId" : 3,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : 3,
+        "value" : 0,
+        "defeated" : true
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "35" : {
+      "mesaId" : 35,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "22" : {
+      "mesaId" : 22,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : 22,
+        "value" : 0,
+        "defeated" : true
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 14,
+        "defeated" : false
+      }
+    },
+    "23" : {
+      "mesaId" : 23,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : 23,
+        "value" : 0,
+        "defeated" : true
+      }
+    },
+    "11" : {
+      "mesaId" : 11,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771458751522
+}

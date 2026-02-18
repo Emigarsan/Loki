@@ -35,6 +35,13 @@ public class MesaCounterService {
         public int c1;
         public int c2;
         public int c3;
+        public int avatar0;
+        public int avatar1;
+        public int avatar2;
+        public int avatar3;
+        public int rupturaTotal;
+        public int threatFromHeroes;
+        public int threatFromPlan;
     }
 
     private final Map<Integer, TotalesMesa> totales = new HashMap<>();
@@ -54,6 +61,13 @@ public class MesaCounterService {
             t.c1 = e.getValue().c1;
             t.c2 = e.getValue().c2;
             t.c3 = e.getValue().c3;
+            t.avatar0 = e.getValue().avatar0;
+            t.avatar1 = e.getValue().avatar1;
+            t.avatar2 = e.getValue().avatar2;
+            t.avatar3 = e.getValue().avatar3;
+            t.rupturaTotal = e.getValue().rupturaTotal;
+            t.threatFromHeroes = e.getValue().threatFromHeroes;
+            t.threatFromPlan = e.getValue().threatFromPlan;
             copy.put(e.getKey(), t);
         }
         return copy;
@@ -80,6 +94,35 @@ public class MesaCounterService {
         return true;
     }
 
+    public synchronized TotalesMesa recordAvatarDefeat(int mesaId, int avatarIndex, int rupturaDelta) {
+        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
+        switch (avatarIndex) {
+            case 0 -> t.avatar0 += 1;
+            case 1 -> t.avatar1 += 1;
+            case 2 -> t.avatar2 += 1;
+            case 3 -> t.avatar3 += 1;
+            default -> {
+                return t;
+            }
+        }
+        if (rupturaDelta > 0) {
+            t.rupturaTotal += rupturaDelta;
+        }
+        return t;
+    }
+
+    public synchronized TotalesMesa addThreat(int mesaId, int delta, String source) {
+        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
+        if (delta > 0) {
+            if ("hero".equalsIgnoreCase(source)) {
+                t.threatFromHeroes += delta;
+            } else if ("plan".equalsIgnoreCase(source)) {
+                t.threatFromPlan += delta;
+            }
+        }
+        return t;
+    }
+
     public synchronized void restore(Map<Integer, TotalesMesa> totalesRestored, List<Event> eventosRestored) {
         clearAll();
         if (totalesRestored != null) {
@@ -90,6 +133,13 @@ public class MesaCounterService {
                     t.c1 = s.c1;
                     t.c2 = s.c2;
                     t.c3 = s.c3;
+                    t.avatar0 = s.avatar0;
+                    t.avatar1 = s.avatar1;
+                    t.avatar2 = s.avatar2;
+                    t.avatar3 = s.avatar3;
+                    t.rupturaTotal = s.rupturaTotal;
+                    t.threatFromHeroes = s.threatFromHeroes;
+                    t.threatFromPlan = s.threatFromPlan;
                 }
                 totales.put(e.getKey(), t);
             }

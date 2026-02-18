@@ -797,6 +797,7 @@ header p {
 .data-table thead th {
   background: var(--color-surface-2);
   color: var(--color-text-primary);
+  text-align: center;
 }
 
 .data-table tbody tr:nth-child(even) td {
@@ -1078,7 +1079,7 @@ button[aria-disabled="true"] {
 }
 
 .modal.trigger-notice img {
-  width: min(50vw, 200px);
+  width: min(70vw, 350px);
   height: auto;
   object-fit: contain;
   align-self: center;
@@ -1096,7 +1097,7 @@ button[aria-disabled="true"] {
 }
 
 .modal.defeat-modal img {
-  width: min(50vw, 180px);
+  width: min(70vw, 320px);
   height: auto;
   object-fit: contain;
   align-self: center;
@@ -1107,6 +1108,7 @@ button[aria-disabled="true"] {
   flex-direction: column;
   gap: 0.75rem;
   text-align: left;
+  width: 100%;
 }
 
 .defeat-form-group label {
@@ -1133,6 +1135,8 @@ button[aria-disabled="true"] {
   cursor: pointer;
   border-radius: 0.5rem;
   align-self: auto;
+  min-width: 0;
+  line-height: 1;
 }
 
 .ruptura-input button:hover {
@@ -1163,6 +1167,11 @@ button[aria-disabled="true"] {
   color: var(--color-text-primary);
   border-radius: 0.5rem;
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  display: block;
 }
 
 .defeat-form-group select:focus {
@@ -1209,6 +1218,30 @@ button[aria-disabled="true"] {
   border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .modal.defeat-modal {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .ruptura-input {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
+  .ruptura-input button {
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+    min-width: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .ruptura-input input {
+    width: 80px;
+  }
 }
 
 .btn-primary {

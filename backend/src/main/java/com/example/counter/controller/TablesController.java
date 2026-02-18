@@ -60,6 +60,17 @@ public class TablesController {
         return ResponseEntity.ok(t);
     }
 
+    @PostMapping("/register/hero-defeated")
+    public ResponseEntity<RegisterTable> recordHeroDefeated(@RequestBody Map<String, Object> payload) {
+        int tableNumber = ((Number) payload.getOrDefault("tableNumber", 0)).intValue();
+        String hero = String.valueOf(payload.getOrDefault("hero", ""));
+        var t = tablesService.recordHeroDefeat(tableNumber, hero);
+        if (t == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(t);
+    }
+
     @GetMapping("/register/characters")
     public ResponseEntity<List<String>> listRegisterCharacters() {
         return ResponseEntity.ok(tablesService.getRegisterCharacters());
