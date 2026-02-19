@@ -3,7 +3,7 @@ FROM node:18 AS frontend-build
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm ci && chmod -R +x node_modules/.bin
 
 COPY frontend/ ./
 RUN npm run build

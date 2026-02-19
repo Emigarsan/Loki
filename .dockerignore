@@ -1,0 +1,15 @@
+# Node
+frontend/node_modules
+frontend/dist
+
+# Java
+backend/target
+
+# VCS / editor
+.git
+.gitignore
+.vscode
+
+# OS / misc
+**/.DS_Store
+**/Thumbs.db
