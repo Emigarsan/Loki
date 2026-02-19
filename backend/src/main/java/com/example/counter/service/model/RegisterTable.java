@@ -12,5 +12,7 @@ public record RegisterTable(
                 List<PlayerInfo> playersInfo,
                 String code,
                 Instant createdAt,
-                String avatar) {
+                String avatar,
+                String realityId,
+                String realityName) {
 }

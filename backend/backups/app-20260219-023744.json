@@ -1,0 +1,192 @@
+{
+  "counter" : {
+    "primary" : 3992,
+    "tertiary" : 5,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ {
+    "id" : "cf4194e3-0508-4074-b41d-6c05539ae464",
+    "tableNumber" : 1,
+    "tableName" : "22",
+    "difficulty" : "Normal",
+    "players" : 2,
+    "playersInfo" : [ {
+      "character" : "Wanda Maximoff",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Vision",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "526FC2",
+    "createdAt" : 1771463295.422908200,
+    "avatar" : "0",
+    "realityId" : "reality-3",
+    "realityName" : "Realidad 3"
+  }, {
+    "id" : "1f3b2b41-7e25-431e-87d0-28272a499dda",
+    "tableNumber" : 33,
+    "tableName" : "a",
+    "difficulty" : "Normal",
+    "players" : 1,
+    "playersInfo" : [ {
+      "character" : "Iron Man",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "2B46F2",
+    "createdAt" : 1771464733.738120200,
+    "avatar" : "3",
+    "realityId" : "reality-1",
+    "realityName" : "Realidad 1"
+  }, {
+    "id" : "9c04f97e-9880-4743-b9da-2fc65cf21b96",
+    "tableNumber" : 45,
+    "tableName" : "1",
+    "difficulty" : "Normal",
+    "players" : 3,
+    "playersInfo" : [ {
+      "character" : "Iron Man",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Captain America",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Protección"
+    } ],
+    "code" : "D2580D",
+    "createdAt" : 1771464929.349409800,
+    "avatar" : "2",
+    "realityId" : "reality-1",
+    "realityName" : "Realidad 1"
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : {
+    "1" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 8,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Vision" : 1,
+        "Wanda Maximoff" : 1
+      }
+    },
+    "45" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 0,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Iron Man" : 1
+      }
+    }
+  },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "33" : {
+      "mesaId" : 33,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "1" : {
+      "mesaId" : 1,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "2" : {
+      "mesaId" : 2,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "3" : {
+      "mesaId" : 3,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "22" : {
+      "mesaId" : 22,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "45" : {
+      "mesaId" : 45,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771465064232
+}

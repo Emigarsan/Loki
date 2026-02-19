@@ -27,6 +27,8 @@ public class TablesController {
         String tableName = (String) payload.getOrDefault("tableName", "");
         String difficulty = (String) payload.getOrDefault("difficulty", "");
         int players = ((Number) payload.getOrDefault("players", 0)).intValue();
+        String realityId = (String) payload.getOrDefault("realityId", null);
+        String realityName = (String) payload.getOrDefault("realityName", null);
         List<Map<String, Object>> p = (List<Map<String, Object>>) payload.getOrDefault("playersInfo", List.of());
         List<PlayerInfo> info = new ArrayList<>();
         for (Map<String, Object> row : p) {
@@ -37,7 +39,7 @@ public class TablesController {
         if (tablesService.isRegisterTableNumberUsed(tableNumber)) {
             return ResponseEntity.status(409).build();
         }
-        return ResponseEntity.ok(tablesService.createRegister(tableNumber, tableName, difficulty, players, info));
+        return ResponseEntity.ok(tablesService.createRegister(tableNumber, tableName, difficulty, players, info, realityId, realityName));
     }
 
     @PostMapping("/register/join")

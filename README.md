@@ -99,5 +99,14 @@ docker run -p 8080:8080 modok-control
 - **Volver**: `/mesa/:id` → `/register`, `/freegame/:id` → `/freegame`.
 - **Seguridad**: Ajusta `admin.secret` vía variable de entorno `ADMIN_SECRET`; restringe el acceso a `/admin/*`.
 
+---
+
+### TODO
+
+- Arreglar las realidades con datos reales
+- Revisar nombres de tablas y valores
+- Cambiar umbrales de los planes
+- Añadir la info por sectores (daño total por sector, Magog y Puerta)
+
 Con estas piezas podrás mantener la aplicación informada y operativa durante el evento, sea en local o desplegada en Railway.
 

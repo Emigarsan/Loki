@@ -1,0 +1,15 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 400
+  },
+  "registerTables" : [ ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "sectorStates" : { },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771463264142
+}

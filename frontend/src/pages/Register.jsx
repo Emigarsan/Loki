@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CharacterSelector from '../components/CharacterSelector.jsx';
+import RealitySelector from '../components/RealitySelector.jsx';
+import CharacterSelectorByReality from '../components/CharacterSelectorByReality.jsx';
 
 const HELP = {
   mesaNumber: 'Número único e identificativo de tu mesa, estará indicado físicamente en la misma',
   mesaName: 'Nombre del grupo de jugadores, es opcional.',
   difficulty: 'Dificultad en la que se va a jugar la partida.',
-  playersCount: 'Entre 1 y 4 jugadores. Aparecerán tantas fichas como jugadores seleccionados.',
-  playerCharacter: 'Nombre del personaje. Escribe parte del nombre y selecciona la sugerencia normalizada.',
-  playerAspect: 'Lista de aspectos. Para Adam Warlock queda bloqueado.',
   joinCode: 'Selecciona la mesa ya creada para cargarla y gestionarla.'
 };
 
@@ -41,44 +39,34 @@ export default function RegisterPage() {
   const [mesaNumber, setMesaNumber] = useState('');
   const [mesaName, setMesaName] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [playersCount, setPlayersCount] = useState('');
-  const [players, setPlayers] = useState([]);
   const [joinCode, setJoinCode] = useState('');
   const [existing, setExisting] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [aspects, setAspects] = useState([]);
   const [swAspects, setSwAspects] = useState([]);
+  const [showRealitySelector, setShowRealitySelector] = useState(false);
+  const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+  const [selectedReality, setSelectedReality] = useState(null);
+  const [selectedHeroes, setSelectedHeroes] = useState(null);
 
-  const normalize = (s) =>
-    (s || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
+  const handleRealityConfirm = (realityData) => {
+    setSelectedReality(realityData);
+    setShowRealitySelector(false);
+    setShowCharacterSelector(true);
+  };
 
-  const charMap = useMemo(() => {
-    const map = new Map();
-    characters.forEach((c) => map.set(normalize(c), c));
-    return map;
-  }, [characters]);
+  const handleHeroesConfirm = (heroesData) => {
+    setSelectedHeroes(heroesData);
+    setShowCharacterSelector(false);
+  };
 
-  const handleCharacterChange = (idx, raw) => {
-    let value = raw;
-    const canon = charMap.get(normalize(value));
-    if (canon) value = canon;
-    setPlayers((prev) =>
-      prev.map((row, i) => {
-        if (i !== idx) return row;
-        if (value === 'Adam Warlock') return { ...row, character: value, aspect: '' };
-        if (value === 'Spider-woman') {
-          return swAspects.includes(row.aspect)
-            ? { ...row, character: value }
-            : { ...row, character: value, aspect: '' };
-        }
-        return aspects.includes(row.aspect)
-          ? { ...row, character: value }
-          : { ...row, character: value, aspect: '' };
-      })
-    );
+  const handleCancelReality = () => {
+    setShowRealitySelector(false);
+  };
+
+  const handleCancelCharacters = () => {
+    setShowCharacterSelector(false);
+    setSelectedReality(null);
   };
 
   useEffect(() => {
@@ -87,22 +75,6 @@ export default function RegisterPage() {
       .then((data) => setExisting(Array.isArray(data) ? data : []))
       .catch(() => setExisting([]));
   }, []);
-
-  useEffect(() => {
-    const parsed = parseInt(playersCount, 10);
-    const count = Number.isNaN(parsed) ? 0 : Math.max(0, parsed);
-    setPlayers((prev) => {
-      const next = [...prev];
-      if (next.length < count) {
-        while (next.length < count) {
-          next.push({ character: '', aspect: '' });
-        }
-      } else if (next.length > count) {
-        next.length = count;
-      }
-      return next;
-    });
-  }, [playersCount]);
 
   useEffect(() => {
     fetch('/api/tables/register/characters')
@@ -123,8 +95,8 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       if (mode === 'create') {
-        if (!mesaNumber || !difficulty || !playersCount) {
-          alert('Completa numero de mesa, dificultad y jugadores');
+        if (!mesaNumber || !difficulty || !selectedHeroes) {
+          alert('Completa numero de mesa, dificultad y selecciona los héroes');
           return;
         }
         const num = parseInt(mesaNumber, 10) || 0;
@@ -132,10 +104,9 @@ export default function RegisterPage() {
           alert('La mesa ya existe');
           return;
         }
-        const parsedPlayers = parseInt(playersCount, 10);
-        const total = Number.isNaN(parsedPlayers) ? 0 : parsedPlayers;
-        if (total > 4) {
-          alert('Maximo 4 jugadores');
+        const total = selectedHeroes.length;
+        if (total > 4 || total < 1) {
+          alert('Debe haber entre 1 y 4 jugadores');
           return;
         }
         const body = {
@@ -143,7 +114,9 @@ export default function RegisterPage() {
           tableName: mesaName,
           difficulty,
           players: total,
-          playersInfo: players.map((p) => ({
+          realityId: selectedReality?.realityId || null,
+          realityName: selectedReality?.realityName || null,
+          playersInfo: selectedHeroes.map((p) => ({
             character: p.character || '',
             aspect: p.aspect || ''
           }))
@@ -243,86 +216,69 @@ export default function RegisterPage() {
             <option value="Experto">Experto</option>
           </select>
         </label>
-        <label className="field-label">
-          <span className="field-label-title">
-            Numero de jugadores
-            <Help text={HELP.playersCount} />
-          </span>
-          <input
-            type="number"
-            min={1}
-            max={4}
-            step={1}
-            placeholder="Ej. 4"
-            value={playersCount}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === '') {
-                setPlayersCount('');
-                return;
-              }
-              let parsed = parseInt(value, 10);
-              if (Number.isNaN(parsed)) {
-                setPlayersCount('');
-                return;
-              }
-              parsed = Math.min(4, Math.max(1, parsed));
-              setPlayersCount(String(parsed));
-            }}
-            required
-          />
-        </label>
 
-        {players.map((p, idx) => (
-          <div key={idx} className="player-row">
-            <label className="field-label">
-              <span className="field-label-title">
-                Personaje
-                <Help text={HELP.playerCharacter} />
-              </span>
-              <CharacterSelector
-                value={p.character}
-                options={characters}
-                onChange={(next) => handleCharacterChange(idx, next)}
-              />
-            </label>
-            <label className="field-label">
-              <span className="field-label-title">
-                Aspecto
-                <Help text={HELP.playerAspect} />
-              </span>
-              {(() => {
-                const isAdam = p.character === 'Adam Warlock';
-                const isSW = p.character === 'Spider-woman';
-                const options = isSW ? swAspects : aspects;
-                return (
-                  <select
-                    value={p.aspect}
-                    disabled={isAdam}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setPlayers((prev) =>
-                          prev.map((row, i) => (i === idx ? { ...row, aspect: value } : row))
-                        );
-                      }}
-                    >
-                      <option value="" disabled>
-                        {isAdam ? 'No aplica' : 'Selecciona aspecto'}
-                      </option>
-                      {options.map((a) => (
-                        <option key={a} value={a}>
-                          {a}
-                        </option>
-                      ))}
-                    </select>
-                  );
-                })()}
-            </label>
-          </div>
-        ))}
+        {!selectedReality ? (
+          <button
+            type="button"
+            className="btn-select-reality"
+            onClick={() => setShowRealitySelector(true)}
+          >
+            Seleccionar Realidad
+          </button>
+        ) : (
+          <>
+            <div className="selected-reality-info">
+              <p><strong>Realidad seleccionada:</strong> {selectedReality.realityName}</p>
+            </div>
 
-        <button type="submit">Crear y continuar</button>
+            {selectedHeroes && (
+              <div className="selected-heroes-info">
+                <p><strong>Héroes seleccionados:</strong></p>
+                <div className="heroes-display">
+                  {selectedHeroes.map((hero, idx) => (
+                    <span key={idx} className="hero-display">
+                      {hero.character} - {hero.aspect}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!selectedHeroes && (
+              <button
+                type="button"
+                className="btn-select-characters"
+                onClick={() => setShowCharacterSelector(true)}
+              >
+                Seleccionar Héroes y Aspectos
+              </button>
+            )}
+
+            {selectedHeroes && (
+              <button type="submit">Crear y continuar</button>
+            )}
+          </>
+        )}
       </form>
+
+      {/* Modal Realidad Selector */}
+      {showRealitySelector && (
+        <RealitySelector
+          onConfirm={handleRealityConfirm}
+          onCancel={handleCancelReality}
+        />
+      )}
+
+      {/* Modal Character Selector By Reality */}
+      {showCharacterSelector && selectedReality && (
+        <CharacterSelectorByReality
+          selectableHeroes={selectedReality.selectableHeroes}
+          aspects={aspects}
+          swAspects={swAspects}
+          onConfirm={handleHeroesConfirm}
+          onCancel={handleCancelCharacters}
+        />
+      )}
 
       <form
         onSubmit={handleSubmit}

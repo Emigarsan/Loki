@@ -35,6 +35,19 @@ public class MesaCounterService {
         public int c1;
         public int c2;
         public int c3;
+        // New structure for avatar defeats and threat tracking
+        public int avatar0;  // Granuja defeats
+        public int avatar1;  // Bribón defeats
+        public int avatar2;  // Bellaco defeats
+        public int avatar3;  // Canalla defeats
+        public int rupturaTotal;  // Total rupture counters
+        public int threatFromHeroes;  // Threat from hero defeats
+        public int threatFromPlan;  // Threat from main plan completion
+        public Map<String, Integer> defeatedHeroes;  // Hero name -> defeat count
+
+        public TotalesMesa() {
+            this.defeatedHeroes = new HashMap<>();
+        }
     }
 
     private final Map<Integer, TotalesMesa> totales = new HashMap<>();
@@ -51,9 +64,20 @@ public class MesaCounterService {
         Map<Integer, TotalesMesa> copy = new HashMap<>();
         for (var e : totales.entrySet()) {
             TotalesMesa t = new TotalesMesa();
-            t.c1 = e.getValue().c1;
-            t.c2 = e.getValue().c2;
-            t.c3 = e.getValue().c3;
+            TotalesMesa src = e.getValue();
+            // Copy legacy counters
+            t.c1 = src.c1;
+            t.c2 = src.c2;
+            t.c3 = src.c3;
+            // Copy new structure
+            t.avatar0 = src.avatar0;
+            t.avatar1 = src.avatar1;
+            t.avatar2 = src.avatar2;
+            t.avatar3 = src.avatar3;
+            t.rupturaTotal = src.rupturaTotal;
+            t.threatFromHeroes = src.threatFromHeroes;
+            t.threatFromPlan = src.threatFromPlan;
+            t.defeatedHeroes = src.defeatedHeroes != null ? new HashMap<>(src.defeatedHeroes) : new HashMap<>();
             copy.put(e.getKey(), t);
         }
         return copy;
@@ -87,9 +111,19 @@ public class MesaCounterService {
                 TotalesMesa t = new TotalesMesa();
                 TotalesMesa s = e.getValue();
                 if (s != null) {
+                    // Copy legacy counters
                     t.c1 = s.c1;
                     t.c2 = s.c2;
                     t.c3 = s.c3;
+                    // Copy new structure
+                    t.avatar0 = s.avatar0;
+                    t.avatar1 = s.avatar1;
+                    t.avatar2 = s.avatar2;
+                    t.avatar3 = s.avatar3;
+                    t.rupturaTotal = s.rupturaTotal;
+                    t.threatFromHeroes = s.threatFromHeroes;
+                    t.threatFromPlan = s.threatFromPlan;
+                    t.defeatedHeroes = s.defeatedHeroes != null ? new HashMap<>(s.defeatedHeroes) : new HashMap<>();
                 }
                 totales.put(e.getKey(), t);
             }
@@ -101,5 +135,55 @@ public class MesaCounterService {
             eventos.addAll(eventosRestored);
         }
     }
-}
 
+    /**
+     * Record an avatar defeat for a specific mesa.
+     * @param mesaId The table number
+     * @param avatarIndex The avatar index (0-3: Granuja, Bribón, Bellaco, Canalla)
+     * @param rupturaAmount The number of rupture counters on the avatar
+     */
+    public synchronized void recordAvatarDefeat(int mesaId, int avatarIndex, int rupturaAmount) {
+        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
+        
+        // Increment the specific avatar defeat counter
+        switch (avatarIndex) {
+            case 0 -> t.avatar0++;
+            case 1 -> t.avatar1++;
+            case 2 -> t.avatar2++;
+            case 3 -> t.avatar3++;
+        }
+        
+        // Add rupture counters to total
+        t.rupturaTotal += Math.max(0, rupturaAmount);
+    }
+
+    /**
+     * Record a hero defeat.
+     * @param mesaId The table number
+     * @param heroName The name of the defeated hero
+     * @param threatAmount The threat contributed by the hero defeat
+     */
+    public synchronized void recordHeroDefeat(int mesaId, String heroName, int threatAmount) {
+        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
+        
+        // Add threat from hero defeats
+        t.threatFromHeroes += Math.max(0, threatAmount);
+        
+        // Track individual hero defeats
+        if (heroName != null && !heroName.isBlank()) {
+            t.defeatedHeroes.put(heroName, t.defeatedHeroes.getOrDefault(heroName, 0) + 1);
+        }
+    }
+
+    /**
+     * Record main plan completion.
+     * @param mesaId The table number
+     * @param threatAmount The threat contributed by the plan completion
+     */
+    public synchronized void recordPlanCompletion(int mesaId, int threatAmount) {
+        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
+        
+        // Add threat from plan completion
+        t.threatFromPlan += Math.max(0, threatAmount);
+    }
+}

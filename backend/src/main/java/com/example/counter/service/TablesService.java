@@ -105,7 +105,7 @@ public class TablesService {
     }
 
     public synchronized RegisterTable createRegister(int tableNumber, String tableName, String difficulty, int players,
-            List<PlayerInfo> playersInfo) {
+            List<PlayerInfo> playersInfo, String realityId, String realityName) {
         String id = UUID.randomUUID().toString();
         String code = shortCode();
         if (playersInfo == null)
@@ -114,7 +114,7 @@ public class TablesService {
         int tn = Math.max(0, tableNumber);
         String avatar = String.valueOf(ThreadLocalRandom.current().nextInt(4));
         RegisterTable t = new RegisterTable(id, tn, tableName, difficulty, Math.max(0, players), sanitized, code,
-                Instant.now(), avatar);
+                Instant.now(), avatar, realityId, realityName);
         registerTables.add(t);
         return t;
     }

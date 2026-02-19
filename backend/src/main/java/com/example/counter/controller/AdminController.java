@@ -4,6 +4,8 @@ import com.example.counter.service.TablesService;
 import com.example.counter.service.mesa.MesaCounterService;
 import com.example.counter.service.model.FreeGameTable;
 import com.example.counter.service.model.RegisterTable;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -126,6 +129,36 @@ public class AdminController {
         }
         String csv = sj.toString() + "\n";
         return csvResponse(csv, "freegame_scores.csv");
+    }
+
+    // XLSX Export Endpoints
+    @GetMapping(value = "/export/event.xlsx", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public ResponseEntity<byte[]> exportEventXlsx(
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        try {
+            List<RegisterTable> reg = tablesService.listRegister();
+            Map<Integer, MesaCounterService.TotalesMesa> mesaSummary = mesaCounterService.getTotalesSnapshot();
+            byte[] xlsx = buildRegisterXlsx(reg, mesaSummary);
+            return xlsxResponse(xlsx, "event.xlsx");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/export/mesas_totales.xlsx", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public ResponseEntity<byte[]> exportMesaTotalesXlsx(
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        try {
+            Map<Integer, MesaCounterService.TotalesMesa> map = mesaCounterService.getTotalesSnapshot();
+            byte[] xlsx = buildMesaTotalesXlsx(map);
+            return xlsxResponse(xlsx, "mesas_totales.xlsx");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/qr")
@@ -276,5 +309,154 @@ public class AdminController {
         headers.setContentType(MediaType.valueOf("text/csv"));
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    private ResponseEntity<byte[]> xlsxResponse(byte[] xlsx, String filename) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+        return new ResponseEntity<>(xlsx, headers, HttpStatus.OK);
+    }
+
+    private byte[] buildRegisterXlsx(List<RegisterTable> reg, Map<Integer, MesaCounterService.TotalesMesa> mesaSummary) throws Exception {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Event Tables");
+        
+        // Header style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerStyle.setFont(headerFont);
+        
+        // Header row
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"ID", "Mesa", "Nombre Mesa", "Dificultad", "Jugadores", "Código", "Fecha",
+                   "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Muertes Héroe",
+                   "Jugador", "Héroe", "Aspecto", "Realidad"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+        
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_INSTANT;
+        int rowNum = 1;
+        
+        for (RegisterTable t : reg) {
+            MesaCounterService.TotalesMesa totales = mesaSummary.get(t.tableNumber());
+            List<com.example.counter.service.model.PlayerInfo> list = t.playersInfo();
+            
+            int heroDefeats = 0;
+            
+            if (list == null || list.isEmpty()) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(nullToEmpty(t.id()));
+                row.createCell(1).setCellValue(t.tableNumber());
+                row.createCell(2).setCellValue(nullToEmpty(t.tableName()));
+                row.createCell(3).setCellValue(nullToEmpty(t.difficulty()));
+                row.createCell(4).setCellValue(t.players());
+                row.createCell(5).setCellValue(nullToEmpty(t.code()));
+                row.createCell(6).setCellValue(fmt.format(t.createdAt()));
+                row.createCell(7).setCellValue(totales != null ? totales.rupturaTotal : 0);
+                row.createCell(8).setCellValue(totales != null ? totales.threatFromHeroes : 0);
+                row.createCell(9).setCellValue(totales != null ? totales.threatFromPlan : 0);
+                row.createCell(10).setCellValue(heroDefeats);
+                row.createCell(11).setCellValue("");
+                row.createCell(12).setCellValue("");
+                row.createCell(13).setCellValue("");
+                row.createCell(14).setCellValue(nullToEmpty(t.realityName()));
+                continue;
+            }
+            
+            for (int i = 0; i < list.size(); i++) {
+                var pi = list.get(i);
+                heroDefeats = 0;
+                if (totales != null && totales.defeatedHeroes != null && pi != null && pi.character() != null) {
+                    heroDefeats = totales.defeatedHeroes.getOrDefault(pi.character(), 0);
+                }
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(nullToEmpty(t.id()));
+                row.createCell(1).setCellValue(t.tableNumber());
+                row.createCell(2).setCellValue(nullToEmpty(t.tableName()));
+                row.createCell(3).setCellValue(nullToEmpty(t.difficulty()));
+                row.createCell(4).setCellValue(t.players());
+                row.createCell(5).setCellValue(nullToEmpty(t.code()));
+                row.createCell(6).setCellValue(fmt.format(t.createdAt()));
+                row.createCell(7).setCellValue(totales != null ? totales.rupturaTotal : 0);
+                row.createCell(8).setCellValue(totales != null ? totales.threatFromHeroes : 0);
+                row.createCell(9).setCellValue(totales != null ? totales.threatFromPlan : 0);
+                row.createCell(10).setCellValue(heroDefeats);
+                row.createCell(11).setCellValue(i + 1);
+                row.createCell(12).setCellValue(nullToEmpty(pi.character()));
+                row.createCell(13).setCellValue(nullToEmpty(pi.aspect()));
+                row.createCell(14).setCellValue(nullToEmpty(t.realityName()));
+            }
+        }
+        
+        // Auto-size columns
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        return outputStream.toByteArray();
+    }
+
+    private byte[] buildMesaTotalesXlsx(Map<Integer, MesaCounterService.TotalesMesa> map) throws Exception {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Totales por Mesa");
+        
+        // Header style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerStyle.setFont(headerFont);
+        
+        // Header row
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Mesa", "Avatar Granuja", "Avatar Bribón", "Avatar Bellaco", "Avatar Canalla",
+                   "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Héroes Derrotados"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+        
+        int rowNum = 1;
+        for (var entry : map.entrySet().stream().sorted((a, b) -> Integer.compare(a.getKey(), b.getKey())).toList()) {
+            var t = entry.getValue();
+            Row row = sheet.createRow(rowNum++);
+            
+            // Build defeated heroes string
+            String defeatedHeroesStr = "";
+            if (t != null && t.defeatedHeroes != null && !t.defeatedHeroes.isEmpty()) {
+                defeatedHeroesStr = t.defeatedHeroes.entrySet().stream()
+                    .map(e -> e.getKey() + " x" + e.getValue())
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("");
+            }
+            
+            row.createCell(0).setCellValue(entry.getKey());
+            row.createCell(1).setCellValue(t != null ? t.avatar0 : 0);
+            row.createCell(2).setCellValue(t != null ? t.avatar1 : 0);
+            row.createCell(3).setCellValue(t != null ? t.avatar2 : 0);
+            row.createCell(4).setCellValue(t != null ? t.avatar3 : 0);
+            row.createCell(5).setCellValue(t != null ? t.rupturaTotal : 0);
+            row.createCell(6).setCellValue(t != null ? t.threatFromHeroes : 0);
+            row.createCell(7).setCellValue(t != null ? t.threatFromPlan : 0);
+            row.createCell(8).setCellValue(defeatedHeroesStr);
+        }
+        
+        // Auto-size columns
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        return outputStream.toByteArray();
     }
 }

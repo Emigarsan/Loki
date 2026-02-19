@@ -52,6 +52,10 @@ export function EventView({ mesaId = null } = {}) {
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [defeatModalVisible, setDefeatModalVisible] = useState(false);
   const [defeatRupturaValue, setDefeatRupturaValue] = useState(0);
+  const [heroDefeatModalVisible, setHeroDefeatModalVisible] = useState(false);
+  const [selectedHero, setSelectedHero] = useState('');
+  const [planCompletionModalVisible, setPlanCompletionModalVisible] = useState(false);
+  const [mesaPlayersInfo, setMesaPlayersInfo] = useState([]);
 
   const normalizeState = useCallback(
     (data) => {
@@ -138,6 +142,13 @@ export function EventView({ mesaId = null } = {}) {
           }
         }
 
+        // Save players info for hero selection
+        if (data && Array.isArray(data.playersInfo)) {
+          setMesaPlayersInfo(data.playersInfo);
+        } else {
+          setMesaPlayersInfo([]);
+        }
+
         setMesaAvatar(avatar);
         if (avatar !== null) {
           setAvatarModalVisible(true);
@@ -146,6 +157,7 @@ export function EventView({ mesaId = null } = {}) {
       })
       .catch(() => {
         setMesaDifficulty('Normal');
+        setMesaPlayersInfo([]);
         setMesaDifficultyLoaded(true);
       });
   }, [mesaId]);
@@ -233,31 +245,156 @@ export function EventView({ mesaId = null } = {}) {
   }, [mesaAvatar, getRandomAvatarExcluding]);
 
   const handleAvatarDefeatSubmit = useCallback(() => {
-    // Reducir contador primario por los contadores de Ruptura
-    if (defeatRupturaValue > 0) {
-      fetch(`${API_BASE}/primary/reduce`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ delta: defeatRupturaValue })
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Error al actualizar el contador');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setState(normalizeState(data));
-          closeAvatarDefeatModal();
-        })
-        .catch((err) => {
-          console.error(err);
-          setError('No se pudo actualizar el contador primario');
-        });
-    } else {
+    if (!mesaId || mesaAvatar === null) {
       closeAvatarDefeatModal();
+      return;
     }
-  }, [defeatRupturaValue, normalizeState]);
+
+    // First, record the avatar defeat in mesa statistics
+    fetch(`/api/mesas/${mesaId}/avatar-defeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        avatarIndex: mesaAvatar, 
+        rupturaAmount: defeatRupturaValue 
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al registrar derrota del avatar');
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Then reduce primary counter by rupture amount
+        if (defeatRupturaValue > 0) {
+          return fetch(`${API_BASE}/primary/reduce`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ delta: defeatRupturaValue })
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve(state) });
+      })
+      .then((response) => {
+        if (response && !response.ok) {
+          throw new Error('Error al actualizar el contador');
+        }
+        return response && typeof response.json === 'function' ? response.json() : state;
+      })
+      .then((data) => {
+        setState(normalizeState(data));
+        closeAvatarDefeatModal();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo registrar la derrota del avatar');
+      });
+  }, [mesaId, mesaAvatar, defeatRupturaValue, normalizeState, state]);
+
+  // Hero Defeat Modal Functions
+  const openHeroDefeatModal = useCallback(() => {
+    setSelectedHero('');
+    setHeroDefeatModalVisible(true);
+  }, []);
+
+  const closeHeroDefeatModal = useCallback(() => {
+    setHeroDefeatModalVisible(false);
+    setSelectedHero('');
+  }, []);
+
+  const handleHeroDefeatSubmit = useCallback(() => {
+    if (!selectedHero || !mesaId) {
+      setError('Debes seleccionar un héroe');
+      return;
+    }
+
+    // Record hero defeat (1 threat automatically)
+    fetch(`/api/mesas/${mesaId}/hero-defeat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        heroName: selectedHero, 
+        threatAmount: 1
+      })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al registrar derrota del héroe');
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Increment tertiary counter (Mundos en Colisión)
+        return fetch(`${API_BASE}/tertiary/increment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ delta: 1 })
+        });
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al actualizar Mundos en Colisión');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setState(normalizeState(data));
+        closeHeroDefeatModal();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo registrar la derrota del héroe');
+      });
+  }, [mesaId, selectedHero, normalizeState]);
+
+  // Plan Completion Modal Functions
+  const openPlanCompletionModal = useCallback(() => {
+    setPlanCompletionModalVisible(true);
+  }, []);
+
+  const closePlanCompletionModal = useCallback(() => {
+    setPlanCompletionModalVisible(false);
+  }, []);
+
+  const handlePlanCompletionSubmit = useCallback(() => {
+    if (!mesaId) return;
+
+    // Record plan completion (1 threat automatically)
+    fetch(`/api/mesas/${mesaId}/plan-completion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ threatAmount: 1 })
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al registrar completación del plan');
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Increment tertiary counter (Mundos en Colisión)
+        return fetch(`${API_BASE}/tertiary/increment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ delta: 1 })
+        });
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al actualizar Mundos en Colisión');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setState(normalizeState(data));
+        closePlanCompletionModal();
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('No se pudo registrar la completación del plan');
+      });
+  }, [mesaId, normalizeState]);
 
   const previousDefeated = useRef({});
 
@@ -462,8 +599,8 @@ export function EventView({ mesaId = null } = {}) {
             <h2>Mundos en Colisión</h2>
             <div className="counter-value">{state.tertiary}</div>
             <div className="mesa-actions">
-              <button type="button" className="mesa-action">Héroe derrotado</button>
-              <button type="button" className="mesa-action">Plan principal completado</button>
+              <button type="button" className="mesa-action" onClick={openHeroDefeatModal}>Héroe derrotado</button>
+              <button type="button" className="mesa-action" onClick={openPlanCompletionModal}>Plan principal completado</button>
             </div>
           </section>
         )}
@@ -564,6 +701,68 @@ export function EventView({ mesaId = null } = {}) {
                 Confirmar
               </button>
               <button type="button" className="btn-secondary" onClick={() => setDefeatModalVisible(false)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {heroDefeatModalVisible && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal defeat-modal">
+            <h3>Registrar Héroe Derrotado</h3>
+
+            <div className="defeat-form-group">
+              <label htmlFor="hero-select">Selecciona el héroe derrotado:</label>
+              <select
+                id="hero-select"
+                value={selectedHero}
+                onChange={(e) => setSelectedHero(e.target.value)}
+              >
+                <option value="">-- Selecciona un héroe --</option>
+                {mesaPlayersInfo && mesaPlayersInfo.length > 0 ? (
+                  mesaPlayersInfo.map((player, index) => (
+                    <option key={index} value={player.character}>
+                      {player.character}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>No hay héroes registrados</option>
+                )}
+              </select>
+            </div>
+
+            <div className="defeat-info">
+              <p>Cambia el Superhéroe a su identidad de Alter ego y fija su medidor de Vida en 1.</p>
+              <p>Se colocará 1 de Amenaza sobre Mundos en Colisión.</p>
+            </div>
+
+            <div className="defeat-actions">
+              <button type="button" className="btn-primary" onClick={handleHeroDefeatSubmit}>
+                Confirmar
+              </button>
+              <button type="button" className="btn-secondary" onClick={closeHeroDefeatModal}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {planCompletionModalVisible && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true">
+          <div className="modal defeat-modal">
+            <h3>Plan Principal Completado</h3>
+
+            <div className="defeat-info">
+              <p>Quita toda la Amenaza que haya sobre Maldad y Alevosía.</p>
+              <p>Se colocará 1 de Amenaza sobre Mundos en Colisión.</p>
+            </div>
+
+            <div className="defeat-actions">
+              <button type="button" className="btn-primary" onClick={handlePlanCompletionSubmit}>
+                Confirmar
+              </button>
+              <button type="button" className="btn-secondary" onClick={closePlanCompletionModal}>
                 Cancelar
               </button>
             </div>
