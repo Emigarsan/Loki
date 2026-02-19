@@ -2834,3 +2834,82 @@ h3,
     padding: 0.3rem 0.6rem;
   }
 }
+
+/* Sector stats section */
+.sector-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.sector-detail {
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  background: rgba(7, 61, 36, 0.25);
+  border: 1px solid rgba(200, 162, 51, 0.25);
+}
+
+.sector-detail.full-width {
+  grid-column: 1 / -1;
+}
+
+.sector-detail-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.sector-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  background: rgba(200, 162, 51, 0.12);
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(200, 162, 51, 0.3);
+  display: inline-block;
+  min-width: 4rem;
+  text-align: center;
+}
+
+.sector-mesas-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sector-mesas-list .stat-badge {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.sector-avatars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.avatar-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.6rem;
+  background: rgba(200, 162, 51, 0.08);
+  border: 1px solid rgba(200, 162, 51, 0.25);
+}
+
+.avatar-stat span:first-child {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.avatar-stat .stat-badge {
+  min-width: 2rem;
+  padding: 0.25rem 0.4rem;
+}

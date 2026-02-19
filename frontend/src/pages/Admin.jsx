@@ -11,6 +11,20 @@ const ASPECT_COLORS = {
   'Masacrismo': '#FF69B4'
 };
 
+const CONSTELLATION_NAMES = [
+  'Andrómeda', 'Casiopea', 'Orión', 'Pegaso', 'Draco',
+  'Hércules', 'Lyra', 'Cygnus', 'Aquila', 'Fénix',
+  'Escorpio', 'Leo', 'Tauro', 'Géminis', 'Virgo',
+  'Libra', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis',
+  'Aries', 'Cáncer', 'Perseo', 'Auriga', 'Boötes'
+];
+
+const getSectorName = (sectorId) => {
+  if (!sectorId || sectorId < 1) return 'Desconocido';
+  const index = (sectorId - 1) % CONSTELLATION_NAMES.length;
+  return CONSTELLATION_NAMES[index];
+};
+
 const getAspectVisual = (aspect) => {
   if (!aspect || typeof aspect !== 'string') {
     return { color: '#C8A233', background: '#C8A233' };
@@ -727,8 +741,11 @@ export default function AdminPage() {
                               return (
                                 <tr key={t.id}>
                                   {isFirstInSector && (
-                                    <td rowSpan={rowspan} style={{ verticalAlign: 'middle', fontWeight: 'bold', textAlign: 'center' }}>
-                                      {t.sectorId}
+                                    <td rowSpan={rowspan} style={{ verticalAlign: 'middle', textAlign: 'center' }}>
+                                      <div className="mesa-main-cell">
+                                        <strong>{getSectorName(t.sectorId)}</strong>
+                                        <span style={{ color: '#C8A233', fontWeight: 'bold', fontSize: '0.85em' }}>#{t.sectorId}</span>
+                                      </div>
                                     </td>
                                   )}
                                   <td>
@@ -858,8 +875,11 @@ export default function AdminPage() {
                               return (
                                 <tr key={mesa}>
                                   {isFirstInSector && (
-                                    <td rowSpan={rowspan} style={{ verticalAlign: 'middle', fontWeight: 'bold', textAlign: 'center' }}>
-                                      {sectorId}
+                                    <td rowSpan={rowspan} style={{ verticalAlign: 'middle', textAlign: 'center' }}>
+                                      <div className="mesa-main-cell">
+                                        <strong>{getSectorName(sectorId)}</strong>
+                                        <span style={{ color: '#C8A233', fontWeight: 'bold', fontSize: '0.85em' }}>#{sectorId}</span>
+                                      </div>
                                     </td>
                                   )}
                                   <td>
@@ -927,6 +947,7 @@ export default function AdminPage() {
                 <button className={statsTab === 'avatares' ? 'active' : ''} onClick={() => setStatsTab('avatares')}>Avatares</button>
                 <button className={statsTab === 'heroes' ? 'active' : ''} onClick={() => setStatsTab('heroes')}>Heroes</button>
                 <button className={statsTab === 'realidades' ? 'active' : ''} onClick={() => setStatsTab('realidades')}>Realidades</button>
+                <button className={statsTab === 'sectores' ? 'active' : ''} onClick={() => setStatsTab('sectores')}>Sectores</button>
               </div>
 
               {statsTab === 'avatares' && (
@@ -1186,6 +1207,115 @@ export default function AdminPage() {
                       );
                     })()}
                   </section>
+                </div>
+              )}
+
+              {statsTab === 'sectores' && (
+                <div className="stats-grid">
+                  {(() => {
+                    // Calculate sector ID based on table number
+                    const calculateSector = (mesaId) => {
+                      const safeMesaId = Math.max(1, mesaId);
+                      if (safeMesaId <= 4) return 1;
+                      if (safeMesaId <= 8) return 2;
+                      const offset = safeMesaId - 9;
+                      const group = Math.max(0, Math.floor(offset / 3));
+                      return 3 + group;
+                    };
+
+                    // Group mesa data by sector
+                    const sectorData = {};
+                    Object.entries(mesaSummary || {}).forEach(([mesaNumber, t]) => {
+                      const sectorId = calculateSector(parseInt(mesaNumber));
+                      if (!sectorData[sectorId]) {
+                        sectorData[sectorId] = {
+                          sector: sectorId,
+                          mesas: [],
+                          totalRuptura: 0,
+                          totalThreatHeroes: 0,
+                          totalThreatPlan: 0,
+                          avatars: { Granuja: 0, Bribón: 0, Bellaco: 0, Canalla: 0 }
+                        };
+                      }
+                      sectorData[sectorId].mesas.push({
+                        mesaNumber,
+                        tableName: t?.tableName || `Mesa ${mesaNumber}`
+                      });
+                      sectorData[sectorId].totalRuptura += t?.rupturaTotal ?? 0;
+                      sectorData[sectorId].totalThreatHeroes += t?.threatFromHeroes ?? 0;
+                      sectorData[sectorId].totalThreatPlan += t?.threatFromPlan ?? 0;
+                      sectorData[sectorId].avatars.Granuja += t?.avatar0 ?? 0;
+                      sectorData[sectorId].avatars.Bribón += t?.avatar1 ?? 0;
+                      sectorData[sectorId].avatars.Bellaco += t?.avatar2 ?? 0;
+                      sectorData[sectorId].avatars.Canalla += t?.avatar3 ?? 0;
+                    });
+
+                    const sectors = Object.values(sectorData).sort((a, b) => a.sector - b.sector);
+
+                    if (sectors.length === 0) {
+                      return <span className="stat-empty">No hay datos de sectores disponibles.</span>;
+                    }
+
+                    return sectors.map((sector) => (
+                      <section className="stat-card" key={sector.sector}>
+                        <div className="stat-card__title">Sector {sector.sector}</div>
+                        <div className="sector-info-grid">
+                          {/* Mesas en este sector */}
+                          <div className="sector-detail">
+                            <span className="sector-detail-label">Mesas</span>
+                            <div className="sector-mesas-list">
+                              {sector.mesas.map((mesa) => (
+                                <span className="stat-badge" key={mesa.mesaNumber}>
+                                  {mesa.tableName} #{mesa.mesaNumber}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Contadores de ruptura */}
+                          <div className="sector-detail">
+                            <span className="sector-detail-label">Ruptura Total</span>
+                            <div className="sector-value">{sector.totalRuptura}</div>
+                          </div>
+
+                          {/* Amenaza por héroe */}
+                          <div className="sector-detail">
+                            <span className="sector-detail-label">Amenaza por Héroe</span>
+                            <div className="sector-value">{sector.totalThreatHeroes}</div>
+                          </div>
+
+                          {/* Amenaza por plan completado */}
+                          <div className="sector-detail">
+                            <span className="sector-detail-label">Amenaza por Plan</span>
+                            <div className="sector-value">{sector.totalThreatPlan}</div>
+                          </div>
+
+                          {/* Avatares derrotados */}
+                          <div className="sector-detail full-width">
+                            <span className="sector-detail-label">Avatares Derrotados</span>
+                            <div className="sector-avatars-grid">
+                              <div className="avatar-stat">
+                                <span>Granuja</span>
+                                <span className="stat-badge">{sector.avatars.Granuja}</span>
+                              </div>
+                              <div className="avatar-stat">
+                                <span>Bribón</span>
+                                <span className="stat-badge">{sector.avatars.Bribón}</span>
+                              </div>
+                              <div className="avatar-stat">
+                                <span>Bellaco</span>
+                                <span className="stat-badge">{sector.avatars.Bellaco}</span>
+                              </div>
+                              <div className="avatar-stat">
+                                <span>Canalla</span>
+                                <span className="stat-badge">{sector.avatars.Canalla}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    ));
+                  })()}
                 </div>
               )}
             </div>
