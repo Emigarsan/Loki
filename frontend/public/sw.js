@@ -18,6 +18,14 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const request = event.request;
 
+    if (request.method !== 'GET') {
+        return;
+    }
+
+    if (new URL(request.url).pathname.startsWith('/api/')) {
+        return;
+    }
+
     if (request.mode === 'navigate') {
         event.respondWith(
             fetch(request).catch(() => caches.match('/index.html'))
