@@ -8,10 +8,17 @@ const PLACEHOLDER_HEROES = [
   'Gamora', 'Drax', 'Rocket Raccoon', 'Groot', 'Mantis'
 ];
 
-// Generate random heroes for each reality
+// Generate random heroes for each reality using Fisher-Yates shuffle
 function getRandomHeroes() {
   const count = Math.floor(Math.random() * 3) + 4; // 4-6 heroes
-  const shuffled = [...PLACEHOLDER_HEROES].sort(() => Math.random() - 0.5);
+  const shuffled = [...PLACEHOLDER_HEROES];
+  
+  // Fisher-Yates shuffle algorithm
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
   return shuffled.slice(0, count);
 }
 
