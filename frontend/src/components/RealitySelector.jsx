@@ -1,47 +1,13 @@
 import { useState, useEffect } from 'react';
+import { REALITIES_DATA } from '../data/realitiesData.js';
 
 export default function RealitySelector({ onConfirm, onCancel }) {
   const [selectedReality, setSelectedReality] = useState('');
   const [realityData, setRealityData] = useState(null);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
-  // Datos placeholder para realidades
-  const realitiesData = {
-    'reality-1': {
-      id: 'reality-1',
-      name: 'Realidad 1',
-      description: 'La primera realidad, donde todo comienza. Un mundo lleno de posibilidades y misterios por descubrir.',
-      image: 'placeholder-image-1',
-      selectableHeroes: ['Iron Man', 'Captain America', 'Hulk'],
-      mandatoryModulars: []
-    },
-    'reality-2': {
-      id: 'reality-2',
-      name: 'Realidad 2',
-      description: 'Una realidad alternativa donde las reglas son diferentes. Los héroes enfrentan nuevos desafíos.',
-      image: 'placeholder-image-2',
-      selectableHeroes: ['Thor', 'Black Widow', 'Hawkeye', 'Spider-Man'],
-      mandatoryModulars: []
-    },
-    'reality-3': {
-      id: 'reality-3',
-      name: 'Realidad 3',
-      description: 'Un universo oscuro donde la magia y la tecnología se entrelazan de formas inesperadas.',
-      image: 'placeholder-image-3',
-      selectableHeroes: ['Doctor Strange', 'Wanda Maximoff', 'Vision', 'Black Panther', 'Ant-Man'],
-      mandatoryModulars: []
-    },
-    // Más realidades...
-    'reality-4': {
-      id: 'reality-4',
-      name: 'Realidad 4',
-      description: 'En esta realidad, los guardianes del universo mantienen el equilibrio cósmico.',
-      image: 'placeholder-image-4',
-      selectableHeroes: ['Star-Lord', 'Gamora', 'Drax', 'Rocket', 'Groot', 'Adam Warlock'],
-      mandatoryModulars: []
-    }
-  };
-
-  const realities = Object.values(realitiesData).slice(0, 40); // Limitar a 40 como en el placeholder
+  const realitiesData = REALITIES_DATA;
+  const realities = Object.values(realitiesData);
 
   useEffect(() => {
     if (selectedReality && realitiesData[selectedReality]) {
@@ -49,6 +15,7 @@ export default function RealitySelector({ onConfirm, onCancel }) {
     } else {
       setRealityData(null);
     }
+    setDescriptionExpanded(false);
   }, [selectedReality]);
 
   const handleConfirm = () => {
@@ -57,26 +24,19 @@ export default function RealitySelector({ onConfirm, onCancel }) {
         realityId: selectedReality,
         realityName: realityData.name,
         selectableHeroes: realityData.selectableHeroes,
-        mandatoryModulars: realityData.mandatoryModulars
+        mandatoryModulars: realityData.mandatoryModulars,
+        specialRules: realityData.specialRules
       });
     }
   };
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content reality-selector">
-        <h2>Seleccionar Realidad</h2>
-
+      <div
+        className={`modal-content reality-selector${realityData?.image ? ' reality-selector--with-bg' : ''}`}
+        style={realityData?.image ? { '--reality-bg-image': `url(${realityData.image})` } : undefined}
+      >
         <form className="form" onSubmit={(e) => e.preventDefault()}>
-          {/* Imagen placeholder */}
-          <div className="reality-image-container">
-            {realityData ? (
-              <div className="reality-image-placeholder">{realityData.image}</div>
-            ) : (
-              <div className="reality-image-placeholder">Selecciona una realidad</div>
-            )}
-          </div>
-
           {/* Desplegable de realidades */}
           <label className="field-label">
             <span className="field-label-title">Elige una Realidad</span>
@@ -86,9 +46,9 @@ export default function RealitySelector({ onConfirm, onCancel }) {
               required
             >
               <option value="">Selecciona una realidad...</option>
-              {realities.map((reality, idx) => (
+              {realities.map((reality) => (
                 <option key={reality.id} value={reality.id}>
-                  Realidad {idx + 1} - {reality.name}
+                  {reality.name}
                 </option>
               ))}
             </select>
@@ -99,7 +59,27 @@ export default function RealitySelector({ onConfirm, onCancel }) {
               {/* Descripción de la realidad */}
               <div className="reality-section">
                 <h3>Descripción</h3>
-                <p>{realityData.description}</p>
+                {(() => {
+                  const text = realityData.description || '';
+                  const canCollapse = text.length > 140;
+                  const visibleText = canCollapse && !descriptionExpanded
+                    ? `${text.slice(0, 140).trimEnd()}…`
+                    : text;
+                  return (
+                    <>
+                      <p>{visibleText}</p>
+                      {canCollapse && (
+                        <button
+                          type="button"
+                          className="reality-read-more"
+                          onClick={() => setDescriptionExpanded((prev) => !prev)}
+                        >
+                          {descriptionExpanded ? 'Leer menos' : 'Leer más'}
+                        </button>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Héroes seleccionables */}
@@ -129,6 +109,13 @@ export default function RealitySelector({ onConfirm, onCancel }) {
                   )}
                 </div>
               </div>
+
+              {realityData.specialRules && (
+                <div className="reality-section">
+                  <h3>Reglas especiales</h3>
+                  <p>{realityData.specialRules}</p>
+                </div>
+              )}
             </>
           )}
 

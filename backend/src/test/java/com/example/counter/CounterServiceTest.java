@@ -28,7 +28,7 @@ class CounterServiceTest {
 
         assertThat(initial.primary()).isEqualTo(4000);
         assertThat(initial.tertiary()).isZero();
-        assertThat(initial.tertiaryMax()).isZero();
+        assertThat(initial.tertiaryMax()).isEqualTo(CounterService.TERTIARY_MAX_DEFAULT_VALUE);
     }
 
     @Test

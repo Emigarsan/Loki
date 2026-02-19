@@ -462,7 +462,7 @@ header p {
   padding: 0.25rem 0.4rem;
 }
 
-/* Generic form + tabs styling used by Register and Freegame */
+/* Generic form + tabs styling used by Register */
 .tabs {
   display: flex;
   gap: 0.5rem;
@@ -641,26 +641,6 @@ header p {
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   align-items: end;
-}
-
-.freegame-row {
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0.75rem;
-  border: 1px solid var(--color-divider);
-  border-radius: 12px;
-  padding: 0.75rem;
-  background: var(--color-surface-2);
-  margin: 0.5rem 0;
-}
-
-.freegame-row label {
-  margin: 0;
-}
-
-@media (max-width: 600px) {
-  .freegame-row {
-    grid-template-columns: 1fr;
-  }
 }
 
 .player-row label {
@@ -938,7 +918,7 @@ header p {
   gap: 1rem;
 }
 
-.admin-section > h3 {
+.admin-section>h3 {
   font-family: 'Merriweather', serif;
   letter-spacing: 0.08rem;
   text-transform: uppercase;
@@ -1286,6 +1266,7 @@ header p {
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2243,9 +2224,35 @@ h3,
   gap: 1rem;
 }
 
+.modal-content.reality-selector {
+  max-width: 760px;
+  padding: 1.25rem;
+  position: relative;
+  isolation: isolate;
+}
+
+.modal-content.reality-selector.reality-selector--with-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--reality-bg-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.modal-content.reality-selector .form {
+  gap: 0.6rem;
+}
+
+.modal-content.reality-selector .field-label-title {
+  font-size: 0.92rem;
+}
+
 .reality-image-container {
   width: 100%;
-  height: 180px;
+  height: min(46vh, 420px);
   background: linear-gradient(135deg, rgba(200, 162, 51, 0.15), rgba(10, 81, 48, 0.15));
   border: 2px dashed var(--color-divider);
   border-radius: 12px;
@@ -2263,6 +2270,15 @@ h3,
   opacity: 0.8;
 }
 
+.reality-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--color-background-alt);
+  padding: 0.35rem;
+  border-radius: 10px;
+}
+
 .reality-section {
   background: var(--color-surface-2);
   padding: 1rem;
@@ -2274,9 +2290,24 @@ h3,
 .reality-section p {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.45;
   text-align: left;
+}
+
+.reality-read-more {
+  margin-top: 0.65rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-secondary);
+  font-weight: 600;
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+.reality-read-more:hover {
+  text-decoration: underline;
 }
 
 .heroes-list,
@@ -2292,9 +2323,9 @@ h3,
   display: inline-block;
   background: var(--color-primary);
   color: var(--color-text-primary);
-  padding: 0.4rem 0.9rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   border: 1px solid var(--color-divider);
   transition: all 0.2s ease;
 }
@@ -2326,7 +2357,7 @@ h3,
   padding: 0.75rem 2rem;
   border: 1px solid var(--color-divider);
   border-radius: 0.9rem;
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2423,7 +2454,7 @@ h3,
   }
 
   .reality-image-container {
-    height: 140px;
+    height: 200px;
   }
 
   .form-actions {

@@ -27,6 +27,7 @@ public class TablesService {
                 "Spiderman (Peter Parker)",
                 "Capitana Marvel",
                 "Hulka",
+                "Hulkling",
                 "Iron Man",
                 "Pantera Negra (T'Challa)",
                 "Capitán América",
@@ -36,7 +37,7 @@ public class TablesService {
                 "Dr. Extraño",
                 "Hulk",
                 "Ojo de Halcón",
-                "Spider-woman",
+                "Spider-Woman",
                 "Hombre Hormiga",
                 "Avispa",
                 "Mercurio",
@@ -49,6 +50,7 @@ public class TablesService {
                 "Veneno",
                 "Spectrum",
                 "Adam Warlock",
+                "Hombre Maravilla",
                 "Nebula",
                 "Máquina de Guerra",
                 "Valquiria",
@@ -71,6 +73,7 @@ public class TablesService {
                 "Dominó",
                 "Mariposa Mental",
                 "Ángel",
+                "Tigra",
                 "X-23",
                 "Masacre",
                 "Bishop",
@@ -80,11 +83,12 @@ public class TablesService {
                 "Rondador Nocturno",
                 "Magneto",
                 "María Hill",
-                "Nick Fury",
+                "Nick Furia",
                 "Pantera Negra (Shuri)",
                 "Seda",
                 "Halcón",
-                "Soldado de invierno");
+                "Hércules",
+                "Soldado de Invierno");
         registerAspects = List.of(
                 "Agresividad",
                 "Justicia",
@@ -261,8 +265,8 @@ public class TablesService {
             if (equalsIgnoreCase(character, "Adam Warlock")) {
                 // Adam Warlock: aspecto vacío y bloqueado
                 aspect = "";
-            } else if (equalsIgnoreCase(character, "Spider-woman")) {
-                // Spider-woman: debe estar en la lista combinada, si no, limpiar
+            } else if (equalsIgnoreCase(character, "Spider-Woman")) {
+                // Spider-Woman: debe estar en la lista combinada, si no, limpiar
                 if (!containsIgnoreCase(registerSpiderwomanAspects, aspect)) {
                     aspect = "";
                 }

@@ -5,13 +5,11 @@ import qrAfternoon from '../assets/qr-afternoon.svg';
 const POLL_INTERVAL_MS = 5000;
 
 const defaultFlags = {
-  event: false,
-  freegame: false
+  event: false
 };
 
 const normalizeFlags = (raw) => ({
-  event: !!(raw && raw.event),
-  freegame: !!(raw && raw.freegame)
+  event: !!(raw && raw.event)
 });
 
 export default function QrDisplayPage() {
@@ -57,13 +55,6 @@ export default function QrDisplayPage() {
     <div className="qr-display-page">
       {error && <p className="error">{error}</p>}
       <div className="qr-grid">
-        <section className={`qr-card ${flags.freegame ? 'active' : 'inactive'}`}>
-          <h2>Retos Inevitables (Mañana)</h2>
-          <img src={qrMorning} alt="Codigo QR Retos Inevitables por la ma\u00f1ana" />
-          <p className="qr-status">
-            {flags.freegame ? 'Disponible para escanear' : 'Pendiente de activar desde Admin > Ver Mesas > Freegame'}
-          </p>
-        </section>
         <section className={`qr-card ${flags.event ? 'active' : 'inactive'}`}>
           <h2>Evento (Tarde)</h2>
           <img src={qrAfternoon} alt="Codigo QR Evento por la tarde" />

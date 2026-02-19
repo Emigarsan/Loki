@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class CounterService {
     private static final int PRIMARY_DEFAULT_VALUE = 4000;
     private static final int TERTIARY_DEFAULT_VALUE = 0;
-    public static final int TERTIARY_MAX_DEFAULT_VALUE = 400;
+    public static final int TERTIARY_MAX_DEFAULT_VALUE = 100;
 
     private int primary = PRIMARY_DEFAULT_VALUE;
     private int tertiary = TERTIARY_DEFAULT_VALUE;

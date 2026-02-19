@@ -10,8 +10,8 @@ export default function AdminPage() {
   const [maxThreatVal, setMaxThreatVal] = useState('');
   const [adminKey, setAdminKey] = useState('');
   const [isAuthed, setIsAuthed] = useState(false);
-  const [tables, setTables] = useState({ register: [], freegame: [] });
-  const [qrFlags, setQrFlags] = useState({ event: false, freegame: false });
+  const [tables, setTables] = useState({ register: [] });
+  const [qrFlags, setQrFlags] = useState({ event: false });
   const [mesaSummary, setMesaSummary] = useState({});
   const [tab, setTab] = useState('mod');
   const [statsTab, setStatsTab] = useState('avatares');
@@ -21,6 +21,14 @@ export default function AdminPage() {
   const [purgeMinutes, setPurgeMinutes] = useState('1440');
   const [purgeKeep, setPurgeKeep] = useState('10');
   const backupFileInputRef = useRef(null);
+  const allTables = Array.isArray(tables.register) ? tables.register : [];
+  const totalTables = allTables.length;
+  const totalPlayers = allTables.reduce((sum, table) => {
+    const players = Number(table?.players);
+    return sum + (Number.isFinite(players) ? Math.max(0, players) : 0);
+  }, 0);
+  const recommendedTertiaryMax = totalTables * 2;
+  const recommendedPrimaryMax = totalPlayers * 20;
 
   // Campos de fijaci?n permanecen vacíos hasta que el usuario escriba.
   const parseTableNumber = (value) => {
@@ -47,17 +55,15 @@ export default function AdminPage() {
       .then((r) => r.ok ? r.json() : Promise.reject(new Error('No autorizado')))
       .then((data) => {
         if (!data || typeof data !== 'object') {
-          setTables({ register: [], freegame: [] });
+          setTables({ register: [] });
           return;
         }
         const register = Array.isArray(data.register) ? data.register : [];
-        const freegame = Array.isArray(data.freegame) ? data.freegame : [];
-        setTables({ register, freegame });
+        setTables({ register });
         const flags = data.qrFlags;
         if (flags && typeof flags === 'object') {
           setQrFlags({
-            event: Boolean(flags.event),
-            freegame: Boolean(flags.freegame)
+            event: Boolean(flags.event)
           });
         }
       })
@@ -86,10 +92,9 @@ export default function AdminPage() {
       .finally(() => setBackupsLoading(false));
   }, [adminKey, isAuthed]);
 
-  const updateQrFlag = useCallback((type, enabled) => {
+  const updateQrFlag = useCallback((enabled) => {
     if (!isAuthed) return;
-    const endpoint = type === 'freegame' ? '/api/admin/qr/freegame' : '/api/admin/qr/event';
-    fetch(endpoint, {
+    fetch('/api/admin/qr/event', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,8 +106,7 @@ export default function AdminPage() {
       .then((data) => {
         if (data && typeof data === 'object') {
           setQrFlags({
-            event: Boolean(data.event),
-            freegame: Boolean(data.freegame)
+            event: Boolean(data.event)
           });
         }
       })
@@ -162,6 +166,24 @@ export default function AdminPage() {
     }).then(fetchState);
   };
 
+  const applyRecommendedPrimary = () => {
+    setPVal(String(recommendedPrimaryMax));
+    fetch(`${API_BASE}/primary/set`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
+      body: JSON.stringify({ value: recommendedPrimaryMax })
+    }).then(fetchState);
+  };
+
+  const applyRecommendedTertiaryMax = () => {
+    setMaxThreatVal(String(recommendedTertiaryMax));
+    fetch(`${API_BASE}/tertiary/max/set`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
+      body: JSON.stringify({ value: recommendedTertiaryMax })
+    }).then(fetchState);
+  };
+
 
   const download = (path, filename) => {
     fetch(path, { headers: { 'X-Admin-Secret': adminKey } })
@@ -194,7 +216,7 @@ export default function AdminPage() {
   const logout = () => {
     setIsAuthed(false);
     setAdminKey('');
-    setTables({ register: [], freegame: [] });
+    setTables({ register: [] });
   };
 
   if (!isAuthed) {
@@ -242,12 +264,16 @@ export default function AdminPage() {
             <section className="counter-card">
               <h3>Vida Loki Dios de las Mentiras</h3>
               <div className="counter-value">{state.primary}</div>
+              <p className="field-hint">
+                Recomendado (20 × jugadores: {totalPlayers}): {recommendedPrimaryMax}
+              </p>
               <div className="form">
                 <label>
                   Fijar a
                   <input type="number" inputMode="numeric" placeholder="0" value={pVal} min={0} onChange={(e) => setPVal(e.target.value)} />
                 </label>
                 <button onClick={setExact('primary', pVal)}>Guardar</button>
+                <button onClick={applyRecommendedPrimary}>Usar recomendado</button>
               </div>
             </section>
 
@@ -266,18 +292,22 @@ export default function AdminPage() {
             <section className="counter-card">
               <h3>Amenaza maxima</h3>
               <div className="counter-value">{state.tertiaryMax ?? 0}</div>
+              <p className="field-hint">
+                Recomendado (2 × mesas: {totalTables}): {recommendedTertiaryMax}
+              </p>
               <div className="form">
                 <label>
                   Fijar a
                   <input type="number" inputMode="numeric" placeholder="0" value={maxThreatVal} min={0} onChange={(e) => setMaxThreatVal(e.target.value)} />
                 </label>
                 <button onClick={setTertiaryMax}>Guardar</button>
+                <button onClick={applyRecommendedTertiaryMax}>Usar recomendado</button>
               </div>
             </section>
 
           </div>
           {tab === 'backup' && (
-              <div className="admin-grid stats-grid" style={{ gridTemplateColumns: '1fr' }}>
+            <div className="admin-grid stats-grid" style={{ gridTemplateColumns: '1fr' }}>
               <section className="counter-card">
                 <h3>Snapshots</h3>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -374,199 +404,109 @@ export default function AdminPage() {
                     )}
                   </tbody>
                 </table>
-                </section>
+              </section>
             </div>
           )}
 
           {tab === 'tables' && (
             <div className="admin-section">
-            <div className="admin-grid" style={{ marginBottom: 12, gridTemplateColumns: '1fr' }}>
-              <div className="form" style={{ marginTop: 8, gap: 8, display: 'flex', flexWrap: 'wrap' }}>
-                <button onClick={() => download('/api/admin/export/event.xlsx', 'event.xlsx')}>Exportar XLSX (Event)</button>
-                <button onClick={() => download('/api/admin/export/mesas_totales.xlsx', 'mesas_totales.xlsx')}>Exportar XLSX (Totales por contador)</button>
-                <label className="admin-toggle">
-                  <input
-                    type="checkbox"
-                    checked={!!qrFlags.event}
-                    onChange={(e) => updateQrFlag('event', e.target.checked)}
-                  />
-                  <span>Mostrar QR Evento</span>
-                </label>
-              </div>
-              <section className="counter-card" style={{ overflowX: 'auto' }}>
-                <h3>Evento M.O.D.O.K.</h3>
-                <table className="data-table stats-table" style={{ width: '100%' }}>
-                  <thead>
-                    <tr>
-                      <th>Mesa</th>
-                      <th>Nombre</th>
-                      <th>Dificultad</th>
-                      <th>Jugadores</th>
-                      <th>Detalle jugadores</th>
-                      <th>Código</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(tables.register || [])
-                      .slice()
-                      .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
-                      .map((t) => {
-                        const mesa = t.tableNumber ?? '';
-                        const nombre = t.tableName ?? '';
-                        const dif = t.difficulty ?? '';
-                        const players = t.players ?? '';
-                        const playersInfo = Array.isArray(t.playersInfo) ? t.playersInfo : [];
-                        return (
-                          <tr key={t.id}>
-                            <td>{mesa}</td>
-                            <td>{nombre}</td>
-                            <td>{dif}</td>
-                            <td>{players}</td>
-                            <td>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                {playersInfo.length > 0
-                                  ? playersInfo.map((p, idx) => (
-                                    <div key={`${t.id}-player-${idx}`}>
-                                      {p.character}{p.aspect ? ` (${p.aspect})` : ''}
-                                    </div>
-                                  ))
-                                  : <span style={{ opacity: 0.6 }}>Sin jugadores</span>}
-                              </div>
-                            </td>
-                            <td>{t.code}</td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </section>
-              <div className="form" style={{ marginTop: 8, gap: 8, display: 'none', flexWrap: 'wrap' }}>
-                <button onClick={() => download('/api/admin/export/freegame.csv', 'freegame.csv')}>Exportar CSV (Freegame)</button>
-                <button onClick={() => download('/api/admin/export/freegame_scores.csv', 'freegame_scores.csv')}>Exportar CSV (Puntuación Freegame)</button>
-                <label className="admin-toggle">
-                  <input
-                    type="checkbox"
-                    checked={!!qrFlags.freegame}
-                    onChange={(e) => updateQrFlag('freegame', e.target.checked)}
-                  />
-                  <span>Mostrar QR Freegame</span>
-                </label>
-              </div>
-              <section className="counter-card" style={{ overflowX: 'auto' }}>
-                <h3>Mesas - Totales Avatares y Amenaza</h3>
-                <table className="data-table stats-table" style={{ width: '100%' }}>
-                  <thead>
-                    <tr>
-                      <th rowSpan={2}>Mesa</th>
-                      <th colSpan={4} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>Avatares Derrotados</th>
-                      <th rowSpan={2}>Ruptura Total</th>
-                      <th colSpan={2} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>Amenaza</th>
-                    </tr>
-                    <tr>
-                      <th>Granuja</th>
-                      <th>Bribón</th>
-                      <th>Bellaco</th>
-                      <th>Canalla</th>
-                      <th>Héroes</th>
-                      <th>Plan</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(mesaSummary || {}).sort((a, b) => Number(a[0]) - Number(b[0])).map(([mesa, t]) => (
-                      <tr key={mesa}>
-                        <td><strong>{mesa}</strong></td>
-                        <td>{t?.avatar0 ?? 0}</td>
-                        <td>{t?.avatar1 ?? 0}</td>
-                        <td>{t?.avatar2 ?? 0}</td>
-                        <td>{t?.avatar3 ?? 0}</td>
-                        <td>{t?.rupturaTotal ?? 0}</td>
-                        <td>{t?.threatFromHeroes ?? 0}</td>
-                        <td>{t?.threatFromPlan ?? 0}</td>
+              <div className="admin-grid" style={{ marginBottom: 12, gridTemplateColumns: '1fr' }}>
+                <div className="form" style={{ marginTop: 8, gap: 8, display: 'flex', flexWrap: 'wrap' }}>
+                  <button onClick={() => download('/api/admin/export/event.xlsx', 'event.xlsx')}>Exportar XLSX (Event)</button>
+                  <button onClick={() => download('/api/admin/export/mesas_totales.xlsx', 'mesas_totales.xlsx')}>Exportar XLSX (Totales por contador)</button>
+                  <label className="admin-toggle">
+                    <input
+                      type="checkbox"
+                      checked={!!qrFlags.event}
+                      onChange={(e) => updateQrFlag(e.target.checked)}
+                    />
+                    <span>Mostrar QR Evento</span>
+                  </label>
+                </div>
+                <section className="counter-card" style={{ overflowX: 'auto' }}>
+                  <h3>Evento M.O.D.O.K.</h3>
+                  <table className="data-table stats-table" style={{ width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th>Mesa</th>
+                        <th>Nombre</th>
+                        <th>Dificultad</th>
+                        <th>Jugadores</th>
+                        <th>Detalle jugadores</th>
+                        <th>Código</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </section>
-              <section className="counter-card" style={{ overflowX: 'auto', display: 'none' }}>
-                <h3>Retos Inevitables</h3>
-                <table className="data-table stats-table" style={{ width: '100%' }}>
-                  <thead>
-                    <tr>
-                      <th>Mesa</th><th>Nombre</th><th>Reto inevitable</th><th>Jugadores</th><th>Detalle jugadores</th><th>Código</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(tables.freegame || [])
-                      .slice()
-                      .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
-                      .map((t) => {
-                        const playersInfo = Array.isArray(t.playersInfo) ? t.playersInfo : [];
-                        return (
-                          <tr key={t.id}>
-                            <td>{t.tableNumber}</td>
-                            <td>{t.name}</td>
-                            <td>{t.inevitableChallenge || '(Ninguno)'}</td>
-                            <td>{t.players}</td>
-                            <td>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                {playersInfo.length > 0
-                                  ? playersInfo.map((p, idx) => (
-                                    <div key={`${t.id}-free-${idx}`}>
-                                      {p.character}
-                                      {p.aspect ? ` (${p.aspect})` : ''}
-                                      {p.legacy ? ` [${p.legacy}]` : ''}
-                                    </div>
-                                  ))
-                                  : <span style={{ opacity: 0.6 }}>Sin jugadores</span>}
-                              </div>
-                            </td>
-                            <td>{t.code}</td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </section>
-              <section className="counter-card" style={{ overflowX: 'auto', display: 'none' }}>
-                <h3>Puntuación por mesa (desglose)</h3>
-                <table className="data-table" style={{ width: '100%' }}>
-                  <thead>
-                    <tr>
-                      <th>Mesa</th>
-                      <th>Dificultad</th>
-                      <th>Reto inevitable</th>
-                      <th>Puntos base</th>
-                      <th>Legados</th>
-                      <th>Puntos de Victoria</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(tables.freegame || [])
-                      .slice()
-                      .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
-                      .map((t) => {
-                        const noCh = !t?.inevitableChallenge || t.inevitableChallenge === '(Ninguno)'; const base = noCh ? 0 : (t?.difficulty === 'Experto' ? 5 : 3);
-                        const legacyCount = noCh ? 0 : (Array.isArray(t?.playersInfo) ? t.playersInfo.filter(p => p.legacy && String(p.legacy) !== 'Ninguno').length : 0);
-                        const vp = noCh ? 0 : (typeof t?.victoryPoints === 'number' ? t.victoryPoints : 0);
-                        const total = noCh ? 0 : (base + legacyCount + vp);
-                        return (
-                          <tr key={t.id + '-score'}>
-                            <td>{t.tableNumber}</td>
-                            <td>{t.difficulty || 'Normal'}</td>
-                            <td>{t.inevitableChallenge || '(Ninguno)'}</td>
-                            <td>{base}</td>
-                            <td>{legacyCount}</td>
-                            <td>{vp}</td>
-                            <td>{total}</td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </section>
+                    </thead>
+                    <tbody>
+                      {(tables.register || [])
+                        .slice()
+                        .sort((a, b) => parseTableNumber(a?.tableNumber) - parseTableNumber(b?.tableNumber))
+                        .map((t) => {
+                          const mesa = t.tableNumber ?? '';
+                          const nombre = t.tableName ?? '';
+                          const dif = t.difficulty ?? '';
+                          const players = t.players ?? '';
+                          const playersInfo = Array.isArray(t.playersInfo) ? t.playersInfo : [];
+                          return (
+                            <tr key={t.id}>
+                              <td>{mesa}</td>
+                              <td>{nombre}</td>
+                              <td>{dif}</td>
+                              <td>{players}</td>
+                              <td>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                  {playersInfo.length > 0
+                                    ? playersInfo.map((p, idx) => (
+                                      <div key={`${t.id}-player-${idx}`}>
+                                        {p.character}{p.aspect ? ` (${p.aspect})` : ''}
+                                      </div>
+                                    ))
+                                    : <span style={{ opacity: 0.6 }}>Sin jugadores</span>}
+                                </div>
+                              </td>
+                              <td>{t.code}</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </section>
+                <section className="counter-card" style={{ overflowX: 'auto' }}>
+                  <h3>Mesas - Totales Avatares y Amenaza</h3>
+                  <table className="data-table stats-table" style={{ width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th rowSpan={2}>Mesa</th>
+                        <th colSpan={4} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>Avatares Derrotados</th>
+                        <th rowSpan={2}>Ruptura Total</th>
+                        <th colSpan={2} style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>Amenaza</th>
+                      </tr>
+                      <tr>
+                        <th>Granuja</th>
+                        <th>Bribón</th>
+                        <th>Bellaco</th>
+                        <th>Canalla</th>
+                        <th>Héroes</th>
+                        <th>Plan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(mesaSummary || {}).sort((a, b) => Number(a[0]) - Number(b[0])).map(([mesa, t]) => (
+                        <tr key={mesa}>
+                          <td><strong>{mesa}</strong></td>
+                          <td>{t?.avatar0 ?? 0}</td>
+                          <td>{t?.avatar1 ?? 0}</td>
+                          <td>{t?.avatar2 ?? 0}</td>
+                          <td>{t?.avatar3 ?? 0}</td>
+                          <td>{t?.rupturaTotal ?? 0}</td>
+                          <td>{t?.threatFromHeroes ?? 0}</td>
+                          <td>{t?.threatFromPlan ?? 0}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </section>
+              </div>
             </div>
-          </div>
           )}
 
           {tab === 'stats' && (
