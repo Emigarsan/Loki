@@ -40,7 +40,11 @@ public class BackupAdminController {
         if (!isAdmin(secret)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Path dir = snapshotService.getBackupDirPath();
         if (dir == null || !Files.exists(dir)) {
-            return ResponseEntity.ok(Map.of("dir", dir == null ? "" : dir.toString(), "files", List.of()));
+            return ResponseEntity.ok(Map.of(
+                    "dir", dir == null ? "" : dir.toString(),
+                    "writable", snapshotService.isBackupDirWritable(),
+                    "files", List.of()
+            ));
         }
         List<Map<String, Object>> files;
         try (var s = Files.list(dir)) {
@@ -58,7 +62,11 @@ public class BackupAdminController {
                     })
                     .collect(Collectors.toList());
         }
-        return ResponseEntity.ok(Map.of("dir", dir.toString(), "files", files));
+        return ResponseEntity.ok(Map.of(
+            "dir", dir.toString(),
+            "writable", snapshotService.isBackupDirWritable(),
+            "files", files
+        ));
     }
 
     @PostMapping("/snapshot-now")
@@ -173,6 +181,15 @@ public class BackupAdminController {
         }
         try (var in = file.getInputStream()) {
             Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+        try {
+            snapshotService.validateSnapshotFile(target);
+        } catch (IOException e) {
+            try { Files.deleteIfExists(target); } catch (IOException ignored) {}
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "ok", false,
+                    "error", "Backup inválido: " + (e.getMessage() == null ? "formato no reconocido" : e.getMessage())
+            ));
         }
         Map<String, Object> payload = Map.of(
                 "ok", true,

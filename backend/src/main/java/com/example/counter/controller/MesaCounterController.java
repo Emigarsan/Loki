@@ -1,6 +1,9 @@
 package com.example.counter.controller;
 
 import com.example.counter.service.mesa.MesaCounterService;
+import com.example.counter.service.TablesService;
+import com.example.counter.service.sector.SectorService;
+import com.example.counter.service.model.RegisterTable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +16,49 @@ import java.util.Map;
 public class MesaCounterController {
 
     private final MesaCounterService mesaService;
+    private final TablesService tablesService;
+    private final SectorService sectorService;
 
-    public MesaCounterController(MesaCounterService mesaService) {
+    public MesaCounterController(MesaCounterService mesaService, TablesService tablesService, SectorService sectorService) {
         this.mesaService = mesaService;
+        this.tablesService = tablesService;
+        this.sectorService = sectorService;
     }
 
     @GetMapping("/summary")
     public ResponseEntity<Map<Integer, MesaCounterService.TotalesMesa>> summary() {
-        return ResponseEntity.ok(mesaService.getTotalesSnapshot());
+        Map<Integer, MesaCounterService.TotalesMesa> totales = mesaService.getTotalesSnapshot();
+        
+        // Enrich with table information and sector if services are available
+        try {
+            if (tablesService != null) {
+                List<RegisterTable> tables = tablesService.listRegister();
+                if (tables != null) {
+                    for (RegisterTable table : tables) {
+                        if (totales.containsKey(table.tableNumber())) {
+                            MesaCounterService.TotalesMesa t = totales.get(table.tableNumber());
+                            t.tableName = table.tableName();
+                            t.realityName = table.realityName();
+                        }
+                    }
+                }
+            }
+            
+            // Enrich with sector information
+            if (sectorService != null) {
+                for (Map.Entry<Integer, MesaCounterService.TotalesMesa> entry : totales.entrySet()) {
+                    int mesaId = entry.getKey();
+                    MesaCounterService.TotalesMesa t = entry.getValue();
+                    t.sectorId = sectorService.getSectorIdForMesa(mesaId);
+                }
+            }
+        } catch (Exception e) {
+            // Log error but don't fail the request
+            System.err.println("Error enriching mesa summary: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return ResponseEntity.ok(totales);
     }
 
     @GetMapping("/events")

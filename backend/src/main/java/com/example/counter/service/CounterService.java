@@ -12,6 +12,8 @@ public class CounterService {
     private int primary = PRIMARY_DEFAULT_VALUE;
     private int tertiary = TERTIARY_DEFAULT_VALUE;
     private int tertiaryMax = TERTIARY_MAX_DEFAULT_VALUE;
+    private int secondaryHeroes = 0;
+    private int secondaryPlan = 0;
 
     public synchronized CounterState getState() {
         return snapshot();
@@ -33,6 +35,16 @@ public class CounterService {
         return snapshot();
     }
 
+    public synchronized CounterState setSecondaryHeroes(int value) {
+        secondaryHeroes = Math.max(0, value);
+        return snapshot();
+    }
+
+    public synchronized CounterState setSecondaryPlan(int value) {
+        secondaryPlan = Math.max(0, value);
+        return snapshot();
+    }
+
     public synchronized CounterState reducePrimary(int delta) {
         primary = Math.max(0, primary - delta);
         return snapshot();
@@ -46,7 +58,7 @@ public class CounterService {
     }
 
     private CounterState snapshot() {
-        return new CounterState(primary, tertiary, tertiaryMax);
+        return new CounterState(primary, tertiary, tertiaryMax, secondaryHeroes, secondaryPlan);
     }
 
 }

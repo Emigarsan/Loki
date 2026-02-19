@@ -129,6 +129,11 @@ public class SectorService {
         return buildStatus(targetInfo.sectorId, targetInfo.mesas, targetIndicators);
     }
 
+    public int getSectorIdForMesa(int mesaId) {
+        SectorInfo info = resolveSector(mesaId);
+        return info.sectorId;
+    }
+
     public synchronized Map<Integer, MesaIndicators> getSnapshot() {
         Map<Integer, MesaIndicators> copy = new HashMap<>();
         for (var entry : mesaIndicators.entrySet()) {

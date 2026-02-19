@@ -68,7 +68,7 @@ public class SnapshotService {
         this.tablesService = tablesService;
         this.mesaService = mesaService;
         this.sectorService = sectorService;
-        this.backupDir = Paths.get(backupDir);
+        this.backupDir = resolveBackupDir(backupDir);
         this.backupEveryMs = backupEveryMs;
         this.backupRetentionMin = backupRetentionMin;
         this.driveDir = (driveDir == null || driveDir.isBlank()) ? null : Paths.get(driveDir);
@@ -94,8 +94,8 @@ public class SnapshotService {
     public void onReady() {
         ensureDir(backupDir);
         log.info(
-                "Snapshot config -> backup.dir={}, backup.every.ms={}, backup.retention.min={}, drive.dir={}, drive.every.ms={}, drive.keep.copies={}, backup.initial={}, restore.onstart={}",
-                backupDir, backupEveryMs, backupRetentionMin, driveDir, driveEveryMs, driveKeepCopies, backupInitial,
+                "Snapshot config -> backup.dir={}, backup.writable={}, user.dir={}, backup.every.ms={}, backup.retention.min={}, drive.dir={}, drive.every.ms={}, drive.keep.copies={}, backup.initial={}, restore.onstart={} ",
+                backupDir, isDirWritable(backupDir), Paths.get("").toAbsolutePath(), backupEveryMs, backupRetentionMin, driveDir, driveEveryMs, driveKeepCopies, backupInitial,
                 restoreOnStart);
         if (restoreOnStart) {
             restoreLatest();
@@ -195,11 +195,19 @@ public class SnapshotService {
         if (data == null)
             return;
         if (data.counter != null) {
-            counterService.setPrimary(Math.max(0, data.counter.primary()));
-            counterService.setTertiary(Math.max(0, data.counter.tertiary()));
-            Integer rawMax = data.counter.tertiaryMax();
+            counterService.setPrimary(Math.max(0, data.counter.primary));
+            counterService.setTertiary(Math.max(0, data.counter.tertiary));
+            Integer rawMax = data.counter.tertiaryMax;
             int normalizedMax = rawMax == null ? CounterService.TERTIARY_MAX_DEFAULT_VALUE : Math.max(0, rawMax);
             counterService.setTertiaryMax(normalizedMax);
+            Integer secondaryHeroes = data.counter.secondaryHeroes;
+            if (secondaryHeroes != null) {
+                counterService.setSecondaryHeroes(Math.max(0, secondaryHeroes));
+            }
+            Integer secondaryPlan = data.counter.secondaryPlan;
+            if (secondaryPlan != null) {
+                counterService.setSecondaryPlan(Math.max(0, secondaryPlan));
+            }
         }
         mesaService.restore(data.mesaTotals, data.mesaEvents);
         sectorService.restore(data.sectorStates);
@@ -224,6 +232,17 @@ public class SnapshotService {
         } catch (Exception e) {
             log.warn("Manual restore failed: {}", e.getMessage());
             return false;
+        }
+    }
+
+    public void validateSnapshotFile(Path file) throws IOException {
+        if (file == null || !Files.exists(file)) {
+            throw new IOException("Archivo de backup no encontrado");
+        }
+        try {
+            objectMapper.readValue(file.toFile(), SnapshotData.class);
+        } catch (Exception e) {
+            throw new IOException("El archivo no tiene un formato de backup válido", e);
         }
     }
 
@@ -290,6 +309,55 @@ public class SnapshotService {
                 Files.createDirectories(dir);
         } catch (Exception e) {
             log.warn("Cannot create dir {}: {}", dir, e.getMessage());
+        }
+    }
+
+    public boolean isBackupDirWritable() {
+        return isDirWritable(backupDir);
+    }
+
+    private Path resolveBackupDir(String configuredDir) {
+        List<Path> candidates = new ArrayList<>();
+        if (configuredDir != null && !configuredDir.isBlank()) {
+            candidates.add(Paths.get(configuredDir));
+        }
+
+        String railwayVolume = System.getenv("RAILWAY_VOLUME_MOUNT_PATH");
+        if (railwayVolume != null && !railwayVolume.isBlank()) {
+            candidates.add(Paths.get(railwayVolume, "backups"));
+        }
+
+        String tempDir = System.getProperty("java.io.tmpdir");
+        if (tempDir != null && !tempDir.isBlank()) {
+            candidates.add(Paths.get(tempDir, "loki-backups"));
+        }
+
+        candidates.add(Paths.get("backups"));
+
+        for (Path candidate : candidates) {
+            try {
+                Path normalized = candidate.toAbsolutePath().normalize();
+                Files.createDirectories(normalized);
+                if (isDirWritable(normalized)) {
+                    return normalized;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        return Paths.get(configuredDir == null || configuredDir.isBlank() ? "backups" : configuredDir)
+                .toAbsolutePath().normalize();
+    }
+
+    private boolean isDirWritable(Path dir) {
+        try {
+            if (dir == null) return false;
+            Files.createDirectories(dir);
+            Path probe = Files.createTempFile(dir, "write-test-", ".tmp");
+            Files.deleteIfExists(probe);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

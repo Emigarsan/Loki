@@ -44,6 +44,9 @@ public class MesaCounterService {
         public int threatFromHeroes;  // Threat from hero defeats
         public int threatFromPlan;  // Threat from main plan completion
         public Map<String, Integer> defeatedHeroes;  // Hero name -> defeat count
+        public String tableName;  // Mesa name
+        public String realityName;  // Reality name
+        public Integer sectorId;  // Sector grouping ID
 
         public TotalesMesa() {
             this.defeatedHeroes = new HashMap<>();
@@ -78,6 +81,9 @@ public class MesaCounterService {
             t.threatFromHeroes = src.threatFromHeroes;
             t.threatFromPlan = src.threatFromPlan;
             t.defeatedHeroes = src.defeatedHeroes != null ? new HashMap<>(src.defeatedHeroes) : new HashMap<>();
+            t.tableName = src.tableName;
+            t.realityName = src.realityName;
+            t.sectorId = src.sectorId;
             copy.put(e.getKey(), t);
         }
         return copy;
@@ -124,6 +130,9 @@ public class MesaCounterService {
                     t.threatFromHeroes = s.threatFromHeroes;
                     t.threatFromPlan = s.threatFromPlan;
                     t.defeatedHeroes = s.defeatedHeroes != null ? new HashMap<>(s.defeatedHeroes) : new HashMap<>();
+                    t.tableName = s.tableName;
+                    t.realityName = s.realityName;
+                    t.sectorId = s.sectorId;
                 }
                 totales.put(e.getKey(), t);
             }
