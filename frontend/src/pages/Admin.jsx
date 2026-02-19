@@ -652,7 +652,7 @@ export default function AdminPage() {
           )}
 
           {tab === 'tables' && (
-            <div className="admin-section admin-section--tables stats-panel">
+            <div className="admin-section admin-section--tables">
               <div className="admin-tables-layout">
                 <div className="admin-tables-header">
                   <button onClick={() => download('/api/admin/export/event.xlsx', 'event.xlsx')}>Exportar XLSX (Event)</button>
@@ -743,11 +743,49 @@ export default function AdminPage() {
                                   <td>
                                     <div className="mesa-players-compact">
                                       {playersInfo.length > 0
-                                        ? playersInfo.map((p, idx) => (
-                                          <div key={`${t.id}-player-${idx}`} className="mesa-player-chip">
-                                            {p.character}{p.aspect ? ` (${p.aspect})` : ''}
-                                          </div>
-                                        ))
+                                        ? playersInfo.map((p, idx) => {
+                                          let chipStyle = {};
+                                          
+                                          // Adam Warlock always shows all 5 colors
+                                          if (p.character && p.character.toLowerCase().includes('adam warlock')) {
+                                            const allColors = Object.values(ASPECT_COLORS);
+                                            const gradientStops = allColors.map((color, i) => {
+                                              const position = (i / (allColors.length - 1)) * 100;
+                                              return `${color}70 ${position}%`;
+                                            }).join(', ');
+                                            chipStyle = {
+                                              background: `linear-gradient(135deg, ${gradientStops})`,
+                                              borderLeft: `3px solid ${allColors[0]}`
+                                            };
+                                          } else if (p.aspect) {
+                                            // Split aspect by dash to handle multi-aspect characters
+                                            const aspects = p.aspect.split('-').map(a => a.trim());
+                                            const colors = aspects.map(a => ASPECT_COLORS[a]).filter(Boolean);
+                                            
+                                            if (colors.length > 1) {
+                                              // Multi-aspect: create gradient with all colors
+                                              const gradientStops = colors.map((color, i) => {
+                                                const position = (i / (colors.length - 1)) * 100;
+                                                return `${color}70 ${position}%`;
+                                              }).join(', ');
+                                              chipStyle = {
+                                                background: `linear-gradient(135deg, ${gradientStops})`,
+                                                borderLeft: `3px solid ${colors[0]}`
+                                              };
+                                            } else if (colors.length === 1) {
+                                              // Single aspect
+                                              chipStyle = {
+                                                background: `linear-gradient(135deg, ${colors[0]}70, ${colors[0]}40)`,
+                                                borderLeft: `3px solid ${colors[0]}`
+                                              };
+                                            }
+                                          }
+                                          return (
+                                            <div key={`${t.id}-player-${idx}`} className="mesa-player-chip" style={chipStyle}>
+                                              {p.character}
+                                            </div>
+                                          );
+                                        })
                                         : <span className="mesa-player-empty">Sin jugadores</span>}
                                     </div>
                                   </td>
@@ -790,10 +828,20 @@ export default function AdminPage() {
                         </thead>
                         <tbody>
                           {(() => {
+                            // Calculate sector ID based on table number
+                            const calculateSector = (mesaId) => {
+                              const safeMesaId = Math.max(1, mesaId);
+                              if (safeMesaId <= 4) return 1;
+                              if (safeMesaId <= 8) return 2;
+                              const offset = safeMesaId - 9;
+                              const group = Math.max(0, Math.floor(offset / 3));
+                              return 3 + group;
+                            };
+                            
                             // Group by sector for rowspan calculation
                             const sectorGroups = {};
                             mesaSummaryRows.forEach(([mesa, t]) => {
-                              const sectorId = t?.sectorId ?? 'N/A';
+                              const sectorId = t?.sectorId ?? calculateSector(parseInt(mesa));
                               if (!sectorGroups[sectorId]) {
                                 sectorGroups[sectorId] = [];
                               }
@@ -802,8 +850,9 @@ export default function AdminPage() {
                             
                             // Render rows with rowspan
                             return mesaSummaryRows.map(([mesa, t], index) => {
-                              const sectorId = t?.sectorId ?? 'N/A';
-                              const isFirstInSector = index === 0 || (mesaSummaryRows[index - 1][1]?.sectorId ?? 'N/A') !== sectorId;
+                              const sectorId = t?.sectorId ?? calculateSector(parseInt(mesa));
+                              const prevSectorId = index > 0 ? (mesaSummaryRows[index - 1][1]?.sectorId ?? calculateSector(parseInt(mesaSummaryRows[index - 1][0]))) : null;
+                              const isFirstInSector = index === 0 || prevSectorId !== sectorId;
                               const rowspan = isFirstInSector ? sectorGroups[sectorId].length : 0;
                               
                               return (

@@ -932,7 +932,10 @@
       "rupturaTotal" : 44,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "2" : {
       "c1" : 0,
@@ -945,7 +948,10 @@
       "rupturaTotal" : 67,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "3" : {
       "c1" : 0,
@@ -961,7 +967,10 @@
       "defeatedHeroes" : {
         "Masacre" : 2,
         "Máquina de Guerra" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "4" : {
       "c1" : 0,
@@ -974,7 +983,10 @@
       "rupturaTotal" : 45,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "5" : {
       "c1" : 0,
@@ -987,7 +999,10 @@
       "rupturaTotal" : 48,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "6" : {
       "c1" : 0,
@@ -1002,7 +1017,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Gambito" : 3
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "7" : {
       "c1" : 0,
@@ -1015,7 +1033,10 @@
       "rupturaTotal" : 44,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "9" : {
       "c1" : 0,
@@ -1030,7 +1051,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Cable" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "10" : {
       "c1" : 0,
@@ -1043,7 +1067,10 @@
       "rupturaTotal" : 44,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "12" : {
       "c1" : 0,
@@ -1056,7 +1083,10 @@
       "rupturaTotal" : 68,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "13" : {
       "c1" : 0,
@@ -1071,7 +1101,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Nick Furia" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "14" : {
       "c1" : 0,
@@ -1084,7 +1117,10 @@
       "rupturaTotal" : 43,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "16" : {
       "c1" : 0,
@@ -1099,7 +1135,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Capitán América" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "17" : {
       "c1" : 0,
@@ -1112,7 +1151,10 @@
       "rupturaTotal" : 43,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "19" : {
       "c1" : 0,
@@ -1127,7 +1169,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Cable" : 4
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "20" : {
       "c1" : 0,
@@ -1140,7 +1185,10 @@
       "rupturaTotal" : 66,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "21" : {
       "c1" : 0,
@@ -1155,7 +1203,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Nebula" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "23" : {
       "c1" : 0,
@@ -1171,7 +1222,10 @@
       "defeatedHeroes" : {
         "Coloso" : 2,
         "X-23" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "24" : {
       "c1" : 0,
@@ -1184,7 +1238,10 @@
       "rupturaTotal" : 68,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "26" : {
       "c1" : 0,
@@ -1199,7 +1256,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Magik" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "27" : {
       "c1" : 0,
@@ -1212,7 +1272,10 @@
       "rupturaTotal" : 47,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "28" : {
       "c1" : 0,
@@ -1225,7 +1288,10 @@
       "rupturaTotal" : 60,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "30" : {
       "c1" : 0,
@@ -1240,7 +1306,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Avispa" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "31" : {
       "c1" : 0,
@@ -1257,7 +1326,10 @@
         "Hombre Maravilla" : 2,
         "Capitana Marvel" : 4,
         "Spectrum" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "33" : {
       "c1" : 0,
@@ -1270,7 +1342,10 @@
       "rupturaTotal" : 69,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "34" : {
       "c1" : 0,
@@ -1283,7 +1358,10 @@
       "rupturaTotal" : 67,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "35" : {
       "c1" : 0,
@@ -1296,7 +1374,10 @@
       "rupturaTotal" : 41,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "37" : {
       "c1" : 0,
@@ -1309,7 +1390,10 @@
       "rupturaTotal" : 67,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "38" : {
       "c1" : 0,
@@ -1325,7 +1409,10 @@
       "defeatedHeroes" : {
         "Gambito" : 2,
         "Nick Furia" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "40" : {
       "c1" : 0,
@@ -1341,7 +1428,10 @@
       "defeatedHeroes" : {
         "Veneno" : 2,
         "Viuda Negra" : 3
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "41" : {
       "c1" : 0,
@@ -1356,7 +1446,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Capitán América" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "42" : {
       "c1" : 0,
@@ -1369,7 +1462,10 @@
       "rupturaTotal" : 64,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "44" : {
       "c1" : 0,
@@ -1384,7 +1480,10 @@
       "threatFromPlan" : 0,
       "defeatedHeroes" : {
         "Capitán América" : 1
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "45" : {
       "c1" : 0,
@@ -1397,7 +1496,10 @@
       "rupturaTotal" : 50,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "47" : {
       "c1" : 0,
@@ -1410,7 +1512,10 @@
       "rupturaTotal" : 42,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "48" : {
       "c1" : 0,
@@ -1425,7 +1530,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Lobezno" : 3
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "49" : {
       "c1" : 0,
@@ -1440,7 +1548,10 @@
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
         "Tigra" : 2
-      }
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     },
     "50" : {
       "c1" : 0,
@@ -1453,7 +1564,10 @@
       "rupturaTotal" : 48,
       "threatFromHeroes" : 0,
       "threatFromPlan" : 0,
-      "defeatedHeroes" : { }
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
     }
   },
   "mesaEvents" : [ ],
@@ -2031,5 +2145,5 @@
   },
   "qrEventEnabled" : true,
   "qrFreegameEnabled" : false,
-  "ts" : 1771521222659
+  "ts" : 1771523305847
 }

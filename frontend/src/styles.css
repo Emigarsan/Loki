@@ -1333,6 +1333,14 @@ header p {
   padding: 1.25rem;
 }
 
+.admin-grid--mod .counter-card {
+  background: linear-gradient(160deg, rgba(20, 20, 20, 0.9), rgba(7, 61, 36, 0.5));
+}
+
+.admin-grid.stats-grid .counter-card {
+  background: linear-gradient(160deg, rgba(20, 20, 20, 0.9), rgba(7, 61, 36, 0.5));
+}
+
 .admin-grid--tables {
   grid-template-columns: 1fr;
   gap: 1.25rem;
@@ -1382,6 +1390,10 @@ header p {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.admin-section--tables .counter-card {
+  background: linear-gradient(160deg, rgba(20, 20, 20, 0.9), rgba(7, 61, 36, 0.5));
 }
 
 .table-scroll--admin {
@@ -1664,6 +1676,7 @@ header p {
 
   .admin-section--tables .counter-card {
     padding: 1.1rem 1.15rem 1.25rem;
+    background: linear-gradient(160deg, rgba(20, 20, 20, 0.9), rgba(7, 61, 36, 0.5));
   }
 }
 
