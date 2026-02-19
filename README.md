@@ -1,66 +1,86 @@
 ## MODOK Control Center
 
-MODOK es una aplicación full-stack pensada para gestionar en vivo las mesas de juego y los contadores globales de un evento temático. El backend (Spring Boot) guarda el estado en memoria y expone una API REST; el frontend (React + Vite) ofrece vistas específicas para registro, seguimiento y operaciones administrativas.
+<div style="background:#3b2f0b;padding:12px 14px;border-radius:10px;border:1px solid #c8a233;color:#f5e9c9;">
+  <strong>TODO</strong>
+  <ul>
+    <li>Arreglar las realidades con datos reales</li>
+    <li>Revisar nombres de tablas y valores</li>
+    <li>Cambiar umbrales de los planes</li>
+    <li>Anadir la info por sectores (dano total por sector, Magog y Puerta)</li>
+  </ul>
+</div>
+
+---
+
+MODOK es una aplicacion full-stack para gestionar en vivo las mesas de juego y contadores globales del evento. El backend (Spring Boot) guarda el estado en memoria y expone una API REST; el frontend (React + Vite) ofrece vistas de registro, tablero por mesa, display y administracion.
 
 ---
 
 ### Estructura del repositorio
 
-| Carpeta / archivo | Descripción |
+| Carpeta / archivo | Descripcion |
 | --- | --- |
-| `backend/` | Servicio Spring Boot. Expone APIs para contadores globales, administración, mesas y snapshots. |
-| `frontend/` | Aplicación React. Los artefactos principales están en `src/pages` (vistas), `src/App.jsx` (EventView compartido) y `src/styles.css`. |
-| `start.sh` | Script de desarrollo local: compila el frontend, copia el build al backend y ejecuta el JAR resultante. |
-| `Dockerfile` | Build multi-stage que produce una imagen con backend + frontend listos para producción. |
+| backend/ | Servicio Spring Boot. Expone APIs para contadores globales, mesas, sectores, admin y snapshots. |
+| frontend/ | Aplicacion React. Vistas principales en src/pages y el tablero compartido en src/App.jsx. |
+| start.sh | Script local: build del frontend, copia a backend y ejecuta el JAR. |
+| Dockerfile | Build multi-stage para backend + frontend. |
 
 ---
 
 ### Vistas del frontend
 
-1. **`/register` – Registro de mesas del evento principal**
-   - **Crear mesa**: define número de mesa, nombre opcional, dificultad, número de jugadores y los datos de cada jugador (personaje + aspecto). Tras crear, redirige a `/mesa/:mesaId`.
-   - **Unirse**: lista las mesas existentes y permite entrar usando el código generado al crear la mesa.
-   - **Límites**: número de jugadores entre 1 y 4; la mesa no puede repetirse.
-   - Cada campo muestra un icono `?` con ayudas flotantes que aclaran restricciones y sugerencias.
+1. /register - Registro de mesas del evento principal
+   - Crear mesa: numero, nombre opcional, dificultad, jugadores y datos (personaje + aspecto).
+   - Unirse: lista mesas existentes y permite entrar con codigo.
+   - Tras crear o unirse, redirige a /mesa/:mesaId.
 
-2. **`/mesa/:mesaId` – Panel de contadores por mesa**
-   - Reutiliza `EventView` (M.O.D.O.K, Contadores secundarios y terciarios) pero anota cada acción en `/api/mesas/:mesaId`.
-   - Incluye botón **Volver** (redirecciona a `/register`).
+2. /mesa/:mesaId - Panel de mesa
+   - Reutiliza EventView con anotacion por mesa.
+   - Acciones guiadas para derrotas de avatar, heroe y plan principal.
 
-3. **`/freegame` – Registro de mesas libres**
-   - Similar a la vista de registro: número, nombre, dificultad, reto inevitable, jugadores y sus datos (incluye legado).
-   - Tras crear o unirse, redirige a `/freegame/:mesaId`.
-   - El reto inevitable `(Ninguno)` deja la puntuación total en 0 y bloquea los puntos de victoria.
-   - Los campos numéricos muestran spinners y botones de ayuda `?` con explicaciones breves.
+3. /freegame - Registro de mesas libres
+   - Similar al registro principal, con reto inevitable y legado.
+   - Tras crear o unirse, redirige a /freegame/:mesaId.
 
-4. **`/freegame/:mesaId` – Ficha de mesa libre**
-   - Muestra información de la mesa, desglose de puntuación (base, legados, puntos de victoria).
-   - Botón **Volver** → `/freegame`.
-   - Permite fijar “Puntos de Victoria”; al enviar se marca como definitivo.
+4. /freegame/:mesaId - Ficha de mesa libre
+   - Muestra desglose de puntuacion y permite fijar Puntos de Victoria.
 
-5. **`/event` – Panel de contadores globales**
-   - Usa `EventView` para operar los contadores centrales; acepta `?mesa=N` para registrar eventos también como mesa.
+5. /event - Panel de contadores globales
+   - Tablero central; acepta ?mesa=N para registrar eventos como mesa.
 
-6. **`/display` – Visualización pública**
-   - Muestra los contadores activos sin controles (modo display).
+6. /display - Visualizacion publica
+   - Muestra contadores sin controles (modo display).
 
-7. **`/admin` – Consola administrativa**
-   - Requiere `X-Admin-Secret`. Permite ajustar contadores, consultar mesas de evento y libres, descargar/exportar datos, gestionar backups (snapshot ahora, listar, descargar, restaurar, purgar, etc.).
+7. /admin - Consola administrativa
+   - Autenticada con X-Admin-Secret.
+   - Tabs: Modificar valores, Mesas, Estadisticas, Backups.
+   - Exportaciones: XLSX (Event y Totales por mesa) y CSV para freegame.
+
+---
+
+### Exportaciones (Admin)
+
+- Event XLSX
+  - Una fila por jugador, con conteo de muertes del heroe en su mesa.
+  - No incluye columnas de avatares.
+- Mesas Totales XLSX
+  - Totales por mesa (avatares, ruptura y amenaza).
+  - Sin contadores C1-C3.
 
 ---
 
 ### API destacada del backend
 
-| Endpoint | Descripción |
+| Endpoint | Descripcion |
 | --- | --- |
-| `GET /api/counter` | Estado actual de los contadores globales. |
-| `POST /api/counter/{primary|secondary|tertiary}/{increment|decrement}` | Ajusta contadores globales. |
-| `POST /api/mesas/{mesaId}/contador/{1|2|3}` | Registra eventos de mesa. |
-| `GET /api/mesas/summary` | Totales consolidados por mesa. |
-| `POST /api/tables/register/create` | Crea mesa del evento. |
-| `POST /api/tables/freegame/create` | Crea mesa libre (incluye reto inevitable y puntuación). |
-| `GET /api/tables/freegame/by-number/{mesa}` | Recupera una mesa libre específica. |
-| `POST /api/admin/backup/*` | Endpoints para snapshots (crear, listar, restaurar, borrar, etc.). |
+| GET /api/counter | Estado actual de contadores globales. |
+| POST /api/counter/{primary|secondary|tertiary}/{increment|decrement} | Ajusta contadores globales. |
+| GET /api/mesas/summary | Totales consolidados por mesa. |
+| POST /api/mesas/{mesaId}/hero-defeat | Registra heroe derrotado en una mesa. |
+| POST /api/mesas/{mesaId}/plan-completion | Registra plan principal completado en una mesa. |
+| POST /api/tables/register/create | Crea mesa del evento. |
+| POST /api/tables/freegame/create | Crea mesa libre. |
+| GET /api/admin/backup/* | Endpoints de snapshots (crear, listar, restaurar, borrar, etc.). |
 
 ---
 
@@ -69,44 +89,29 @@ MODOK es una aplicación full-stack pensada para gestionar en vivo las mesas de 
 ```bash
 # Requisitos: Node 18+, Java 17+, Maven
 ./start.sh
-# webpack dev server: cd frontend && npm install && npm run dev
-# backend dev:       cd backend && mvn spring-boot:run
+# frontend dev: cd frontend && npm install && npm run dev
+# backend dev:  cd backend && mvn spring-boot:run
 ```
 
-- `/frontend/vite.config.js` ya incluye proxy a `/api` → `http://localhost:8080`.
-- Durante el build, el frontend queda embebido en `backend/src/main/resources/static`.
+- frontend/vite.config.js incluye proxy a /api -> http://localhost:8080.
+- El build del frontend se embebe en backend/src/main/resources/static.
 
 ---
 
-### Despliegue con Docker / Railway
+### Despliegue con Docker
 
 ```bash
 docker build -t modok-control .
 docker run -p 8080:8080 modok-control
 ```
 
-- Para Railway: añadir `BACKUP_DIR`, `BACKUP_EVERY_MS`, `ADMIN_SECRET`, etc. según necesidad.
-- El contenedor arranca el jar `app.jar` con el frontend servidos desde Spring Boot.
-- La imagen fija `JAVA_TOOL_OPTIONS` con `-Xms128m -Xmx256m -XX:+UseSerialGC`; si necesitas más margen puedes sobrescribir la variable en Railway.
-- `spring.main.lazy-initialization=true` viene activado para reducir memoria en reposo; desactívalo si detectas efectos secundarios en arranques muy frecuentes.
+- Configura ADMIN_SECRET y variables de backup segun necesidad.
+- La imagen fija JAVA_TOOL_OPTIONS con limites conservadores; puedes sobrescribir.
 
 ---
 
 ### Notas operativas
 
-- **Snapshots**: se guardan como `app-YYYYMMDD-HHmmss.json`; puedes listarlos y restaurarlos vía `/api/admin/backup/*`.
-- **Reto inevitable**: si es `(Ninguno)`, la puntuación de la mesa libre permanece en 0 (no se contabiliza legado ni VP).
-- **Volver**: `/mesa/:id` → `/register`, `/freegame/:id` → `/freegame`.
-- **Seguridad**: Ajusta `admin.secret` vía variable de entorno `ADMIN_SECRET`; restringe el acceso a `/admin/*`.
-
----
-
-### TODO
-
-- Arreglar las realidades con datos reales
-- Revisar nombres de tablas y valores
-- Cambiar umbrales de los planes
-- Añadir la info por sectores (daño total por sector, Magog y Puerta)
-
-Con estas piezas podrás mantener la aplicación informada y operativa durante el evento, sea en local o desplegada en Railway.
-
+- Snapshots: se guardan como app-YYYYMMDD-HHmmss.json.
+- Reto inevitable: si es (Ninguno), la puntuacion total queda en 0.
+- Seguridad: ajusta admin.secret via ADMIN_SECRET y restringe /admin/*.
