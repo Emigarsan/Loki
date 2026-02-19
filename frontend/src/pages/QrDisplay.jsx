@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import qrMorning from '../assets/qr-morning.svg';
-import qrAfternoon from '../assets/qr-afternoon.svg';
 
 const POLL_INTERVAL_MS = 5000;
 
@@ -56,10 +54,10 @@ export default function QrDisplayPage() {
       {error && <p className="error">{error}</p>}
       <div className="qr-grid">
         <section className={`qr-card ${flags.event ? 'active' : 'inactive'}`}>
-          <h2>Evento (Tarde)</h2>
-          <img src={qrAfternoon} alt="Codigo QR Evento por la tarde" />
+          <h2>Evento</h2>
+          <img src="/qr-code.svg" alt="Codigo QR Evento por la tarde" />
           <p className="qr-status">
-            {flags.event ? 'Disponible para escanear' : 'Pendiente de activar desde Admin > Ver Mesas > Event'}
+            {flags.event ? 'Disponible para escanear' : 'Pendiente de activar por los administradores'}
           </p>
         </section>
       </div>

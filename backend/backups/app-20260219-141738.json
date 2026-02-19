@@ -1,0 +1,46 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 100
+  },
+  "registerTables" : [ ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "11" : {
+      "mesaId" : 11,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "12" : {
+      "mesaId" : 12,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771507058251
+}
