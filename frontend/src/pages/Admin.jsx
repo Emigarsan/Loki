@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { REALITIES_DATA } from '../data/realitiesData.js';
 
 const API_BASE = '/api/counter';
 
@@ -758,6 +759,13 @@ export default function AdminPage() {
                 <div className="stats-grid">
                   <section className="stat-card">
                     {(() => {
+                      // Create reality number mapping
+                      const realityIds = Object.keys(REALITIES_DATA);
+                      const realityIdToNumber = {};
+                      realityIds.forEach((id, index) => {
+                        realityIdToNumber[id] = index + 1;
+                      });
+
                       const realityCount = {};
                       (tables.register || []).forEach((t) => {
                         if (t.realityName && t.realityId) {
@@ -776,9 +784,10 @@ export default function AdminPage() {
                           <div className="stat-reality-grid">
                             {entries.map(([key, count]) => {
                               const [id, name] = key.split('|');
+                              const realityNumber = realityIdToNumber[id] || '?';
                               return (
                                 <div className="stat-reality-card" key={key}>
-                                  <div className="stat-reality-title">{name}</div>
+                                  <div className="stat-reality-title">Realidad #{realityNumber}: {name}</div>
                                   <div className="stat-reality-meta">{id}</div>
                                   <span className="stat-badge">{count}</span>
                                 </div>
@@ -791,13 +800,20 @@ export default function AdminPage() {
                   </section>
                   <section className="stat-card">
                     {(() => {
+                      // Create reality number mapping
+                      const realityIds = Object.keys(REALITIES_DATA);
+                      const realityIdToNumber = {};
                       const allRealities = [];
-                      for (let i = 1; i <= 40; i += 1) {
+                      realityIds.forEach((id, index) => {
+                        const number = index + 1;
+                        realityIdToNumber[id] = number;
                         allRealities.push({
-                          id: `reality-${i}`,
-                          name: `Realidad ${i}`
+                          id: id,
+                          number: number,
+                          name: REALITIES_DATA[id].name
                         });
-                      }
+                      });
+
                       const playedRealityIds = new Set();
                       (tables.register || []).forEach((t) => {
                         if (t.realityId) {
@@ -816,7 +832,7 @@ export default function AdminPage() {
                             <div className="stat-reality-missing__list">
                               {notPlayed.map((r) => (
                                 <span className="stat-reality-chip" key={r.id}>
-                                  {r.name}
+                                  Realidad #{r.number}: {r.name}
                                 </span>
                               ))}
                             </div>
