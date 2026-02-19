@@ -9,6 +9,19 @@ export default function RealitySelector({ onConfirm, onCancel }) {
   const realitiesData = REALITIES_DATA;
   const realities = Object.values(realitiesData);
 
+  // Block background scroll when modal is open
+  useEffect(() => {
+    const root = document.getElementById('root');
+    if (root) {
+      root.classList.add('modal-open');
+    }
+    return () => {
+      if (root) {
+        root.classList.remove('modal-open');
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (selectedReality && realitiesData[selectedReality]) {
       setRealityData(realitiesData[selectedReality]);

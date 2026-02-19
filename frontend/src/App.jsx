@@ -51,11 +51,31 @@ export function EventView({ mesaId = null } = {}) {
   const [mesaAvatar, setMesaAvatar] = useState(null);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [defeatModalVisible, setDefeatModalVisible] = useState(false);
-  const [defeatRupturaValue, setDefeatRupturaValue] = useState(0);
+  const [defeatRupturaValue, setDefeatRupturaValue] = useState('');
   const [heroDefeatModalVisible, setHeroDefeatModalVisible] = useState(false);
   const [selectedHero, setSelectedHero] = useState('');
   const [planCompletionModalVisible, setPlanCompletionModalVisible] = useState(false);
   const [mesaPlayersInfo, setMesaPlayersInfo] = useState([]);
+
+  // Block background scroll when any modal is open
+  useEffect(() => {
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    const anyModalOpen = modalMessage || primaryNoticeVisible || avatarModalVisible ||
+      defeatModalVisible || heroDefeatModalVisible || planCompletionModalVisible;
+
+    if (anyModalOpen) {
+      root.classList.add('modal-open');
+    } else {
+      root.classList.remove('modal-open');
+    }
+
+    return () => {
+      root.classList.remove('modal-open');
+    };
+  }, [modalMessage, primaryNoticeVisible, avatarModalVisible, defeatModalVisible,
+    heroDefeatModalVisible, planCompletionModalVisible]);
 
   const normalizeState = useCallback(
     (data) => {
@@ -250,13 +270,16 @@ export function EventView({ mesaId = null } = {}) {
       return;
     }
 
+    // Convert empty string to 0 for ruptura value
+    const rupturaAmount = defeatRupturaValue === '' ? 0 : parseInt(defeatRupturaValue, 10);
+
     // First, record the avatar defeat in mesa statistics
     fetch(`/api/mesas/${mesaId}/avatar-defeat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        avatarIndex: mesaAvatar, 
-        rupturaAmount: defeatRupturaValue 
+      body: JSON.stringify({
+        avatarIndex: mesaAvatar,
+        rupturaAmount: rupturaAmount
       })
     })
       .then((response) => {
@@ -267,11 +290,11 @@ export function EventView({ mesaId = null } = {}) {
       })
       .then(() => {
         // Then reduce primary counter by rupture amount
-        if (defeatRupturaValue > 0) {
+        if (rupturaAmount > 0) {
           return fetch(`${API_BASE}/primary/reduce`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ delta: defeatRupturaValue })
+            body: JSON.stringify({ delta: rupturaAmount })
           });
         }
         return Promise.resolve({ ok: true, json: () => Promise.resolve(state) });
@@ -313,8 +336,8 @@ export function EventView({ mesaId = null } = {}) {
     fetch(`/api/mesas/${mesaId}/hero-defeat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        heroName: selectedHero, 
+      body: JSON.stringify({
+        heroName: selectedHero,
         threatAmount: 1
       })
     })
@@ -680,15 +703,33 @@ export function EventView({ mesaId = null } = {}) {
             <div className="defeat-form-group">
               <label htmlFor="ruptura-input">¿Cuántos contadores de Ruptura tenía el Avatar sobre él?</label>
               <div className="ruptura-input">
-                <button type="button" onClick={() => setDefeatRupturaValue(Math.max(0, defeatRupturaValue - 1))}>−</button>
+                <button type="button" onClick={() => {
+                  const current = defeatRupturaValue === '' ? 0 : parseInt(defeatRupturaValue, 10);
+                  const newValue = Math.max(0, current - 1);
+                  setDefeatRupturaValue(newValue === 0 ? '' : newValue);
+                }}>−</button>
                 <input
                   id="ruptura-input"
                   type="number"
                   min="0"
+                  placeholder="0"
                   value={defeatRupturaValue}
-                  onChange={(e) => setDefeatRupturaValue(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setDefeatRupturaValue('');
+                    } else {
+                      const parsed = parseInt(val, 10);
+                      if (!isNaN(parsed) && parsed >= 0) {
+                        setDefeatRupturaValue(parsed);
+                      }
+                    }
+                  }}
                 />
-                <button type="button" onClick={() => setDefeatRupturaValue(defeatRupturaValue + 1)}>+</button>
+                <button type="button" onClick={() => {
+                  const current = defeatRupturaValue === '' ? 0 : parseInt(defeatRupturaValue, 10);
+                  setDefeatRupturaValue(current + 1);
+                }}>+</button>
               </div>
             </div>
 

@@ -15,6 +15,22 @@ export default function QrDisplayPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Block background scroll when loading modal is open
+  useEffect(() => {
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    if (loading) {
+      root.classList.add('modal-open');
+    } else {
+      root.classList.remove('modal-open');
+    }
+
+    return () => {
+      root.classList.remove('modal-open');
+    };
+  }, [loading]);
+
   useEffect(() => {
     let cancelled = false;
 

@@ -14,6 +14,22 @@ export default function DisplayPage() {
   const [error, setError] = useState(null);
   const [primaryHalfTriggered, setPrimaryHalfTriggered] = useState(false);
 
+  // Block background scroll when loading modal is open
+  useEffect(() => {
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    if (initialLoading) {
+      root.classList.add('modal-open');
+    } else {
+      root.classList.remove('modal-open');
+    }
+
+    return () => {
+      root.classList.remove('modal-open');
+    };
+  }, [initialLoading]);
+
   const normalizeState = useCallback(
     (data) => {
       if (!data || typeof data !== 'object') {

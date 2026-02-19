@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CharacterSelector from './CharacterSelector.jsx';
 
 export default function CharacterSelectorByReality({ selectableHeroes, aspects = [], swAspects = [], onConfirm, onCancel }) {
@@ -6,6 +6,19 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
     Array(1).fill(null).map(() => ({ character: '', aspect: '' }))
   );
   const [playersCount, setPlayersCount] = useState('1');
+
+  // Block background scroll when modal is open
+  useEffect(() => {
+    const root = document.getElementById('root');
+    if (root) {
+      root.classList.add('modal-open');
+    }
+    return () => {
+      if (root) {
+        root.classList.remove('modal-open');
+      }
+    };
+  }, []);
 
   const handlePlayersCountChange = (e) => {
     const value = e.target.value;

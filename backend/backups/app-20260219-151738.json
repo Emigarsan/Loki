@@ -1,0 +1,90 @@
+{
+  "counter" : {
+    "primary" : 3980,
+    "tertiary" : 0,
+    "tertiaryMax" : 100
+  },
+  "registerTables" : [ {
+    "id" : "e3c900b2-8033-4308-9e72-4ac11fef69cd",
+    "tableNumber" : 43,
+    "tableName" : "awe",
+    "difficulty" : "Normal",
+    "players" : 1,
+    "playersInfo" : [ {
+      "character" : "X-23",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "2E1409",
+    "createdAt" : 1771510473.088570000,
+    "avatar" : "0",
+    "realityId" : "tierra-salvaje",
+    "realityName" : "Tierra Salvaje"
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : {
+    "43" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 20,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { }
+    }
+  },
+  "mesaEvents" : [ ],
+  "sectorStates" : {
+    "43" : {
+      "mesaId" : 43,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 10,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "11" : {
+      "mesaId" : 11,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "12" : {
+      "mesaId" : 12,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : true,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771510658396
+}

@@ -425,7 +425,7 @@ export default function AdminPage() {
                   </label>
                 </div>
                 <section className="counter-card" style={{ overflowX: 'auto' }}>
-                  <h3>Evento M.O.D.O.K.</h3>
+                  <h3>Evento Loki Interocio 2026</h3>
                   <table className="data-table stats-table" style={{ width: '100%' }}>
                     <thead>
                       <tr>
