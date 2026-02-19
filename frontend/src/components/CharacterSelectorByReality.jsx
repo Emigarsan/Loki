@@ -7,19 +7,6 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
   );
   const [playersCount, setPlayersCount] = useState('1');
 
-  // Block background scroll when modal is open
-  useEffect(() => {
-    const root = document.getElementById('root');
-    if (root) {
-      root.classList.add('modal-open');
-    }
-    return () => {
-      if (root) {
-        root.classList.remove('modal-open');
-      }
-    };
-  }, []);
-
   const handlePlayersCountChange = (e) => {
     const value = e.target.value;
     if (value === '') {
@@ -81,8 +68,6 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
   return (
     <div className="modal-overlay">
       <div className="modal-content character-selector-by-reality">
-        <h2>Seleccionar Héroes y Aspectos</h2>
-
         <form className="form" onSubmit={(e) => e.preventDefault()}>
           {/* Número de jugadores */}
           <label className="field-label">

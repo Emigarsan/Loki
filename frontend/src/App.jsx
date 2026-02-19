@@ -57,26 +57,6 @@ export function EventView({ mesaId = null } = {}) {
   const [planCompletionModalVisible, setPlanCompletionModalVisible] = useState(false);
   const [mesaPlayersInfo, setMesaPlayersInfo] = useState([]);
 
-  // Block background scroll when any modal is open
-  useEffect(() => {
-    const root = document.getElementById('root');
-    if (!root) return;
-
-    const anyModalOpen = modalMessage || primaryNoticeVisible || avatarModalVisible ||
-      defeatModalVisible || heroDefeatModalVisible || planCompletionModalVisible;
-
-    if (anyModalOpen) {
-      root.classList.add('modal-open');
-    } else {
-      root.classList.remove('modal-open');
-    }
-
-    return () => {
-      root.classList.remove('modal-open');
-    };
-  }, [modalMessage, primaryNoticeVisible, avatarModalVisible, defeatModalVisible,
-    heroDefeatModalVisible, planCompletionModalVisible]);
-
   const normalizeState = useCallback(
     (data) => {
       if (!data || typeof data !== 'object') {

@@ -191,6 +191,45 @@ public class TablesService {
         return null;
     }
 
+    public synchronized RegisterTable findRegisterById(String id) {
+        for (RegisterTable t : registerTables) {
+            if (t.id().equals(id)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public synchronized boolean updateRegisterTable(String id, int tableNumber, String tableName, String difficulty,
+            int players, List<PlayerInfo> playersInfo, String realityId, String realityName) {
+        for (int i = 0; i < registerTables.size(); i++) {
+            RegisterTable t = registerTables.get(i);
+            if (t.id().equals(id)) {
+                List<PlayerInfo> sanitized = sanitizeRegisterPlayers(playersInfo == null ? List.of() : playersInfo);
+                int tn = Math.max(0, tableNumber);
+                RegisterTable updated = new RegisterTable(
+                        t.id(),
+                        tn,
+                        tableName,
+                        difficulty,
+                        Math.max(0, players),
+                        sanitized,
+                        t.code(),
+                        t.createdAt(),
+                        t.avatar(),
+                        realityId,
+                        realityName);
+                registerTables.set(i, updated);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized boolean deleteRegisterTable(String id) {
+        return registerTables.removeIf(t -> t.id().equals(id));
+    }
+
     public synchronized List<FreeGameTable> listFreeGame() {
         return Collections.unmodifiableList(new ArrayList<>(freeGameTables));
     }

@@ -54,10 +54,6 @@ body {
   overflow-x: hidden;
 }
 
-#root.modal-open {
-  overflow: hidden;
-}
-
 p,
 li {
   text-align: justify;

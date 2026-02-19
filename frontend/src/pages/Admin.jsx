@@ -21,6 +21,8 @@ export default function AdminPage() {
   const [uploadingBackup, setUploadingBackup] = useState(false);
   const [purgeMinutes, setPurgeMinutes] = useState('1440');
   const [purgeKeep, setPurgeKeep] = useState('10');
+  const [editingTable, setEditingTable] = useState(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const backupFileInputRef = useRef(null);
   const allTables = Array.isArray(tables.register) ? tables.register : [];
   const totalTables = allTables.length;
@@ -183,6 +185,99 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
       body: JSON.stringify({ value: recommendedTertiaryMax })
     }).then(fetchState);
+  };
+
+  const handleEditTable = (table) => {
+    setEditingTable({
+      id: table.id,
+      tableNumber: table.tableNumber,
+      tableName: table.tableName,
+      difficulty: table.difficulty,
+      players: table.players,
+      playersInfo: table.playersInfo || [],
+      realityId: table.realityId || '',
+      realityName: table.realityName || ''
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleDeleteTable = (table) => {
+    if (!window.confirm(`¿Estás seguro de que quieres eliminar la mesa ${table.tableNumber}?`)) {
+      return;
+    }
+    
+    fetch(`/api/admin/tables/${table.id}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Secret': adminKey }
+    })
+      .then((r) => {
+        if (r.ok) {
+          alert('Mesa eliminada correctamente');
+          fetchTables();
+        } else {
+          return r.json().then(data => {
+            throw new Error(data.error || 'Error al eliminar mesa');
+          });
+        }
+      })
+      .catch((e) => alert(e.message));
+  };
+
+  const handleSaveEditTable = () => {
+    if (!editingTable) return;
+
+    fetch(`/api/admin/tables/${editingTable.id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Admin-Secret': adminKey 
+      },
+      body: JSON.stringify(editingTable)
+    })
+      .then((r) => {
+        if (r.ok) {
+          alert('Mesa actualizada correctamente');
+          setEditModalVisible(false);
+          setEditingTable(null);
+          fetchTables();
+        } else {
+          return r.json().then(data => {
+            throw new Error(data.error || 'Error al actualizar mesa');
+          });
+        }
+      })
+      .catch((e) => alert(e.message));
+  };
+
+  const handleCancelEdit = () => {
+    setEditModalVisible(false);
+    setEditingTable(null);
+  };
+
+  const updateEditField = (field, value) => {
+    setEditingTable(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updatePlayerInfo = (index, field, value) => {
+    setEditingTable(prev => {
+      const newPlayersInfo = [...prev.playersInfo];
+      newPlayersInfo[index] = { ...newPlayersInfo[index], [field]: value };
+      return { ...prev, playersInfo: newPlayersInfo };
+    });
+  };
+
+  const addPlayerSlot = () => {
+    setEditingTable(prev => ({
+      ...prev,
+      playersInfo: [...prev.playersInfo, { character: '', aspect: '' }]
+    }));
+  };
+
+  const removePlayerSlot = (index) => {
+    setEditingTable(prev => ({
+      ...prev,
+      playersInfo: prev.playersInfo.filter((_, i) => i !== index)
+    }));
   };
 
 
@@ -435,6 +530,7 @@ export default function AdminPage() {
                         <th>Jugadores</th>
                         <th>Detalle jugadores</th>
                         <th>Código</th>
+                        <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -465,6 +561,22 @@ export default function AdminPage() {
                                 </div>
                               </td>
                               <td>{t.code}</td>
+                              <td>
+                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                  <button 
+                                    onClick={() => handleEditTable(t)}
+                                    style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                                  >
+                                    Editar
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDeleteTable(t)}
+                                    style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', background: '#c82333' }}
+                                  >
+                                    Eliminar
+                                  </button>
+                                </div>
+                              </td>
                             </tr>
                           );
                         })}
@@ -846,6 +958,134 @@ export default function AdminPage() {
             </div>
           )}
 
+        </div>
+      )}
+
+      {/* Modal de edición de mesa */}
+      {editModalVisible && editingTable && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '800px' }}>
+            <h2>Editar Mesa {editingTable.tableNumber}</h2>
+            
+            <form className="form" onSubmit={(e) => e.preventDefault()}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <label className="field-label">
+                  <span className="field-label-title">Número de Mesa</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editingTable.tableNumber}
+                    onChange={(e) => updateEditField('tableNumber', parseInt(e.target.value, 10))}
+                    required
+                  />
+                </label>
+
+                <label className="field-label">
+                  <span className="field-label-title">Nombre de Mesa</span>
+                  <input
+                    type="text"
+                    value={editingTable.tableName}
+                    onChange={(e) => updateEditField('tableName', e.target.value)}
+                    required
+                  />
+                </label>
+
+                <label className="field-label">
+                  <span className="field-label-title">Dificultad</span>
+                  <select
+                    value={editingTable.difficulty}
+                    onChange={(e) => updateEditField('difficulty', e.target.value)}
+                    required
+                  >
+                    <option value="">Selecciona...</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Experto">Experto</option>
+                    <option value="Heroico">Heroico</option>
+                  </select>
+                </label>
+
+                <label className="field-label">
+                  <span className="field-label-title">Número de Jugadores</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="4"
+                    value={editingTable.players}
+                    onChange={(e) => updateEditField('players', parseInt(e.target.value, 10))}
+                    required
+                  />
+                </label>
+
+                <label className="field-label">
+                  <span className="field-label-title">ID de Realidad</span>
+                  <select
+                    value={editingTable.realityId}
+                    onChange={(e) => {
+                      const realityId = e.target.value;
+                      const reality = REALITIES_DATA[realityId];
+                      updateEditField('realityId', realityId);
+                      updateEditField('realityName', reality ? reality.name : '');
+                    }}
+                  >
+                    <option value="">Selecciona realidad...</option>
+                    {Object.values(REALITIES_DATA).map((reality) => (
+                      <option key={reality.id} value={reality.id}>
+                        {reality.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div style={{ marginTop: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '1rem' }}>Información de Jugadores</h3>
+                  <button
+                    type="button"
+                    onClick={addPlayerSlot}
+                    style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                  >
+                    + Añadir Jugador
+                  </button>
+                </div>
+
+                {editingTable.playersInfo.map((player, idx) => (
+                  <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <input
+                      type="text"
+                      placeholder="Héroe"
+                      value={player.character || ''}
+                      onChange={(e) => updatePlayerInfo(idx, 'character', e.target.value)}
+                      style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid var(--color-divider)' }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Aspecto"
+                      value={player.aspect || ''}
+                      onChange={(e) => updatePlayerInfo(idx, 'aspect', e.target.value)}
+                      style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid var(--color-divider)' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePlayerSlot(idx)}
+                      style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', background: '#c82333' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="form-actions" style={{ marginTop: '1.5rem' }}>
+                <button type="button" onClick={handleCancelEdit}>
+                  Cancelar
+                </button>
+                <button type="button" onClick={handleSaveEditTable}>
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

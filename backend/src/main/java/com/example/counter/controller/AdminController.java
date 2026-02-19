@@ -50,6 +50,59 @@ public class AdminController {
                 "qrFlags", buildQrFlags()));
     }
 
+    @PutMapping("/tables/{id}")
+    public ResponseEntity<?> updateTable(
+            @PathVariable String id,
+            @RequestBody Map<String, Object> body,
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        try {
+            int tableNumber = ((Number) body.get("tableNumber")).intValue();
+            String tableName = (String) body.get("tableName");
+            String difficulty = (String) body.get("difficulty");
+            int players = ((Number) body.get("players")).intValue();
+            @SuppressWarnings("unchecked")
+            List<Map<String, String>> playersInfoRaw = (List<Map<String, String>>) body.get("playersInfo");
+            String realityId = (String) body.get("realityId");
+            String realityName = (String) body.get("realityName");
+
+            List<com.example.counter.service.model.PlayerInfo> playersInfo = playersInfoRaw == null ? List.of()
+                    : playersInfoRaw.stream()
+                            .map(p -> new com.example.counter.service.model.PlayerInfo(
+                                    p.get("character"), p.get("aspect")))
+                            .toList();
+
+            boolean updated = tablesService.updateRegisterTable(id, tableNumber, tableName, difficulty,
+                    players, playersInfo, realityId, realityName);
+
+            if (updated) {
+                return ResponseEntity.ok(Map.of("success", true));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Mesa no encontrada"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Datos inválidos: " + e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/tables/{id}")
+    public ResponseEntity<?> deleteTable(
+            @PathVariable String id,
+            @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        boolean deleted = tablesService.deleteRegisterTable(id);
+        if (deleted) {
+            return ResponseEntity.ok(Map.of("success", true));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Mesa no encontrada"));
+        }
+    }
+
     @GetMapping(value = "/export/event.csv", produces = "text/csv")
     public ResponseEntity<byte[]> exportEventCsv(
             @RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
@@ -318,36 +371,37 @@ public class AdminController {
         return new ResponseEntity<>(xlsx, headers, HttpStatus.OK);
     }
 
-    private byte[] buildRegisterXlsx(List<RegisterTable> reg, Map<Integer, MesaCounterService.TotalesMesa> mesaSummary) throws Exception {
+    private byte[] buildRegisterXlsx(List<RegisterTable> reg, Map<Integer, MesaCounterService.TotalesMesa> mesaSummary)
+            throws Exception {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Event Tables");
-        
+
         // Header style
         CellStyle headerStyle = workbook.createCellStyle();
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerStyle.setFont(headerFont);
-        
+
         // Header row
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"ID", "Mesa", "Nombre Mesa", "Dificultad", "Jugadores", "Código", "Fecha",
-                   "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Muertes Héroe",
-                   "Jugador", "Héroe", "Aspecto", "Realidad"};
+        String[] headers = { "ID", "Mesa", "Nombre Mesa", "Dificultad", "Jugadores", "Código", "Fecha",
+                "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Muertes Héroe",
+                "Jugador", "Héroe", "Aspecto", "Realidad" };
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
             cell.setCellStyle(headerStyle);
         }
-        
+
         DateTimeFormatter fmt = DateTimeFormatter.ISO_INSTANT;
         int rowNum = 1;
-        
+
         for (RegisterTable t : reg) {
             MesaCounterService.TotalesMesa totales = mesaSummary.get(t.tableNumber());
             List<com.example.counter.service.model.PlayerInfo> list = t.playersInfo();
-            
+
             int heroDefeats = 0;
-            
+
             if (list == null || list.isEmpty()) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(nullToEmpty(t.id()));
@@ -367,7 +421,7 @@ public class AdminController {
                 row.createCell(14).setCellValue(nullToEmpty(t.realityName()));
                 continue;
             }
-            
+
             for (int i = 0; i < list.size(); i++) {
                 var pi = list.get(i);
                 heroDefeats = 0;
@@ -392,12 +446,12 @@ public class AdminController {
                 row.createCell(14).setCellValue(nullToEmpty(t.realityName()));
             }
         }
-        
+
         // Auto-size columns
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
-        
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
         workbook.close();
@@ -407,37 +461,37 @@ public class AdminController {
     private byte[] buildMesaTotalesXlsx(Map<Integer, MesaCounterService.TotalesMesa> map) throws Exception {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Totales por Mesa");
-        
+
         // Header style
         CellStyle headerStyle = workbook.createCellStyle();
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerStyle.setFont(headerFont);
-        
+
         // Header row
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"Mesa", "Avatar Granuja", "Avatar Bribón", "Avatar Bellaco", "Avatar Canalla",
-                   "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Héroes Derrotados"};
+        String[] headers = { "Mesa", "Avatar Granuja", "Avatar Bribón", "Avatar Bellaco", "Avatar Canalla",
+                "Ruptura Total", "Amenaza Héroes", "Amenaza Plan", "Héroes Derrotados" };
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
             cell.setCellStyle(headerStyle);
         }
-        
+
         int rowNum = 1;
         for (var entry : map.entrySet().stream().sorted((a, b) -> Integer.compare(a.getKey(), b.getKey())).toList()) {
             var t = entry.getValue();
             Row row = sheet.createRow(rowNum++);
-            
+
             // Build defeated heroes string
             String defeatedHeroesStr = "";
             if (t != null && t.defeatedHeroes != null && !t.defeatedHeroes.isEmpty()) {
                 defeatedHeroesStr = t.defeatedHeroes.entrySet().stream()
-                    .map(e -> e.getKey() + " x" + e.getValue())
-                    .reduce((a, b) -> a + ", " + b)
-                    .orElse("");
+                        .map(e -> e.getKey() + " x" + e.getValue())
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse("");
             }
-            
+
             row.createCell(0).setCellValue(entry.getKey());
             row.createCell(1).setCellValue(t != null ? t.avatar0 : 0);
             row.createCell(2).setCellValue(t != null ? t.avatar1 : 0);
@@ -448,12 +502,12 @@ public class AdminController {
             row.createCell(7).setCellValue(t != null ? t.threatFromPlan : 0);
             row.createCell(8).setCellValue(defeatedHeroesStr);
         }
-        
+
         // Auto-size columns
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
-        
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
         workbook.close();
