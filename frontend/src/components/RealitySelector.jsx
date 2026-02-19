@@ -61,9 +61,9 @@ export default function RealitySelector({ onConfirm, onCancel }) {
                 <h3>Descripción</h3>
                 {(() => {
                   const text = realityData.description || '';
-                  const canCollapse = text.length > 140;
+                  const canCollapse = text.length > 80;
                   const visibleText = canCollapse && !descriptionExpanded
-                    ? `${text.slice(0, 140).trimEnd()}…`
+                    ? `${text.slice(0, 80).trimEnd()}…`
                     : text;
                   return (
                     <>

@@ -40,7 +40,7 @@
       }
     }
   },
-  "qrEventEnabled" : false,
+  "qrEventEnabled" : true,
   "qrFreegameEnabled" : false,
-  "ts" : 1771505858195
+  "ts" : 1771509458360
 }
