@@ -1,18 +1,18 @@
-## MODOK Control Center
+## LokiAPP Control Center
 
-<div style="background:#3b2f0b;padding:12px 14px;border-radius:10px;border:1px solid #c8a233;color:#f5e9c9;">
+<div style="background:#2a3b2f;padding:12px 14px;border-radius:10px;border:1px solid #c8a233;color:#f5e9c9;">
   <strong>TODO</strong>
   <ul>
     <li>Arreglar las realidades con datos reales</li>
     <li>Revisar nombres de tablas y valores</li>
     <li>Cambiar umbrales de los planes</li>
-    <li>Anadir la info por sectores (dano total por sector, Magog y Puerta)</li>
+    <li>Añadir la info por sectores (daño total por sector, Magog y Puerta)</li>
   </ul>
 </div>
 
 ---
 
-MODOK es una aplicacion full-stack para gestionar en vivo las mesas de juego y contadores globales del evento. El backend (Spring Boot) guarda el estado en memoria y expone una API REST; el frontend (React + Vite) ofrece vistas de registro, tablero por mesa, display y administracion.
+LokiAPP es una aplicacion full-stack para gestionar en vivo las mesas de juego y contadores globales del evento. El backend (Spring Boot) guarda el estado en memoria y expone una API REST; el frontend (React + Vite) ofrece vistas de registro, tablero por mesa, display y administracion.
 
 ---
 
@@ -30,31 +30,22 @@ MODOK es una aplicacion full-stack para gestionar en vivo las mesas de juego y c
 ### Vistas del frontend
 
 1. /register - Registro de mesas del evento principal
-   - Crear mesa: numero, nombre opcional, dificultad, jugadores y datos (personaje + aspecto).
-   - Unirse: lista mesas existentes y permite entrar con codigo.
-   - Tras crear o unirse, redirige a /mesa/:mesaId.
+  - Crear mesa: numero, nombre opcional, dificultad, jugadores y datos (personaje + aspecto).
+  - Unirse: lista mesas existentes y permite entrar con codigo.
+  - Tras crear o unirse, redirige a /mesa/:mesaId.
 
 2. /mesa/:mesaId - Panel de mesa
-   - Reutiliza EventView con anotacion por mesa.
-   - Acciones guiadas para derrotas de avatar, heroe y plan principal.
+  - Reutiliza el tablero principal con anotacion por mesa.
+  - Acciones guiadas para derrotas de avatar, heroe y plan principal.
+  - Indicadores por mesa/sector segun el estado del evento.
 
-3. /freegame - Registro de mesas libres
-   - Similar al registro principal, con reto inevitable y legado.
-   - Tras crear o unirse, redirige a /freegame/:mesaId.
+3. /display - Visualizacion publica
+  - Muestra contadores sin controles (modo display).
 
-4. /freegame/:mesaId - Ficha de mesa libre
-   - Muestra desglose de puntuacion y permite fijar Puntos de Victoria.
-
-5. /event - Panel de contadores globales
-   - Tablero central; acepta ?mesa=N para registrar eventos como mesa.
-
-6. /display - Visualizacion publica
-   - Muestra contadores sin controles (modo display).
-
-7. /admin - Consola administrativa
-   - Autenticada con X-Admin-Secret.
-   - Tabs: Modificar valores, Mesas, Estadisticas, Backups.
-   - Exportaciones: XLSX (Event y Totales por mesa) y CSV para freegame.
+4. /admin - Consola administrativa
+  - Autenticada con X-Admin-Secret.
+  - Tabs: Modificar valores, Mesas, Estadisticas, Backups.
+  - Exportaciones: XLSX (Event y Totales por mesa).
 
 ---
 
@@ -79,7 +70,6 @@ MODOK es una aplicacion full-stack para gestionar en vivo las mesas de juego y c
 | POST /api/mesas/{mesaId}/hero-defeat | Registra heroe derrotado en una mesa. |
 | POST /api/mesas/{mesaId}/plan-completion | Registra plan principal completado en una mesa. |
 | POST /api/tables/register/create | Crea mesa del evento. |
-| POST /api/tables/freegame/create | Crea mesa libre. |
 | GET /api/admin/backup/* | Endpoints de snapshots (crear, listar, restaurar, borrar, etc.). |
 
 ---
@@ -101,8 +91,8 @@ MODOK es una aplicacion full-stack para gestionar en vivo las mesas de juego y c
 ### Despliegue con Docker
 
 ```bash
-docker build -t modok-control .
-docker run -p 8080:8080 modok-control
+docker build -t lokiapp .
+docker run -p 8080:8080 lokiapp
 ```
 
 - Configura ADMIN_SECRET y variables de backup segun necesidad.
@@ -113,5 +103,4 @@ docker run -p 8080:8080 modok-control
 ### Notas operativas
 
 - Snapshots: se guardan como app-YYYYMMDD-HHmmss.json.
-- Reto inevitable: si es (Ninguno), la puntuacion total queda en 0.
 - Seguridad: ajusta admin.secret via ADMIN_SECRET y restringe /admin/*.
