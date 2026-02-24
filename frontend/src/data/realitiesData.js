@@ -554,4 +554,50 @@ export const REALITIES_DATA = {
     ],
     "specialRules": "Todas las cartas del conjunto modular Futuro Pasado pierden la palabra clave Victoria."
   }
+  ,
+  "loom-world": {
+    "id": "loom-world",
+    "name": "Loom World",
+    "description": "La Red de la Vida y el Destino se tensa.\nLos tótems araña han sido marcados… y los Herederos han salido de caza.\nCada salto entre realidades deja un hilo atrás. Cada decisión vibra en la red.\nAquí no luchan solos. Luchan conectados. Porque cuando cae uno, toda la red lo siente.",
+    "image": "/realities/loom-world.jpg",
+    "selectableHeroes": ["Spider-Man (Peter Parker)", "Spiderwoman", "Spiderman (Miles Morales)", "Ghost-Spider", "SP//dr", "Spidercerdo", "Seda"],
+    "mandatoryModulars": ["Los Herederos"],
+    "specialRules": "Spiderman Peter Parker es obligatorio. Spider-Man (Peter Parker) empieza la partida con la mejora Guerrero de la Gran Red en juego. Esta mejora no cuenta para el límite mínimo de cartas del mazo, ya que gana la palabra clave Permanente."
+  },
+  "la-mansion-de-los-vengadores": {
+    "id": "la-mansion-de-los-vengadores",
+    "name": "La mansión de los Vengadores",
+    "description": "Las rencillas antiguas nunca mueren.  Solo esperan el momento adecuado para volver a estallar.  Y cuando lo hacen… Los Vengadores siempre están en el centro.\nAquí no se trata solo de defender un lugar, sino un legado. Un símbolo que ha resistido invasiones, traiciones y guerras que no siempre salieron en los titulares. HYDRA lo sabe. Y vuelve a intentarlo.\nAquí no luchan por gloria ni por órdenes. Luchan porque alguien tiene que hacerlo.\nY porque, pase lo que pase… los Vengadores siempre responden.",
+    "image": "/realities/la-mansion-de-los-vengadores.jpg",
+    "selectableHeroes": ["Avispa", "Bruja Escarlata", "Capitán América", "Capitana Marvel", "Dr. Extraño", "Halcón", "Hombre Hormiga", "Hulk", "Hulka", "Hulkling", "Iron Man", "Vision", "Máquina de Guerra", "Mercurio", "Ojo de Halcón", "Pantera Negra (T'Challa)", "Spectrum", "Spiderman (Peter Parker)", "Spiderwoman", "Thor", "Tigra", "Valquiria", "Viuda Negra", "Hércules", "Hombre Maravilla"],
+    "mandatoryModulars": ["Asalto de HYDRA", "Patrulla de HYDRA"],
+    "specialRules": "Capitán América es obligatorio."
+  },
+  "sapiencial": {
+    "id": "sapiencial",
+    "name": "Sapiencial",
+    "description": "Son proscritos, y lo saben. El universo los ama y los odia a partes iguales.\n Pero cuando entran en escena… el ritmo lo marcan ellos.\nNo siguen planes maestros ni cadenas de mando. Improvisan, discuten, se equivocan y, aun así, siempre acaban salvando el día. A su manera.\nNo son héroes ejemplares, pero cuando el cosmos se descontrola… Nadie lo hace sonar mejor que ellos.",
+    "image": "/realities/sapiencial.jpg",
+    "selectableHeroes": ["Adam Warlock", "Drax", "Gamora", "Groot", "Mapache Cohete", "Nébula", "Starlord", "Veneno"],
+    "mandatoryModulars": ["Bestiario Galáctico"],
+    "specialRules": "Star-Lord es obligatorio"
+  },
+  "attilan": {
+    "id": "attilan",
+    "name": "Attilan",
+    "description": "No buscan aprobación ni títulos heredados.\nSon jóvenes, son ruidosos y creen que el mundo puede ser mejor… Una nueva generación que demuestra que el heroísmo no depende de la experiencia, sino de la convicción.\nNo son el futuro. Son el presente. Y no piensan esperar su turno.",
+    "image": "/realities/attilan.jpg",
+    "selectableHeroes": ["Ms. Marvel", "Spiderman (Miles Morales)", "Nova", "Ironheart"],
+    "mandatoryModulars": ["Científico IMA", "Riesgo extremo"],
+    "specialRules": "Ms. Marvel es obligatoria. Joystick pierde la palabra clave Victoria."
+  },
+  "madrid": {
+    "id": "madrid",
+    "name": "Madrid",
+    "description": "Este es el mundo tal como lo conocemos. El punto de referencia. La línea base. Donde todo empezó… o donde todo podría terminar.\nAquí no hay restricciones impuestas por la realidad. Solo las decisiones que toméis.\nLa realidad parece estable. Pero en el Universo 616… las cosas nunca permanecen así por mucho tiempo.",
+    "image": "/realities/madrid.jpg",
+    "selectableHeroes": "Cualquiera",
+    "mandatoryModulars": ["Magia Embaucadora"],
+    "specialRules": ""
+  }
 };

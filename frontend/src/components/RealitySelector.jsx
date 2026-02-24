@@ -7,7 +7,9 @@ export default function RealitySelector({ onConfirm, onCancel }) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   const realitiesData = REALITIES_DATA;
-  const realities = Object.values(realitiesData);
+  // Obtener las IDs en el orden definido en el objeto
+  const realityIds = Object.keys(realitiesData);
+  const realities = realityIds.map((id, idx) => ({ ...realitiesData[id], id, number: idx + 1 }));
 
   useEffect(() => {
     if (selectedReality && realitiesData[selectedReality]) {
@@ -46,11 +48,20 @@ export default function RealitySelector({ onConfirm, onCancel }) {
               required
             >
               <option value="">Selecciona una realidad...</option>
-              {realities.map((reality) => (
-                <option key={reality.id} value={reality.id}>
-                  {reality.name}
-                </option>
-              ))}
+              {realities.map((reality) => {
+                const isCollapsed = reality.id === 'mojoverso';
+                return (
+                  <option
+                    key={reality.id}
+                    value={reality.id}
+                    disabled={isCollapsed}
+                    style={isCollapsed ? { color: '#888', backgroundColor: '#eee' } : {}}
+                  >
+                    {`Realidad #${reality.number}: ${reality.name}`}
+                    {isCollapsed ? ' (colapsada)' : ''}
+                  </option>
+                );
+              })}
             </select>
           </label>
 
