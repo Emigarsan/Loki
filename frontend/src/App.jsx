@@ -9,7 +9,7 @@ const initialState = {
 
 const indicatorDefs = [
   { key: 'mangog', label: 'Mangog' },
-  { key: 'gate', label: 'Puerta entre mundos' }
+  { key: 'gate', label: 'Portal entre dos mundos' }
 ];
 
 const AVATARS = {
@@ -274,7 +274,7 @@ export function EventView({ mesaId = null } = {}) {
           return fetch(`${API_BASE}/primary/reduce`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ delta: rupturaAmount })
+            body: JSON.stringify({ delta: rupturaAmount, mesaId })
           });
         }
         return Promise.resolve({ ok: true, json: () => Promise.resolve(state) });
@@ -332,7 +332,7 @@ export function EventView({ mesaId = null } = {}) {
         return fetch(`${API_BASE}/tertiary/increment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ delta: 1 })
+          body: JSON.stringify({ delta: 1, mesaId })
         });
       })
       .then((response) => {
@@ -380,7 +380,7 @@ export function EventView({ mesaId = null } = {}) {
         return fetch(`${API_BASE}/tertiary/increment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ delta: 1 })
+          body: JSON.stringify({ delta: 1, mesaId })
         });
       })
       .then((response) => {

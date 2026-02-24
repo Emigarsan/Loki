@@ -4,6 +4,7 @@ import com.example.counter.service.CounterService;
 import com.example.counter.service.TablesService;
 import com.example.counter.service.mesa.MesaCounterService;
 import com.example.counter.service.mesa.MesaCounterService.Event;
+import com.example.counter.service.mesa.MesaCounterService.AvatarDefeat;
 import com.example.counter.service.mesa.MesaCounterService.TotalesMesa;
 import com.example.counter.service.model.CounterState;
 import com.example.counter.service.model.FreeGameTable;
@@ -84,6 +85,7 @@ public class SnapshotService {
         public List<FreeGameTable> freeGameTables;
         public Map<Integer, TotalesMesa> mesaTotals;
         public List<Event> mesaEvents;
+        public List<AvatarDefeat> avatarDefeats;
         public Map<Integer, SectorService.MesaIndicators> sectorStates;
         public boolean qrEventEnabled;
         public boolean qrFreegameEnabled;
@@ -95,7 +97,8 @@ public class SnapshotService {
         ensureDir(backupDir);
         log.info(
                 "Snapshot config -> backup.dir={}, backup.writable={}, user.dir={}, backup.every.ms={}, backup.retention.min={}, drive.dir={}, drive.every.ms={}, drive.keep.copies={}, backup.initial={}, restore.onstart={} ",
-                backupDir, isDirWritable(backupDir), Paths.get("").toAbsolutePath(), backupEveryMs, backupRetentionMin, driveDir, driveEveryMs, driveKeepCopies, backupInitial,
+                backupDir, isDirWritable(backupDir), Paths.get("").toAbsolutePath(), backupEveryMs, backupRetentionMin,
+                driveDir, driveEveryMs, driveKeepCopies, backupInitial,
                 restoreOnStart);
         if (restoreOnStart) {
             restoreLatest();
@@ -155,6 +158,7 @@ public class SnapshotService {
         data.qrFreegameEnabled = tablesService.isFreegameQrEnabled();
         data.mesaTotals = mesaService.getTotalesSnapshot();
         data.mesaEvents = mesaService.getEventosSnapshot();
+        data.avatarDefeats = mesaService.getAvatarDefeatsSnapshot();
         data.sectorStates = sectorService.getSnapshot();
         data.ts = System.currentTimeMillis();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(out.toFile(), data);
@@ -209,7 +213,7 @@ public class SnapshotService {
                 counterService.setSecondaryPlan(Math.max(0, secondaryPlan));
             }
         }
-        mesaService.restore(data.mesaTotals, data.mesaEvents);
+        mesaService.restore(data.mesaTotals, data.mesaEvents, data.avatarDefeats);
         sectorService.restore(data.sectorStates);
         tablesService.restore(data.registerTables, data.freeGameTables);
         tablesService.setEventQrEnabled(data.qrEventEnabled);
@@ -351,7 +355,8 @@ public class SnapshotService {
 
     private boolean isDirWritable(Path dir) {
         try {
-            if (dir == null) return false;
+            if (dir == null)
+                return false;
             Files.createDirectories(dir);
             Path probe = Files.createTempFile(dir, "write-test-", ".tmp");
             Files.deleteIfExists(probe);

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { REALITIES_DATA } from '../data/realitiesData.js';
+import * as XLSX from 'xlsx';
 
 const API_BASE = '/api/counter';
 
@@ -23,6 +24,29 @@ const getSectorName = (sectorId) => {
   if (!sectorId || sectorId < 1) return 'Desconocido';
   const index = (sectorId - 1) % CONSTELLATION_NAMES.length;
   return CONSTELLATION_NAMES[index];
+};
+
+const SPECIAL_AVATAR_SPECS = [
+  {
+    id: 'mangog',
+    display: 'Mangog',
+    matches: (normalized) => normalized.includes('mangog')
+  },
+  {
+    id: 'portal',
+    display: 'Portal entre dos mundos',
+    matches: (normalized) => normalized.includes('portal entre dos mundos')
+  }
+];
+
+const getSectorIdFromMesa = (mesaNumber) => {
+  const parsedMesa = Number(mesaNumber);
+  const safeMesaId = Number.isFinite(parsedMesa) && parsedMesa > 0 ? parsedMesa : 1;
+  if (safeMesaId <= 4) return 1;
+  if (safeMesaId <= 8) return 2;
+  const offset = safeMesaId - 9;
+  const group = Math.max(0, Math.floor(offset / 3));
+  return 3 + group;
 };
 
 const getAspectVisual = (aspect) => {
@@ -53,8 +77,10 @@ export default function AdminPage() {
   const [adminKey, setAdminKey] = useState('');
   const [isAuthed, setIsAuthed] = useState(false);
   const [tables, setTables] = useState({ register: [] });
+  const [backendHeroes, setBackendHeroes] = useState([]);
   const [qrFlags, setQrFlags] = useState({ event: false });
   const [mesaSummary, setMesaSummary] = useState({});
+  const [avatarDefeats, setAvatarDefeats] = useState([]);
   const [tab, setTab] = useState('mod');
   const [statsTab, setStatsTab] = useState('avatares');
   const [backups, setBackups] = useState({ dir: '', writable: true, files: [] });
@@ -65,6 +91,11 @@ export default function AdminPage() {
   const [editingTable, setEditingTable] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [heroesStatsModalVisible, setHeroesStatsModalVisible] = useState(false);
+  const [heroCombosModalVisible, setHeroCombosModalVisible] = useState(false);
+  const [avatarDefeatsModalVisible, setAvatarDefeatsModalVisible] = useState(false);
+  const [specialAvatarDefeatsModalVisible, setSpecialAvatarDefeatsModalVisible] = useState(false);
+  const [avatarDefeatMesaFilter, setAvatarDefeatMesaFilter] = useState('');
+  const [avatarDefeatNameFilter, setAvatarDefeatNameFilter] = useState('');
   const backupFileInputRef = useRef(null);
   const allTables = Array.isArray(tables.register) ? tables.register : [];
   const totalTables = allTables.length;
@@ -94,6 +125,99 @@ export default function AdminPage() {
       threatFromPlan: 0
     })
   ), [mesaSummaryRows]);
+  const topAvatarDefeats = useMemo(() => (
+    (avatarDefeats || []).slice(0, 10)
+  ), [avatarDefeats]);
+  const avatarDefeatNameOptions = useMemo(() => (
+    Array.from(new Set((avatarDefeats || []).map((item) => item?.avatarName).filter(Boolean))).sort((a, b) => a.localeCompare(b))
+  ), [avatarDefeats]);
+  const filteredAvatarDefeats = useMemo(() => {
+    const mesaFilter = avatarDefeatMesaFilter.trim();
+    const avatarFilter = avatarDefeatNameFilter.trim();
+    return (avatarDefeats || []).filter((defeat) => {
+      const mesaMatches = mesaFilter === '' || String(defeat?.mesaId ?? '').includes(mesaFilter);
+      const avatarMatches = avatarFilter === '' || (defeat?.avatarName || '') === avatarFilter;
+      return mesaMatches && avatarMatches;
+    });
+  }, [avatarDefeats, avatarDefeatMesaFilter, avatarDefeatNameFilter]);
+
+  const trackedSpecialAvatarDefeats = useMemo(() => {
+    return (avatarDefeats || [])
+      .map((defeat) => {
+        const name = (defeat?.avatarName || '').trim();
+        if (!name) return null;
+        const normalized = name.toLowerCase();
+        const matchedSpec = SPECIAL_AVATAR_SPECS.find((spec) => spec.matches(normalized));
+        if (!matchedSpec) return null;
+        return {
+          ...defeat,
+          specialAvatarLabel: matchedSpec.display,
+          sectorId: getSectorIdFromMesa(defeat?.mesaId)
+        };
+      })
+      .filter(Boolean);
+  }, [avatarDefeats]);
+
+  const sectorSummaryRows = useMemo(() => {
+    const sectorData = {};
+
+    Object.entries(mesaSummary || {}).forEach(([mesaNumber, row]) => {
+      const sectorId = row?.sectorId ?? getSectorIdFromMesa(parseInt(mesaNumber, 10));
+      if (!sectorData[sectorId]) {
+        sectorData[sectorId] = {
+          sectorId,
+          mesas: [],
+          rupturaTotal: 0,
+          threatFromHeroes: 0,
+          threatFromPlan: 0,
+          avatar0: 0,
+          avatar1: 0,
+          avatar2: 0,
+          avatar3: 0,
+          mangogDefeats: 0,
+          portalDefeats: 0
+        };
+      }
+
+      sectorData[sectorId].mesas.push(row?.tableName || `Mesa ${mesaNumber}`);
+      sectorData[sectorId].rupturaTotal += row?.rupturaTotal ?? 0;
+      sectorData[sectorId].threatFromHeroes += row?.threatFromHeroes ?? 0;
+      sectorData[sectorId].threatFromPlan += row?.threatFromPlan ?? 0;
+      sectorData[sectorId].avatar0 += row?.avatar0 ?? 0;
+      sectorData[sectorId].avatar1 += row?.avatar1 ?? 0;
+      sectorData[sectorId].avatar2 += row?.avatar2 ?? 0;
+      sectorData[sectorId].avatar3 += row?.avatar3 ?? 0;
+    });
+
+    (trackedSpecialAvatarDefeats || []).forEach((defeat) => {
+      const sectorId = defeat?.sectorId ?? getSectorIdFromMesa(defeat?.mesaId);
+      if (!sectorData[sectorId]) {
+        sectorData[sectorId] = {
+          sectorId,
+          mesas: [],
+          rupturaTotal: 0,
+          threatFromHeroes: 0,
+          threatFromPlan: 0,
+          avatar0: 0,
+          avatar1: 0,
+          avatar2: 0,
+          avatar3: 0,
+          mangogDefeats: 0,
+          portalDefeats: 0
+        };
+      }
+
+      const specialName = (defeat?.specialAvatarLabel || defeat?.avatarName || '').toLowerCase();
+      if (specialName.includes('mangog')) {
+        sectorData[sectorId].mangogDefeats += 1;
+      } else if (specialName.includes('portal entre dos mundos')) {
+        sectorData[sectorId].portalDefeats += 1;
+      }
+    });
+
+    return Object.values(sectorData).sort((a, b) => a.sectorId - b.sectorId);
+  }, [mesaSummary, trackedSpecialAvatarDefeats]);
+
   const recommendedTertiaryMax = totalTables * 2;
   const recommendedPrimaryMax = totalPlayers * 20;
 
@@ -137,12 +261,24 @@ export default function AdminPage() {
       .catch(() => { });
   }, [adminKey, isAuthed]);
 
+  useEffect(() => {
+    if (!isAuthed) {
+      setBackendHeroes([]);
+      return;
+    }
+    fetch('/api/tables/register/characters')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => setBackendHeroes(Array.isArray(data) ? data : []))
+      .catch(() => setBackendHeroes([]));
+  }, [isAuthed]);
+
   useEffect(() => { if (isAuthed) { fetchTables(); const id = setInterval(fetchTables, 3000); return () => clearInterval(id); } }, [isAuthed, fetchTables]);
 
   useEffect(() => {
     if (!isAuthed) return;
     const load = () => {
       fetch('/api/mesas/summary').then(r => r.ok ? r.json() : {}).then(setMesaSummary).catch(() => { });
+      fetch('/api/mesas/avatar-defeats').then(r => r.ok ? r.json() : []).then(setAvatarDefeats).catch(() => { });
     };
     load();
     const id = setInterval(load, 3000);
@@ -279,7 +415,8 @@ export default function AdminPage() {
       players: table.players,
       playersInfo: table.playersInfo || [],
       realityId: table.realityId || '',
-      realityName: table.realityName || ''
+      realityName: table.realityName || '',
+      disconnected: Boolean(table.disconnected)
     });
     setEditModalVisible(true);
   };
@@ -305,6 +442,53 @@ export default function AdminPage() {
       })
       .catch((e) => alert(e.message));
   };
+
+  const toggleDisconnect = useCallback((table) => {
+    if (!isAuthed || !table?.id) return;
+    const nextDisconnected = !Boolean(table.disconnected);
+    const numericTableNumber = Number(table.tableNumber);
+    const tableNumber = Number.isFinite(numericTableNumber) ? numericTableNumber : 0;
+    const numericPlayers = Number(table.players);
+    const players = Number.isFinite(numericPlayers) ? numericPlayers : 0;
+    const body = {
+      tableNumber,
+      tableName: table.tableName || '',
+      difficulty: table.difficulty || '',
+      players: Math.max(0, players),
+      playersInfo: Array.isArray(table.playersInfo) ? table.playersInfo : [],
+      realityId: table.realityId || '',
+      realityName: table.realityName || '',
+      disconnected: nextDisconnected
+    };
+
+    setTables((prev) => ({
+      ...prev,
+      register: Array.isArray(prev.register)
+        ? prev.register.map((row) => (row.id === table.id ? { ...row, disconnected: nextDisconnected } : row))
+        : prev.register
+    }));
+
+    fetch(`/api/admin/tables/${table.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Secret': adminKey
+      },
+      body: JSON.stringify(body)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((data) => Promise.reject(new Error(data?.error || 'Error al actualizar la mesa')));
+        }
+        return response.json();
+      })
+      .catch((e) => {
+        alert(e.message || 'Error al cambiar el estado de desconexión');
+      })
+      .finally(() => {
+        fetchTables();
+      });
+  }, [adminKey, fetchTables, isAuthed]);
 
   const handleSaveEditTable = () => {
     if (!editingTable) return;
@@ -405,7 +589,7 @@ export default function AdminPage() {
             };
           });
 
-        return { hero, total, segments };
+        return { hero, total, segments, aspectBreakdown };
       });
 
     const totalAspectCount = Object.values(aspectCount).reduce((sum, count) => sum + count, 0);
@@ -424,11 +608,60 @@ export default function AdminPage() {
       topHeroRows: heroRows.slice(0, 10),
       aspectRows,
       comboEntries,
-      topComboRows: comboEntries.slice(0, 5),
+      topComboRows: comboEntries.slice(0, 10),
       modalComboRows: comboEntries.slice(0, 15),
       topCombo: comboEntries[0] || null
     };
   }, [tables.register]);
+
+  const allSelectableHeroes = useMemo(() => {
+    const backendCatalog = Array.isArray(backendHeroes)
+      ? backendHeroes.filter(Boolean)
+      : [];
+
+    const fallbackCatalog = Object.values(REALITIES_DATA || {})
+      .flatMap((reality) => Array.isArray(reality?.selectableHeroes) ? reality.selectableHeroes : [])
+      .filter(Boolean);
+
+    const sourceCatalog = backendCatalog.length > 0 ? backendCatalog : fallbackCatalog;
+    return Array.from(new Set(sourceCatalog)).sort((a, b) => a.localeCompare(b));
+  }, [backendHeroes]);
+
+  const unusedHeroes = useMemo(() => {
+    const usedHeroes = new Set((heroesStatsData.heroRows || []).map((row) => row.hero));
+    return allSelectableHeroes.filter((hero) => !usedHeroes.has(hero));
+  }, [allSelectableHeroes, heroesStatsData.heroRows]);
+
+  const usedHeroNames = useMemo(() => (
+    (heroesStatsData.heroRows || []).map((row) => row.hero)
+  ), [heroesStatsData.heroRows]);
+
+  const orderByBackend = useCallback((names) => {
+    if (!Array.isArray(backendHeroes) || backendHeroes.length === 0) {
+      return Array.isArray(names) ? names.slice() : [];
+    }
+    const nameSet = new Set(names || []);
+    const ordered = [];
+    // preserve backend order
+    backendHeroes.forEach((h) => {
+      if (nameSet.has(h)) ordered.push(h);
+    });
+    // append any names not present in backend at the end (preserve original order)
+    (Array.isArray(names) ? names : []).forEach((n) => {
+      if (!backendHeroes.includes(n)) ordered.push(n);
+    });
+    return ordered;
+  }, [backendHeroes]);
+
+  const usedHeroesTooltip = useMemo(() => {
+    const ordered = orderByBackend(usedHeroNames || []);
+    return ordered.length > 0 ? ordered.join('\n') : 'Sin héroes seleccionados';
+  }, [orderByBackend, usedHeroNames]);
+
+  const unusedHeroesTooltip = useMemo(() => {
+    const ordered = orderByBackend(unusedHeroes || []);
+    return ordered.length > 0 ? ordered.join('\n') : 'No hay héroes pendientes';
+  }, [orderByBackend, unusedHeroes]);
 
 
   const download = (path, filename) => {
@@ -442,6 +675,145 @@ export default function AdminPage() {
         a.click();
         URL.revokeObjectURL(url);
       }).catch((e) => alert(e.message));
+  };
+
+  const formatAvatarDefeatTimestamp = (timestamp) => {
+    if (!timestamp) return '-';
+    return new Date(timestamp).toLocaleString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
+  const exportAvatarDefeatsToExcel = (rowsToExport = avatarDefeats) => {
+    if (!rowsToExport || rowsToExport.length === 0) {
+      alert('No hay derrotas de avatar para exportar.');
+      return;
+    }
+
+    const rows = rowsToExport.map((defeat, index) => ({
+      '#': index + 1,
+      Avatar: defeat.avatarName || '-',
+      Mesa: `Mesa ${defeat.mesaId ?? '-'}`,
+      Ruptura: defeat.rupturaAmount ?? 0,
+      Timestamp: formatAvatarDefeatTimestamp(defeat.timestamp)
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Avatares Derrotados');
+    XLSX.writeFile(workbook, `avatares-derrotados-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.xlsx`);
+  };
+
+  const exportSpecialAvatarDefeatsToExcel = (rowsToExport = trackedSpecialAvatarDefeats) => {
+    if (!rowsToExport || rowsToExport.length === 0) {
+      alert('No hay derrotas especiales para exportar.');
+      return;
+    }
+
+    const rows = rowsToExport.map((defeat, index) => ({
+      '#': index + 1,
+      Sector: getSectorName(defeat.sectorId),
+      Mesa: `Mesa ${defeat.mesaId ?? '-'}`,
+      Avatar: defeat.specialAvatarLabel || defeat.avatarName || '-',
+      Timestamp: formatAvatarDefeatTimestamp(defeat.timestamp)
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Mangog y Portal');
+    XLSX.writeFile(workbook, `mangog-portal-derrotas-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.xlsx`);
+  };
+
+  const exportHeroTotalsToExcel = (rowsToExport = heroesStatsData.heroRows) => {
+    if (!rowsToExport || rowsToExport.length === 0) {
+      alert('No hay datos de héroes para exportar.');
+      return;
+    }
+
+    const orderedAspects = [
+      ...new Set([
+        ...Object.keys(ASPECT_COLORS),
+        ...((heroesStatsData.aspectRows || []).map((row) => row.aspect))
+      ])
+    ];
+
+    const rows = rowsToExport.map((row, index) => {
+      const result = {
+        '#': index + 1,
+        Heroe: row.hero,
+        Total: row.total
+      };
+      orderedAspects.forEach((aspect) => {
+        result[aspect] = row.aspectBreakdown?.[aspect] ?? 0;
+      });
+      return result;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Heroes por Aspecto');
+
+    const unusedRows = unusedHeroes.map((hero, index) => ({
+      '#': index + 1,
+      Heroe: hero
+    }));
+    const unusedWorksheet = XLSX.utils.json_to_sheet(unusedRows.length > 0 ? unusedRows : [{ Heroe: 'Sin datos' }]);
+    XLSX.utils.book_append_sheet(workbook, unusedWorksheet, 'Heroes no seleccionados');
+
+    XLSX.writeFile(workbook, `heroes-totales-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.xlsx`);
+  };
+
+  const exportHeroCombosToExcel = (rowsToExport = heroesStatsData.comboEntries) => {
+    if (!rowsToExport || rowsToExport.length === 0) {
+      alert('No hay combinaciones para exportar.');
+      return;
+    }
+
+    const rows = rowsToExport.map(([combo, count], index) => {
+      const [hero, aspect] = combo.split(' | ');
+      return {
+        '#': index + 1,
+        Heroe: hero || '-',
+        Aspecto: aspect || '-',
+        Veces: count
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Combinaciones');
+    XLSX.writeFile(workbook, `heroes-aspectos-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.xlsx`);
+  };
+
+  const exportSectorSummaryToExcel = (rowsToExport = sectorSummaryRows) => {
+    if (!rowsToExport || rowsToExport.length === 0) {
+      alert('No hay datos de sectores para exportar.');
+      return;
+    }
+
+    const rows = rowsToExport.map((row) => ({
+      Sector: `${getSectorName(row.sectorId)} (#${row.sectorId})`,
+      Mesas: row.mesas.length,
+      Ruptura: row.rupturaTotal,
+      Amenaza_Heroes: row.threatFromHeroes,
+      Amenaza_Plan: row.threatFromPlan,
+      Granuja: row.avatar0,
+      Bribon: row.avatar1,
+      Bellaco: row.avatar2,
+      Canalla: row.avatar3,
+      Mangog: row.mangogDefeats,
+      Portal: row.portalDefeats
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sectores');
+    XLSX.writeFile(workbook, `sectores-resumen-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.xlsx`);
   };
 
   const tryAuth = (e) => {
@@ -693,6 +1065,7 @@ export default function AdminPage() {
                             <th>Dificultad</th>
                             <th>Jugadores</th>
                             <th>Detalle jugadores</th>
+                            <th>Desconectar</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -707,7 +1080,7 @@ export default function AdminPage() {
                               const group = Math.max(0, Math.floor(offset / 3));
                               return 3 + group;
                             };
-                            
+
                             // Sort and add sector information
                             const sortedTables = (tables.register || [])
                               .slice()
@@ -716,7 +1089,7 @@ export default function AdminPage() {
                                 ...t,
                                 sectorId: calculateSector(t.tableNumber ?? 0)
                               }));
-                            
+
                             // Group by sector for rowspan calculation
                             const sectorGroups = {};
                             sortedTables.forEach(t => {
@@ -725,7 +1098,7 @@ export default function AdminPage() {
                               }
                               sectorGroups[t.sectorId].push(t);
                             });
-                            
+
                             // Render rows with rowspan
                             return sortedTables.map((t, index) => {
                               const mesa = t.tableNumber ?? '';
@@ -733,11 +1106,11 @@ export default function AdminPage() {
                               const dif = t.difficulty ?? '';
                               const players = t.players ?? '';
                               const playersInfo = Array.isArray(t.playersInfo) ? t.playersInfo : [];
-                              
+
                               // Check if this is the first row of the sector
                               const isFirstInSector = index === 0 || sortedTables[index - 1].sectorId !== t.sectorId;
                               const rowspan = isFirstInSector ? sectorGroups[t.sectorId].length : 0;
-                              
+
                               return (
                                 <tr key={t.id}>
                                   {isFirstInSector && (
@@ -762,7 +1135,7 @@ export default function AdminPage() {
                                       {playersInfo.length > 0
                                         ? playersInfo.map((p, idx) => {
                                           let chipStyle = {};
-                                          
+
                                           // Adam Warlock always shows all 5 colors
                                           if (p.character && p.character.toLowerCase().includes('adam warlock')) {
                                             const allColors = Object.values(ASPECT_COLORS);
@@ -778,7 +1151,7 @@ export default function AdminPage() {
                                             // Split aspect by dash to handle multi-aspect characters
                                             const aspects = p.aspect.split('-').map(a => a.trim());
                                             const colors = aspects.map(a => ASPECT_COLORS[a]).filter(Boolean);
-                                            
+
                                             if (colors.length > 1) {
                                               // Multi-aspect: create gradient with all colors
                                               const gradientStops = colors.map((color, i) => {
@@ -805,6 +1178,16 @@ export default function AdminPage() {
                                         })
                                         : <span className="mesa-player-empty">Sin jugadores</span>}
                                     </div>
+                                  </td>
+                                  <td>
+                                    <label className="admin-toggle">
+                                      <input
+                                        type="checkbox"
+                                        checked={!!t.disconnected}
+                                        onChange={() => toggleDisconnect(t)}
+                                      />
+                                      <span>Desconectar</span>
+                                    </label>
                                   </td>
                                   <td>
                                     <div className="table-actions">
@@ -854,7 +1237,7 @@ export default function AdminPage() {
                               const group = Math.max(0, Math.floor(offset / 3));
                               return 3 + group;
                             };
-                            
+
                             // Group by sector for rowspan calculation
                             const sectorGroups = {};
                             mesaSummaryRows.forEach(([mesa, t]) => {
@@ -864,14 +1247,14 @@ export default function AdminPage() {
                               }
                               sectorGroups[sectorId].push([mesa, t]);
                             });
-                            
+
                             // Render rows with rowspan
                             return mesaSummaryRows.map(([mesa, t], index) => {
                               const sectorId = t?.sectorId ?? calculateSector(parseInt(mesa));
                               const prevSectorId = index > 0 ? (mesaSummaryRows[index - 1][1]?.sectorId ?? calculateSector(parseInt(mesaSummaryRows[index - 1][0]))) : null;
                               const isFirstInSector = index === 0 || prevSectorId !== sectorId;
                               const rowspan = isFirstInSector ? sectorGroups[sectorId].length : 0;
-                              
+
                               return (
                                 <tr key={mesa}>
                                   {isFirstInSector && (
@@ -994,6 +1377,98 @@ export default function AdminPage() {
                           });
                       })()}
                     </div>
+                    <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(200, 162, 51, 0.2)', paddingTop: '1rem' }}>
+                      <h4 style={{ fontSize: '0.9rem', marginBottom: '0.8rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05rem' }}>Top 10 últimos avatares derrotados</h4>
+                      {topAvatarDefeats && topAvatarDefeats.length > 0 ? (
+                        <div className="stat-table-wrapper">
+                          <table className="stat-table">
+                            <thead>
+                              <tr>
+                                <th>Avatar</th>
+                                <th>Mesa</th>
+                                <th>Ruptura</th>
+                                <th>Timestamp</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {topAvatarDefeats.map((defeat, idx) => (
+                                <tr key={idx}>
+                                  <td>{defeat.avatarName}</td>
+                                  <td>Mesa {defeat.mesaId}</td>
+                                  <td>{defeat.rupturaAmount}</td>
+                                  <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <span className="stat-empty">No hay avatares derrotados registrados.</span>
+                      )}
+                      <div style={{ marginTop: '1rem' }}>
+                        <h4 style={{ marginBottom: '0.6rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05rem' }}>
+                          Mangog / Portal entre dos mundos
+                        </h4>
+                        {trackedSpecialAvatarDefeats && trackedSpecialAvatarDefeats.length > 0 ? (
+                          <div className="stat-table-wrapper">
+                            <table className="stat-table">
+                              <thead>
+                                <tr>
+                                  <th>Sector</th>
+                                  <th>Mesa</th>
+                                  <th>Derrotado</th>
+                                  <th>Timestamp</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {trackedSpecialAvatarDefeats.map((defeat, idx) => (
+                                  <tr key={`special-${idx}`}>
+                                    <td>{getSectorName(defeat.sectorId)}</td>
+                                    <td>Mesa {defeat.mesaId}</td>
+                                    <td>{defeat.specialAvatarLabel || defeat.avatarName}</td>
+                                    <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <span className="stat-empty">Todavía no se ha derrotado a Mangog ni a Portal entre dos mundos.</span>
+                        )}
+                      </div>
+                      <div className="form-actions" style={{ marginTop: 12 }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAvatarDefeatMesaFilter('');
+                            setAvatarDefeatNameFilter('');
+                            setAvatarDefeatsModalVisible(true);
+                          }}
+                          disabled={!avatarDefeats || avatarDefeats.length === 0}
+                        >
+                          Ver lista completa
+                        </button>
+                        <button type="button" onClick={exportAvatarDefeatsToExcel} disabled={!avatarDefeats || avatarDefeats.length === 0}>
+                          Exportar Excel
+                        </button>
+                      </div>
+                      <div className="form-actions" style={{ marginTop: 8 }}>
+                        <button
+                          type="button"
+                          onClick={() => setSpecialAvatarDefeatsModalVisible(true)}
+                          disabled={!trackedSpecialAvatarDefeats || trackedSpecialAvatarDefeats.length === 0}
+                        >
+                          Ver derrotas Mangog / Portal
+                        </button>
+                        <button
+                          type="button"
+                          onClick={exportSpecialAvatarDefeatsToExcel}
+                          disabled={!trackedSpecialAvatarDefeats || trackedSpecialAvatarDefeats.length === 0}
+                        >
+                          Exportar Excel (Mangog / Portal)
+                        </button>
+                      </div>
+                    </div>
                   </section>
                   <section className="stat-card">
                     <div className="stat-card__title">Heroes derrotados por mesa</div>
@@ -1041,7 +1516,11 @@ export default function AdminPage() {
                     <div className="stat-card__title">Heroes mas utilizados (Top 10)</div>
                     <div className="stat-row__meta" style={{ marginBottom: 10 }}>
                       <span>Total heroes distintos</span>
-                      <span className="stat-badge">{heroesStatsData.heroRows.length}</span>
+                      <span className="stat-badge" title={usedHeroesTooltip}>{heroesStatsData.heroRows.length}</span>
+                    </div>
+                    <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+                      <span>Héroes no seleccionados</span>
+                      <span className="stat-badge" title={unusedHeroesTooltip}>{unusedHeroes.length}</span>
                     </div>
                     <div className="stat-list">
                       {heroesStatsData.topHeroRows.map(({ hero, total, segments }) => (
@@ -1075,7 +1554,7 @@ export default function AdminPage() {
 
                     <div className="form-actions" style={{ marginTop: 16 }}>
                       <button type="button" onClick={() => setHeroesStatsModalVisible(true)}>
-                        Ver análisis completo de héroes
+                        Ver total completo de héroes
                       </button>
                     </div>
                   </section>
@@ -1097,26 +1576,45 @@ export default function AdminPage() {
                   </section>
 
                   <section className="stat-card">
-                    <div className="stat-card__title">Combinaciones Heroe + Aspecto (Top 5)</div>
-                    <div className="stat-highlight">
-                      {heroesStatsData.topCombo ? (
-                        <div className="stat-highlight__value" key={`${heroesStatsData.topCombo[0]}-${heroesStatsData.topCombo[1]}`}>
-                          {heroesStatsData.topCombo[0]} <span className="stat-badge">{heroesStatsData.topCombo[1]}</span>
-                        </div>
-                      ) : (
-                        <div className="stat-empty">Sin datos</div>
-                      )}
-                    </div>
+                    <div className="stat-card__title">Combinaciones Heroe + Aspecto (Top 10)</div>
                     {heroesStatsData.topComboRows.length > 0 && (
                       <div className="combo-list">
                         {heroesStatsData.topComboRows.map(([combo, count]) => (
                           <div className="combo-row" key={combo}>
-                            <span className="combo-name">{combo}</span>
-                            <span className="stat-badge">{count}</span>
+                            {(() => {
+                              const [hero, aspect] = combo.split(' | ');
+                              const visual = getAspectVisual(aspect);
+                              return (
+                                <>
+                                  <span className="combo-name">{hero || '-'}</span>
+                                  <span
+                                    className="hero-segment"
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      minWidth: 120,
+                                      textAlign: 'center',
+                                      background: visual.background,
+                                      borderRadius: 999,
+                                      padding: '2px 10px'
+                                    }}
+                                  >
+                                    {aspect || '-'}
+                                  </span>
+                                </>
+                              );
+                            })()}
+                            <span className="stat-badge" style={{ borderRadius: 999 }}>{count}</span>
                           </div>
                         ))}
                       </div>
                     )}
+                    <div className="form-actions" style={{ marginTop: 16 }}>
+                      <button type="button" onClick={() => setHeroCombosModalVisible(true)}>
+                        Ver lista completa de combinaciones
+                      </button>
+                    </div>
                   </section>
                 </div>
               )}
@@ -1212,110 +1710,44 @@ export default function AdminPage() {
 
               {statsTab === 'sectores' && (
                 <div className="stats-grid">
-                  {(() => {
-                    // Calculate sector ID based on table number
-                    const calculateSector = (mesaId) => {
-                      const safeMesaId = Math.max(1, mesaId);
-                      if (safeMesaId <= 4) return 1;
-                      if (safeMesaId <= 8) return 2;
-                      const offset = safeMesaId - 9;
-                      const group = Math.max(0, Math.floor(offset / 3));
-                      return 3 + group;
-                    };
+                  <section className="stat-card">
+                    <div className="stat-card__title">Resumen por sectores</div>
+                    <div className="form-actions" style={{ marginBottom: 12 }}>
+                      <button type="button" onClick={() => exportSectorSummaryToExcel(sectorSummaryRows)} disabled={!sectorSummaryRows.length}>
+                        Exportar Excel
+                      </button>
+                    </div>
 
-                    // Group mesa data by sector
-                    const sectorData = {};
-                    Object.entries(mesaSummary || {}).forEach(([mesaNumber, t]) => {
-                      const sectorId = calculateSector(parseInt(mesaNumber));
-                      if (!sectorData[sectorId]) {
-                        sectorData[sectorId] = {
-                          sector: sectorId,
-                          mesas: [],
-                          totalRuptura: 0,
-                          totalThreatHeroes: 0,
-                          totalThreatPlan: 0,
-                          avatars: { Granuja: 0, Bribón: 0, Bellaco: 0, Canalla: 0 }
-                        };
-                      }
-                      sectorData[sectorId].mesas.push({
-                        mesaNumber,
-                        tableName: t?.tableName || `Mesa ${mesaNumber}`
-                      });
-                      sectorData[sectorId].totalRuptura += t?.rupturaTotal ?? 0;
-                      sectorData[sectorId].totalThreatHeroes += t?.threatFromHeroes ?? 0;
-                      sectorData[sectorId].totalThreatPlan += t?.threatFromPlan ?? 0;
-                      sectorData[sectorId].avatars.Granuja += t?.avatar0 ?? 0;
-                      sectorData[sectorId].avatars.Bribón += t?.avatar1 ?? 0;
-                      sectorData[sectorId].avatars.Bellaco += t?.avatar2 ?? 0;
-                      sectorData[sectorId].avatars.Canalla += t?.avatar3 ?? 0;
-                    });
-
-                    const sectors = Object.values(sectorData).sort((a, b) => a.sector - b.sector);
-
-                    if (sectors.length === 0) {
-                      return <span className="stat-empty">No hay datos de sectores disponibles.</span>;
-                    }
-
-                    return sectors.map((sector) => (
-                      <section className="stat-card" key={sector.sector}>
-                        <div className="stat-card__title">Sector {sector.sector}</div>
-                        <div className="sector-info-grid">
-                          {/* Mesas en este sector */}
-                          <div className="sector-detail">
-                            <span className="sector-detail-label">Mesas</span>
-                            <div className="sector-mesas-list">
-                              {sector.mesas.map((mesa) => (
-                                <span className="stat-badge" key={mesa.mesaNumber}>
-                                  {mesa.tableName} #{mesa.mesaNumber}
-                                </span>
-                              ))}
+                    {sectorSummaryRows.length > 0 ? (
+                      <div className="stat-mesa-grid stat-mesa-grid--compact">
+                        {sectorSummaryRows.map((sector) => (
+                          <div className="stat-mesa-card stat-mesa-card--compact" key={`sector-${sector.sectorId}`}>
+                            <div className="stat-mesa-title">{getSectorName(sector.sectorId)} #{sector.sectorId}</div>
+                            <div className="stat-row__meta" style={{ marginBottom: 8 }}>
+                              <span>Mesas</span>
+                              <span className="stat-badge">{sector.mesas.length}</span>
+                            </div>
+                            <div className="summary-chip-group" style={{ marginBottom: 8 }}>
+                              <span className="summary-chip">Ruptura: {sector.rupturaTotal}</span>
+                              <span className="summary-chip">Amenaza H/P: {sector.threatFromHeroes}/{sector.threatFromPlan}</span>
+                            </div>
+                            <div className="summary-chip-group" style={{ marginBottom: 8 }}>
+                              <span className="summary-chip">G: {sector.avatar0}</span>
+                              <span className="summary-chip">B: {sector.avatar1}</span>
+                              <span className="summary-chip">Be: {sector.avatar2}</span>
+                              <span className="summary-chip">C: {sector.avatar3}</span>
+                            </div>
+                            <div className="summary-chip-group">
+                              <span className="summary-chip">Mangog: {sector.mangogDefeats}</span>
+                              <span className="summary-chip">Portal: {sector.portalDefeats}</span>
                             </div>
                           </div>
-
-                          {/* Contadores de ruptura */}
-                          <div className="sector-detail">
-                            <span className="sector-detail-label">Ruptura Total</span>
-                            <div className="sector-value">{sector.totalRuptura}</div>
-                          </div>
-
-                          {/* Amenaza por héroe */}
-                          <div className="sector-detail">
-                            <span className="sector-detail-label">Amenaza por Héroe</span>
-                            <div className="sector-value">{sector.totalThreatHeroes}</div>
-                          </div>
-
-                          {/* Amenaza por plan completado */}
-                          <div className="sector-detail">
-                            <span className="sector-detail-label">Amenaza por Plan</span>
-                            <div className="sector-value">{sector.totalThreatPlan}</div>
-                          </div>
-
-                          {/* Avatares derrotados */}
-                          <div className="sector-detail full-width">
-                            <span className="sector-detail-label">Avatares Derrotados</span>
-                            <div className="sector-avatars-grid">
-                              <div className="avatar-stat">
-                                <span>Granuja</span>
-                                <span className="stat-badge">{sector.avatars.Granuja}</span>
-                              </div>
-                              <div className="avatar-stat">
-                                <span>Bribón</span>
-                                <span className="stat-badge">{sector.avatars.Bribón}</span>
-                              </div>
-                              <div className="avatar-stat">
-                                <span>Bellaco</span>
-                                <span className="stat-badge">{sector.avatars.Bellaco}</span>
-                              </div>
-                              <div className="avatar-stat">
-                                <span>Canalla</span>
-                                <span className="stat-badge">{sector.avatars.Canalla}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    ));
-                  })()}
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="stat-empty">No hay datos de sectores disponibles.</span>
+                    )}
+                  </section>
                 </div>
               )}
             </div>
@@ -1325,88 +1757,263 @@ export default function AdminPage() {
       )}
 
       {/* Modal de edición de mesa */}
-      {heroesStatsModalVisible && (
+      {avatarDefeatsModalVisible && (
         <div className="modal-overlay">
           <div className="modal-content modal-content--stats" style={{ maxWidth: '1100px' }}>
-            <h2>Análisis completo de Héroes</h2>
+            <h2>Todas las derrotas de avatares</h2>
 
-            <div className="stats-grid" style={{ marginTop: 8 }}>
-              <section className="stat-card">
-                <div className="stat-card__title">Heroes mas utilizados</div>
-                <div className="stat-list">
-                  {heroesStatsData.heroRows.map(({ hero, total, segments }) => (
-                    <div className="stat-row" key={hero}>
-                      <div className="stat-row__label">{hero}</div>
-                      <div className="hero-bar-row">
-                        <span className="hero-total">{total}</span>
-                        <div className="hero-bar">
-                          {segments.length > 0 ? (
-                            segments.map((segment) => (
-                              <span
-                                key={`${hero}-${segment.aspect}`}
-                                className="hero-segment"
-                                style={{
-                                  width: `${segment.width}%`,
-                                  background: segment.color
-                                }}
-                                title={`${segment.aspect}: ${segment.count}`}
-                              >
-                                {segment.count}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="hero-segment hero-segment--empty">0</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+            <div className="form" style={{ marginBottom: 12 }}>
+              <label>
+                Filtrar por mesa
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Ej: 12"
+                  value={avatarDefeatMesaFilter}
+                  onChange={(e) => setAvatarDefeatMesaFilter(e.target.value)}
+                />
+              </label>
+              <label>
+                Filtrar por avatar
+                <select
+                  value={avatarDefeatNameFilter}
+                  onChange={(e) => setAvatarDefeatNameFilter(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  {avatarDefeatNameOptions.map((name) => (
+                    <option key={name} value={name}>{name}</option>
                   ))}
-                </div>
-              </section>
-
-              <section className="stat-card">
-                <div className="stat-card__title">Aspectos mas utilizados</div>
-                <div className="aspect-card-grid">
-                  {heroesStatsData.aspectRows.map(({ aspect, count, percent, visual }) => (
-                    <div className="aspect-card" style={{ '--accent-color': visual.color }} key={aspect}>
-                      <div className="aspect-card__fill" style={{ height: `${percent}%`, background: visual.background }} />
-                      <div className="aspect-card__content">
-                        <div className="aspect-card__name">{aspect}</div>
-                        <div className="aspect-card__count">{count}</div>
-                        <div className="aspect-card__percent">{percent}% del total</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="stat-card">
-                <div className="stat-card__title">Combinacion Heroe + Aspecto mas utilizada</div>
-                <div className="stat-highlight">
-                  {heroesStatsData.topCombo ? (
-                    <div className="stat-highlight__value" key={`${heroesStatsData.topCombo[0]}-${heroesStatsData.topCombo[1]}`}>
-                      {heroesStatsData.topCombo[0]} <span className="stat-badge">{heroesStatsData.topCombo[1]}</span>
-                    </div>
-                  ) : (
-                    <div className="stat-empty">Sin datos</div>
-                  )}
-                </div>
-                {heroesStatsData.modalComboRows.length > 0 && (
-                  <div className="combo-list">
-                    {heroesStatsData.modalComboRows.map(([combo, count]) => (
-                      <div className="combo-row" key={combo}>
-                        <span className="combo-name">{combo}</span>
-                        <span className="stat-badge">{count}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
+                </select>
+              </label>
             </div>
 
+            <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+              <span>Resultados</span>
+              <span className="stat-badge">{filteredAvatarDefeats.length}</span>
+            </div>
+
+            {filteredAvatarDefeats && filteredAvatarDefeats.length > 0 ? (
+              <div className="stat-table-wrapper">
+                <table className="stat-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Avatar</th>
+                      <th>Mesa</th>
+                      <th>Ruptura</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAvatarDefeats.map((defeat, idx) => (
+                      <tr key={`${defeat.timestamp}-${defeat.mesaId}-${idx}`}>
+                        <td>{idx + 1}</td>
+                        <td>{defeat.avatarName}</td>
+                        <td>Mesa {defeat.mesaId}</td>
+                        <td>{defeat.rupturaAmount}</td>
+                        <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="stat-empty">No hay avatares derrotados registrados.</div>
+            )}
+
             <div className="form-actions" style={{ marginTop: 16 }}>
-              <button type="button" onClick={() => setHeroesStatsModalVisible(false)}>
+              <button type="button" onClick={() => exportAvatarDefeatsToExcel(filteredAvatarDefeats)} disabled={!filteredAvatarDefeats || filteredAvatarDefeats.length === 0}>
+                Exportar Excel
+              </button>
+              <button type="button" onClick={() => setAvatarDefeatsModalVisible(false)}>
                 Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {specialAvatarDefeatsModalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content modal-content--stats" style={{ maxWidth: '950px' }}>
+            <h2>Derrotas de Mangog y Portal entre dos mundos</h2>
+
+            <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+              <span>Resultados</span>
+              <span className="stat-badge">{trackedSpecialAvatarDefeats.length}</span>
+            </div>
+
+            {trackedSpecialAvatarDefeats.length > 0 ? (
+              <div className="stat-table-wrapper">
+                <table className="stat-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Sector</th>
+                      <th>Mesa</th>
+                      <th>Derrotado</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {trackedSpecialAvatarDefeats.map((defeat, idx) => (
+                      <tr key={`${defeat.timestamp}-${defeat.mesaId}-${idx}`}>
+                        <td>{idx + 1}</td>
+                        <td>{getSectorName(defeat.sectorId)}</td>
+                        <td>Mesa {defeat.mesaId}</td>
+                        <td>{defeat.specialAvatarLabel || defeat.avatarName}</td>
+                        <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="stat-empty">Todavía no se ha derrotado a Mangog ni a Portal entre dos mundos.</div>
+            )}
+
+            <div className="form-actions" style={{ marginTop: 16 }}>
+              <button type="button" onClick={() => exportSpecialAvatarDefeatsToExcel(trackedSpecialAvatarDefeats)} disabled={!trackedSpecialAvatarDefeats.length}>
+                Exportar Excel
+              </button>
+              <button type="button" onClick={() => setSpecialAvatarDefeatsModalVisible(false)}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {heroesStatsModalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content modal-content--stats" style={{ maxWidth: '900px', position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setHeroesStatsModalVisible(false)}
+              style={{ position: 'absolute', top: 10, right: 12, minWidth: 32, padding: '4px 8px' }}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+            <h2>Total completo de héroes</h2>
+
+            <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+              <span>Total héroes distintos</span>
+              <span className="stat-badge" title={usedHeroesTooltip}>{heroesStatsData.heroRows.length}</span>
+            </div>
+
+            <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+              <span>Héroes no seleccionados</span>
+              <span className="stat-badge" title={unusedHeroesTooltip}>{unusedHeroes.length}</span>
+            </div>
+
+            {heroesStatsData.heroRows.length > 0 ? (
+              <div className="stat-list">
+                {heroesStatsData.heroRows.map(({ hero, total, segments }) => (
+                  <div className="stat-row" key={hero}>
+                    <div className="stat-row__label">{hero}</div>
+                    <div className="hero-bar-row">
+                      <span className="hero-total">{total}</span>
+                      <div className="hero-bar">
+                        {segments.length > 0 ? (
+                          segments.map((segment) => (
+                            <span
+                              key={`${hero}-${segment.aspect}`}
+                              className="hero-segment"
+                              style={{
+                                width: `${segment.width}%`,
+                                background: segment.color
+                              }}
+                              title={`${segment.aspect}: ${segment.count}`}
+                            >
+                              {segment.count}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="hero-segment hero-segment--empty">0</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="stat-empty">No hay datos de héroes.</div>
+            )}
+
+            <div className="form-actions" style={{ marginTop: 16 }}>
+              <button type="button" onClick={() => exportHeroTotalsToExcel(heroesStatsData.heroRows)} disabled={!heroesStatsData.heroRows.length}>
+                Exportar Excel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {heroCombosModalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content modal-content--stats" style={{ maxWidth: '980px', position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setHeroCombosModalVisible(false)}
+              style={{ position: 'absolute', top: 10, right: 12, minWidth: 32, padding: '4px 8px' }}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+            <h2>Combinaciones Héroe + Aspecto</h2>
+
+            <div className="stat-row__meta" style={{ marginBottom: 10 }}>
+              <span>Total combinaciones</span>
+              <span className="stat-badge">{heroesStatsData.comboEntries.length}</span>
+            </div>
+
+            {heroesStatsData.comboEntries.length > 0 ? (
+              <div className="stat-table-wrapper">
+                <table className="stat-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Nombre</th>
+                      <th>Aspecto</th>
+                      <th>Veces</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {heroesStatsData.comboEntries.map(([combo, count], idx) => {
+                      const [hero, aspect] = combo.split(' | ');
+                      const visual = getAspectVisual(aspect);
+                      return (
+                        <tr key={`${combo}-${idx}`}>
+                          <td>{idx + 1}</td>
+                          <td>{hero || '-'}</td>
+                          <td>
+                            <span
+                              className="hero-segment"
+                              style={{
+                                display: 'inline-block',
+                                minWidth: 90,
+                                textAlign: 'center',
+                                background: visual.background
+                              }}
+                            >
+                              {aspect || '-'}
+                            </span>
+                          </td>
+                          <td>{count}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="stat-empty">No hay combinaciones registradas.</div>
+            )}
+
+            <div className="form-actions" style={{ marginTop: 16 }}>
+              <button type="button" onClick={() => exportHeroCombosToExcel(heroesStatsData.comboEntries)} disabled={!heroesStatsData.comboEntries.length}>
+                Exportar Excel
               </button>
             </div>
           </div>

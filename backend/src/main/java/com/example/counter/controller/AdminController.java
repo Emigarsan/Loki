@@ -67,6 +67,8 @@ public class AdminController {
             List<Map<String, String>> playersInfoRaw = (List<Map<String, String>>) body.get("playersInfo");
             String realityId = (String) body.get("realityId");
             String realityName = (String) body.get("realityName");
+            Boolean disconnectedRaw = (Boolean) body.get("disconnected");
+            boolean disconnected = disconnectedRaw != null && disconnectedRaw;
 
             List<com.example.counter.service.model.PlayerInfo> playersInfo = playersInfoRaw == null ? List.of()
                     : playersInfoRaw.stream()
@@ -75,7 +77,7 @@ public class AdminController {
                             .toList();
 
             boolean updated = tablesService.updateRegisterTable(id, tableNumber, tableName, difficulty,
-                    players, playersInfo, realityId, realityName);
+                    players, playersInfo, realityId, realityName, disconnected);
 
             if (updated) {
                 return ResponseEntity.ok(Map.of("success", true));

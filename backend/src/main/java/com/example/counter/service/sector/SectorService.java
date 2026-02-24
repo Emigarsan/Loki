@@ -1,6 +1,7 @@
 package com.example.counter.service.sector;
 
 import com.example.counter.service.TablesService;
+import com.example.counter.service.mesa.MesaCounterService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,22 +42,28 @@ public class SectorService {
 
     private final Map<Integer, MesaIndicators> mesaIndicators = new HashMap<>();
     private final TablesService tablesService;
+    private final MesaCounterService mesaCounterService;
 
-    public SectorService(TablesService tablesService) {
+    public SectorService(TablesService tablesService, MesaCounterService mesaCounterService) {
         this.tablesService = tablesService;
+        this.mesaCounterService = mesaCounterService;
     }
 
     public synchronized SectorStatus getStatusForMesa(int mesaId) {
         SectorInfo info = resolveSector(mesaId);
-        MesaIndicators indicators = mesaIndicators.computeIfAbsent(mesaId, id -> {
+        mesaIndicators.computeIfAbsent(mesaId, id -> {
             MesaIndicators m = new MesaIndicators();
             m.mesaId = id;
             return m;
         });
-        return buildStatus(info.sectorId, info.mesas, indicators);
+        boolean viewerDisconnected = isMesaDisconnected(mesaId);
+        return buildStatus(info.sectorId, info.mesas, mesaId, viewerDisconnected);
     }
 
     public synchronized SectorStatus setIndicatorActive(int mesaId, String indicatorKey, boolean active) {
+        if (isMesaDisconnected(mesaId)) {
+            return getStatusForMesa(mesaId);
+        }
         SectorInfo info = resolveSector(mesaId);
         MesaIndicators indicators = mesaIndicators.computeIfAbsent(mesaId, id -> {
             MesaIndicators m = new MesaIndicators();
@@ -91,18 +98,23 @@ public class SectorService {
             }
             indicator.activeMesaId = null;
         }
-        return buildStatus(info.sectorId, info.mesas, indicators);
+        return buildStatus(info.sectorId, info.mesas, mesaId, false);
     }
 
     public synchronized SectorStatus applyDelta(int mesaId, int targetMesaId, String indicatorKey, int delta) {
+        boolean sourceDisconnected = isMesaDisconnected(mesaId);
+        boolean targetDisconnected = isMesaDisconnected(targetMesaId);
+        if (sourceDisconnected || targetDisconnected) {
+            return getStatusForMesa(mesaId);
+        }
         SectorInfo sourceInfo = resolveSector(mesaId);
         SectorInfo targetInfo = resolveSector(targetMesaId);
-        
+
         // Verify both mesas are in the same sector
         if (sourceInfo.sectorId != targetInfo.sectorId) {
             throw new IllegalStateException("mesas not in same sector");
         }
-        
+
         MesaIndicators targetIndicators = mesaIndicators.computeIfAbsent(targetMesaId, id -> {
             MesaIndicators m = new MesaIndicators();
             m.mesaId = id;
@@ -124,9 +136,23 @@ public class SectorService {
         }
         if (indicator.value > 0 && next == 0 && delta < 0) {
             indicator.defeated = true;
+            String defeatedAvatarName = toSpecialAvatarName(indicatorKey);
+            if (defeatedAvatarName != null) {
+                mesaCounterService.recordNamedAvatarDefeat(targetMesaId, defeatedAvatarName, 0);
+            }
         }
         indicator.value = next;
-        return buildStatus(targetInfo.sectorId, targetInfo.mesas, targetIndicators);
+        return buildStatus(targetInfo.sectorId, targetInfo.mesas, mesaId, false);
+    }
+
+    private String toSpecialAvatarName(String indicatorKey) {
+        if ("mangog".equalsIgnoreCase(indicatorKey)) {
+            return "Mangog";
+        }
+        if ("gate".equalsIgnoreCase(indicatorKey)) {
+            return "Portal entre dos mundos";
+        }
+        return null;
     }
 
     public int getSectorIdForMesa(int mesaId) {
@@ -185,10 +211,11 @@ public class SectorService {
         return null;
     }
 
-    private SectorStatus buildStatus(int sectorId, List<Integer> theoreticalMesas, MesaIndicators indicators) {
+    private SectorStatus buildStatus(int sectorId, List<Integer> theoreticalMesas, int viewerMesaId,
+            boolean viewerDisconnected) {
         SectorStatus status = new SectorStatus();
         status.sectorId = sectorId;
-        
+
         // Filter to only include registered mesas
         List<Integer> registeredMesas = new ArrayList<>();
         for (int mesaId : theoreticalMesas) {
@@ -196,10 +223,22 @@ public class SectorService {
                 registeredMesas.add(mesaId);
             }
         }
-        status.mesas = registeredMesas;
-        status.indicatorsByMesa = new HashMap<>();
-        
+
+        List<Integer> visibleMesas = new ArrayList<>();
         for (int mesaId : registeredMesas) {
+            if (viewerDisconnected) {
+                if (mesaId == viewerMesaId) {
+                    visibleMesas.add(mesaId);
+                }
+            } else if (!isMesaDisconnected(mesaId)) {
+                visibleMesas.add(mesaId);
+            }
+        }
+
+        status.mesas = visibleMesas;
+        status.indicatorsByMesa = new HashMap<>();
+
+        for (int mesaId : visibleMesas) {
             MesaIndicators mesaInd = mesaIndicators.get(mesaId);
             if (mesaInd == null) {
                 mesaInd = new MesaIndicators();
@@ -210,10 +249,10 @@ public class SectorService {
             indMap.put("gate", copyIndicator(mesaInd.gate));
             status.indicatorsByMesa.put(mesaId, indMap);
         }
-        
+
         return status;
     }
-    
+
     private boolean isMesaRegistered(int mesaId) {
         return tablesService.listRegister().stream()
                 .anyMatch(table -> table.tableNumber() == mesaId);
@@ -231,11 +270,16 @@ public class SectorService {
             int end = start + (MESA_GROUP_SIZE - 1);
             info = new SectorInfo(sectorId, range(start, end));
         }
-        
+
         List<Integer> mesasInSector = info.mesas;
         return (int) tablesService.listRegister().stream()
                 .filter(table -> mesasInSector.contains(table.tableNumber()))
+                .filter(table -> !table.disconnected())
                 .count();
+    }
+
+    private boolean isMesaDisconnected(int mesaId) {
+        return tablesService.isRegisterTableDisconnected(mesaId);
     }
 
     private SectorInfo resolveSector(int mesaId) {
@@ -272,4 +316,3 @@ public class SectorService {
         }
     }
 }
-

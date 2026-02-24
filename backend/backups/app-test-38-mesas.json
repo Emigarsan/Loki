@@ -35,7 +35,8 @@
       "createdAt": 1771500000.0,
       "avatar": "0",
       "realityId": "tierra-salvaje",
-      "realityName": "Tierra Salvaje"
+      "realityName": "Tierra Salvaje",
+      "disconnected": false
     },
     {
       "id": "test-mesa-002",

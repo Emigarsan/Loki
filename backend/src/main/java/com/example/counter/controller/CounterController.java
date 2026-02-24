@@ -1,6 +1,7 @@
 package com.example.counter.controller;
 
 import com.example.counter.service.CounterService;
+import com.example.counter.service.TablesService;
 import com.example.counter.service.model.CounterState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,14 @@ import java.util.Map;
 public class CounterController {
 
     private final CounterService counterService;
+    private final TablesService tablesService;
     private final String adminSecret;
 
     public CounterController(CounterService counterService,
+            TablesService tablesService,
             @Value("${admin.secret:}") String adminSecret) {
         this.counterService = counterService;
+        this.tablesService = tablesService;
         this.adminSecret = adminSecret;
     }
 
@@ -64,13 +68,25 @@ public class CounterController {
     @PostMapping("/primary/reduce")
     public ResponseEntity<CounterState> reducePrimary(@RequestBody Map<String, Integer> payload) {
         int delta = Math.max(0, payload.getOrDefault("delta", 0));
+        Integer mesaId = payload.get("mesaId");
+        if (!shouldApplyForMesa(mesaId)) {
+            return ResponseEntity.ok(counterService.getState());
+        }
         return ResponseEntity.ok(counterService.reducePrimary(delta));
     }
 
     @PostMapping("/tertiary/increment")
     public ResponseEntity<CounterState> incrementTertiary(@RequestBody Map<String, Integer> payload) {
         int delta = Math.max(0, payload.getOrDefault("delta", 0));
+        Integer mesaId = payload.get("mesaId");
+        if (!shouldApplyForMesa(mesaId)) {
+            return ResponseEntity.ok(counterService.getState());
+        }
         return ResponseEntity.ok(counterService.incrementTertiary(delta));
+    }
+
+    private boolean shouldApplyForMesa(Integer mesaId) {
+        return mesaId == null || !tablesService.isRegisterTableDisconnected(mesaId);
     }
 
     private int sanitizeValue(Map<String, Integer> payload) {

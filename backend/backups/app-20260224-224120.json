@@ -1,0 +1,2188 @@
+{
+  "counter" : {
+    "primary" : 1014,
+    "tertiary" : 46,
+    "tertiaryMax" : 76,
+    "secondaryHeroes" : 28,
+    "secondaryPlan" : 18
+  },
+  "registerTables" : [ {
+    "id" : "test-mesa-001",
+    "tableNumber" : 1,
+    "tableName" : "Escuadrón Alfa",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Tigra",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST01",
+    "createdAt" : 1771500000.000000000,
+    "avatar" : "0",
+    "realityId" : "tierra-salvaje",
+    "realityName" : "Tierra Salvaje",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-002",
+    "tableNumber" : 2,
+    "tableName" : "Vanguardia Mutante",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magik",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Avispa",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST02",
+    "createdAt" : 1771500075.000000000,
+    "avatar" : "1",
+    "realityId" : "sala-roja",
+    "realityName" : "Sala Roja",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-003",
+    "tableNumber" : 3,
+    "tableName" : "Comando Omega",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Masacre",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Star-Lord",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Mapache Cohete",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST03",
+    "createdAt" : 1771500150.000000000,
+    "avatar" : "2",
+    "realityId" : "mundo-asesino",
+    "realityName" : "Mundo Asesino",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-004",
+    "tableNumber" : 4,
+    "tableName" : "Fuerza Nébula",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulkling",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST04",
+    "createdAt" : 1771500225.000000000,
+    "avatar" : "3",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-005",
+    "tableNumber" : 5,
+    "tableName" : "Legión Arcana",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Ironheart",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Iron Man",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Seda",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST05",
+    "createdAt" : 1771500300.000000000,
+    "avatar" : "0",
+    "realityId" : "zona-negativa",
+    "realityName" : "Zona negativa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-006",
+    "tableNumber" : 6,
+    "tableName" : "Patrulla Centinela",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Gambito",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hombre Maravilla",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Bishop",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spectrum",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST06",
+    "createdAt" : 1771500375.000000000,
+    "avatar" : "1",
+    "realityId" : "hala",
+    "realityName" : "Hala",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-007",
+    "tableNumber" : 7,
+    "tableName" : "Unidad Fénix",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulkling",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Gatasombra",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST07",
+    "createdAt" : 1771500450.000000000,
+    "avatar" : "2",
+    "realityId" : "dimension-azufre",
+    "realityName" : "Dimensión azufre",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-008",
+    "tableNumber" : 9,
+    "tableName" : "Guardia Estelar",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cable",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST09",
+    "createdAt" : 1771500525.000000000,
+    "avatar" : "3",
+    "realityId" : "triskelion",
+    "realityName" : "Triskelion",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-009",
+    "tableNumber" : 10,
+    "tableName" : "Equipo Relámpago",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Magik",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Dr. Extraño",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Adam Warlock",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST10",
+    "createdAt" : 1771500600.000000000,
+    "avatar" : "0",
+    "realityId" : "dimension-oscura",
+    "realityName" : "Dimensión oscura",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-010",
+    "tableNumber" : 12,
+    "tableName" : "Círculo Gamma",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Masacre",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Vision",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST12",
+    "createdAt" : 1771500675.000000000,
+    "avatar" : "1",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-011",
+    "tableNumber" : 13,
+    "tableName" : "Orden Astral",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Tormenta",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "María Hill",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST13",
+    "createdAt" : 1771500750.000000000,
+    "avatar" : "2",
+    "realityId" : "madripoor",
+    "realityName" : "Madripoor",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-012",
+    "tableNumber" : 14,
+    "tableName" : "Batallón Kree",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Veneno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Spider-Man (Miles Morales)",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST14",
+    "createdAt" : 1771500825.000000000,
+    "avatar" : "3",
+    "realityId" : "klyntar",
+    "realityName" : "Klyntar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-013",
+    "tableNumber" : 16,
+    "tableName" : "Lanza de Krakoa",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magik",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Valquiria",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Thor",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST16",
+    "createdAt" : 1771500900.000000000,
+    "avatar" : "0",
+    "realityId" : "avalon",
+    "realityName" : "Avalon",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-014",
+    "tableNumber" : 17,
+    "tableName" : "Centuria Roja",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Drax",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST17",
+    "createdAt" : 1771500975.000000000,
+    "avatar" : "1",
+    "realityId" : "sakaar",
+    "realityName" : "Sakaar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-015",
+    "tableNumber" : 19,
+    "tableName" : "Línea Aegis",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cable",
+      "aspect" : "Protección"
+    }, {
+      "character" : "María Hill",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Spider-Man (Miles Morales)",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST19",
+    "createdAt" : 1771501050.000000000,
+    "avatar" : "2",
+    "realityId" : "el-pico",
+    "realityName" : "El Pico",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-016",
+    "tableNumber" : 20,
+    "tableName" : "Nexo de Titanes",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spidercerdo",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST20",
+    "createdAt" : 1771501125.000000000,
+    "avatar" : "3",
+    "realityId" : "rigel-3",
+    "realityName" : "Rigel-3",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-017",
+    "tableNumber" : 21,
+    "tableName" : "Alianza Prisma",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Nebula",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Protección"
+    }, {
+      "character" : "María Hill",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST21",
+    "createdAt" : 1771501200.000000000,
+    "avatar" : "0",
+    "realityId" : "espacio-profundo",
+    "realityName" : "Espacio profundo",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-018",
+    "tableNumber" : 23,
+    "tableName" : "Célula Triskelion",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Coloso",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "X-23",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST23",
+    "createdAt" : 1771501275.000000000,
+    "avatar" : "1",
+    "realityId" : "krakoa",
+    "realityName" : "Krakoa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-019",
+    "tableNumber" : 24,
+    "tableName" : "Escudo Carmesí",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "X-23",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Tigra",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST24",
+    "createdAt" : 1771501350.000000000,
+    "avatar" : "2",
+    "realityId" : "tierra-salvaje",
+    "realityName" : "Tierra Salvaje",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-020",
+    "tableNumber" : 26,
+    "tableName" : "Vórtice X",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Avispa",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Magik",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST26",
+    "createdAt" : 1771501425.000000000,
+    "avatar" : "3",
+    "realityId" : "sala-roja",
+    "realityName" : "Sala Roja",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-021",
+    "tableNumber" : 27,
+    "tableName" : "Núcleo Delta",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cable",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Bishop",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Masacre",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST27",
+    "createdAt" : 1771501500.000000000,
+    "avatar" : "0",
+    "realityId" : "mundo-asesino",
+    "realityName" : "Mundo Asesino",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-022",
+    "tableNumber" : 28,
+    "tableName" : "Hijos del Trueno",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulka",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST28",
+    "createdAt" : 1771501575.000000000,
+    "avatar" : "1",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-023",
+    "tableNumber" : 30,
+    "tableName" : "Filo Nocturno",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Ironheart",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Avispa",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Mapache Cohete",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Spiderman (Peter Parker)",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST30",
+    "createdAt" : 1771501650.000000000,
+    "avatar" : "2",
+    "realityId" : "zona-negativa",
+    "realityName" : "Zona negativa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-024",
+    "tableNumber" : 31,
+    "tableName" : "Bloque M",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spectrum",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hombre Maravilla",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Bishop",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST31",
+    "createdAt" : 1771501725.000000000,
+    "avatar" : "3",
+    "realityId" : "hala",
+    "realityName" : "Hala",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-025",
+    "tableNumber" : 33,
+    "tableName" : "Sector 616",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulkling",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Vision",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST33",
+    "createdAt" : 1771501800.000000000,
+    "avatar" : "0",
+    "realityId" : "dimension-azufre",
+    "realityName" : "Dimensión azufre",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-026",
+    "tableNumber" : 34,
+    "tableName" : "Punto Omega",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Cable",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST34",
+    "createdAt" : 1771501875.000000000,
+    "avatar" : "1",
+    "realityId" : "triskelion",
+    "realityName" : "Triskelion",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-027",
+    "tableNumber" : 35,
+    "tableName" : "Ala Norte",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Dr. Extraño",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Magik",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Adam Warlock",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST35",
+    "createdAt" : 1771501950.000000000,
+    "avatar" : "2",
+    "realityId" : "dimension-oscura",
+    "realityName" : "Dimensión oscura",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-028",
+    "tableNumber" : 37,
+    "tableName" : "Ala Sur",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magneto",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Pícara",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST37",
+    "createdAt" : 1771502025.000000000,
+    "avatar" : "3",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-029",
+    "tableNumber" : 38,
+    "tableName" : "Fuerza Horizonte",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Gambito",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Spider-Woman",
+      "aspect" : "Protección-Liderazgo"
+    }, {
+      "character" : "Tormenta",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST38",
+    "createdAt" : 1771502100.000000000,
+    "avatar" : "0",
+    "realityId" : "madripoor",
+    "realityName" : "Madripoor",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-030",
+    "tableNumber" : 40,
+    "tableName" : "Pacto Helios",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Spider-Man (Miles Morales)",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST40",
+    "createdAt" : 1771502175.000000000,
+    "avatar" : "1",
+    "realityId" : "klyntar",
+    "realityName" : "Klyntar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-031",
+    "tableNumber" : 41,
+    "tableName" : "Escuadra Quantum",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Magik",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST41",
+    "createdAt" : 1771502250.000000000,
+    "avatar" : "2",
+    "realityId" : "avalon",
+    "realityName" : "Avalon",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-032",
+    "tableNumber" : 42,
+    "tableName" : "Runa de Acero",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulk",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Drax",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hércules",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST42",
+    "createdAt" : 1771502325.000000000,
+    "avatar" : "3",
+    "realityId" : "sakaar",
+    "realityName" : "Sakaar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-033",
+    "tableNumber" : 44,
+    "tableName" : "Bastión Prime",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cíclope",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Ms. Marvel",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Spider-Man (Miles Morales)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST44",
+    "createdAt" : 1771502400.000000000,
+    "avatar" : "0",
+    "realityId" : "el-pico",
+    "realityName" : "El Pico",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-034",
+    "tableNumber" : 45,
+    "tableName" : "Relevo Nova",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Dominó",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Spidercerdo",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST45",
+    "createdAt" : 1771502475.000000000,
+    "avatar" : "1",
+    "realityId" : "rigel-3",
+    "realityName" : "Rigel-3",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-035",
+    "tableNumber" : 47,
+    "tableName" : "Pico de Guerra",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "María Hill",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Nebula",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST47",
+    "createdAt" : 1771502550.000000000,
+    "avatar" : "2",
+    "realityId" : "espacio-profundo",
+    "realityName" : "Espacio profundo",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-036",
+    "tableNumber" : 48,
+    "tableName" : "Cadena Boreal",
+    "difficulty" : "Heroico",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Coloso",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "X-23",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST48",
+    "createdAt" : 1771502625.000000000,
+    "avatar" : "3",
+    "realityId" : "krakoa",
+    "realityName" : "Krakoa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-037",
+    "tableNumber" : 49,
+    "tableName" : "Custodia Mística",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Lobezno",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Tigra",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST49",
+    "createdAt" : 1771502700.000000000,
+    "avatar" : "0",
+    "realityId" : "tierra-salvaje",
+    "realityName" : "Tierra Salvaje",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-038",
+    "tableNumber" : 50,
+    "tableName" : "Anillo de Ébano",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Avispa",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST50",
+    "createdAt" : 1771502775.000000000,
+    "avatar" : "1",
+    "realityId" : "sala-roja",
+    "realityName" : "Sala Roja",
+    "disconnected" : false
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : {
+    "1" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 2,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 44,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "2" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 2,
+      "avatar3" : 0,
+      "rupturaTotal" : 67,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "3" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 47,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Masacre" : 2,
+        "Máquina de Guerra" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "4" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 2,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 45,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "5" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 48,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "6" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 2,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 67,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Gambito" : 3
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "7" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 44,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "9" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 46,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Cable" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "10" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 44,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "12" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 68,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "13" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 47,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Nick Furia" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "14" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 43,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "16" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 47,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Capitán América" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "17" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 2,
+      "avatar3" : 0,
+      "rupturaTotal" : 43,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "19" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 2,
+      "rupturaTotal" : 48,
+      "threatFromHeroes" : 3,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Cable" : 4
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "20" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 2,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 66,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "21" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 43,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Nebula" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "23" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 46,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Coloso" : 2,
+        "X-23" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "24" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 2,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 68,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "26" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 46,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Magik" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "27" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 0,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 47,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "28" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 1,
+      "avatar3" : 2,
+      "rupturaTotal" : 60,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "30" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 3,
+      "rupturaTotal" : 65,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Avispa" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "31" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 46,
+      "threatFromHeroes" : 5,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Hombre Maravilla" : 2,
+        "Capitana Marvel" : 4,
+        "Spectrum" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "33" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 1,
+      "avatar3" : 2,
+      "rupturaTotal" : 69,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "34" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 1,
+      "avatar3" : 1,
+      "rupturaTotal" : 67,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "35" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 41,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "37" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 67,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "38" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 71,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Gambito" : 2,
+        "Nick Furia" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "40" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 47,
+      "threatFromHeroes" : 3,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Veneno" : 2,
+        "Viuda Negra" : 3
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "41" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 2,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 44,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Capitán América" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "42" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 1,
+      "avatar3" : 2,
+      "rupturaTotal" : 64,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "44" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 44,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : {
+        "Capitán América" : 1
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "45" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 50,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "47" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 42,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "48" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
+      "avatar3" : 1,
+      "rupturaTotal" : 70,
+      "threatFromHeroes" : 2,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Lobezno" : 3
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "49" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 1,
+      "avatar1" : 2,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 67,
+      "threatFromHeroes" : 1,
+      "threatFromPlan" : 1,
+      "defeatedHeroes" : {
+        "Tigra" : 2
+      },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    },
+    "50" : {
+      "c1" : 0,
+      "c2" : 0,
+      "c3" : 0,
+      "avatar0" : 0,
+      "avatar1" : 0,
+      "avatar2" : 0,
+      "avatar3" : 2,
+      "rupturaTotal" : 48,
+      "threatFromHeroes" : 0,
+      "threatFromPlan" : 0,
+      "defeatedHeroes" : { },
+      "tableName" : null,
+      "realityName" : null,
+      "sectorId" : null
+    }
+  },
+  "mesaEvents" : [ ],
+  "avatarDefeats" : [ ],
+  "sectorStates" : {
+    "1" : {
+      "mesaId" : 1,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 11,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "2" : {
+      "mesaId" : 2,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 13,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      }
+    },
+    "3" : {
+      "mesaId" : 3,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 8,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "4" : {
+      "mesaId" : 4,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 11,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "5" : {
+      "mesaId" : 5,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 10,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "6" : {
+      "mesaId" : 6,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 8,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "7" : {
+      "mesaId" : 7,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      }
+    },
+    "9" : {
+      "mesaId" : 9,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 7,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      }
+    },
+    "10" : {
+      "mesaId" : 10,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "12" : {
+      "mesaId" : 12,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 8,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      }
+    },
+    "13" : {
+      "mesaId" : 13,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 12,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      }
+    },
+    "14" : {
+      "mesaId" : 14,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 14,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      }
+    },
+    "16" : {
+      "mesaId" : 16,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 7,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      }
+    },
+    "17" : {
+      "mesaId" : 17,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 10,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "19" : {
+      "mesaId" : 19,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 9,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "20" : {
+      "mesaId" : 20,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 13,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "21" : {
+      "mesaId" : 21,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 9,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "23" : {
+      "mesaId" : 23,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "24" : {
+      "mesaId" : 24,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 8,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "26" : {
+      "mesaId" : 26,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 13,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "27" : {
+      "mesaId" : 27,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 13,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      }
+    },
+    "28" : {
+      "mesaId" : 28,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 7,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      }
+    },
+    "30" : {
+      "mesaId" : 30,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 7,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      }
+    },
+    "31" : {
+      "mesaId" : 31,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "33" : {
+      "mesaId" : 33,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "34" : {
+      "mesaId" : 34,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 7,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "35" : {
+      "mesaId" : 35,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "37" : {
+      "mesaId" : 37,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 14,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 1,
+        "defeated" : false
+      }
+    },
+    "38" : {
+      "mesaId" : 38,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 10,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 1,
+        "defeated" : false
+      }
+    },
+    "40" : {
+      "mesaId" : 40,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "41" : {
+      "mesaId" : 41,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 9,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      }
+    },
+    "42" : {
+      "mesaId" : 42,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 8,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "44" : {
+      "mesaId" : 44,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 9,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      }
+    },
+    "45" : {
+      "mesaId" : 45,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 12,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    },
+    "47" : {
+      "mesaId" : 47,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 12,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 2,
+        "defeated" : false
+      }
+    },
+    "48" : {
+      "mesaId" : 48,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 14,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 6,
+        "defeated" : false
+      }
+    },
+    "49" : {
+      "mesaId" : 49,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 3,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 5,
+        "defeated" : false
+      }
+    },
+    "50" : {
+      "mesaId" : 50,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 11,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 4,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : true,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771969280337
+}

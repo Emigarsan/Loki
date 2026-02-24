@@ -1149,6 +1149,44 @@ header p {
   font-size: 0.85rem;
 }
 
+.stat-table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(200, 162, 51, 0.35);
+}
+
+.stat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.stat-table thead {
+  background: rgba(200, 162, 51, 0.12);
+  border-bottom: 1px solid rgba(200, 162, 51, 0.35);
+}
+
+.stat-table th {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  color: var(--color-text-secondary);
+}
+
+.stat-table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid rgba(200, 162, 51, 0.2);
+}
+
+.stat-table tbody tr:hover {
+  background: rgba(200, 162, 51, 0.08);
+}
+
+.stat-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .stat-highlight {
   display: flex;
   align-items: center;

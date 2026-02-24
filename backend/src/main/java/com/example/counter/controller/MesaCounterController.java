@@ -19,7 +19,8 @@ public class MesaCounterController {
     private final TablesService tablesService;
     private final SectorService sectorService;
 
-    public MesaCounterController(MesaCounterService mesaService, TablesService tablesService, SectorService sectorService) {
+    public MesaCounterController(MesaCounterService mesaService, TablesService tablesService,
+            SectorService sectorService) {
         this.mesaService = mesaService;
         this.tablesService = tablesService;
         this.sectorService = sectorService;
@@ -28,7 +29,7 @@ public class MesaCounterController {
     @GetMapping("/summary")
     public ResponseEntity<Map<Integer, MesaCounterService.TotalesMesa>> summary() {
         Map<Integer, MesaCounterService.TotalesMesa> totales = mesaService.getTotalesSnapshot();
-        
+
         // Enrich with table information and sector if services are available
         try {
             if (tablesService != null) {
@@ -43,7 +44,7 @@ public class MesaCounterController {
                     }
                 }
             }
-            
+
             // Enrich with sector information
             if (sectorService != null) {
                 for (Map.Entry<Integer, MesaCounterService.TotalesMesa> entry : totales.entrySet()) {
@@ -57,7 +58,7 @@ public class MesaCounterController {
             System.err.println("Error enriching mesa summary: " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         return ResponseEntity.ok(totales);
     }
 
@@ -66,19 +67,32 @@ public class MesaCounterController {
         return ResponseEntity.ok(mesaService.getEventosSnapshot());
     }
 
+    @GetMapping("/last-avatar-defeats")
+    public ResponseEntity<List<MesaCounterService.AvatarDefeat>> lastAvatarDefeats() {
+        return ResponseEntity.ok(mesaService.getAvatarDefeatsLatestFirst());
+    }
+
+    @GetMapping("/avatar-defeats")
+    public ResponseEntity<List<MesaCounterService.AvatarDefeat>> avatarDefeats() {
+        return ResponseEntity.ok(mesaService.getAvatarDefeatsLatestFirst());
+    }
+
     @PostMapping("/{mesaId}/avatar-defeat")
     public ResponseEntity<Map<String, String>> recordAvatarDefeat(
             @PathVariable int mesaId,
             @RequestBody Map<String, Object> payload) {
         try {
+            if (isMesaDisconnected(mesaId)) {
+                return ResponseEntity.ok(Map.of("status", "ok", "message", "mocked"));
+            }
             Integer avatarIndex = (Integer) payload.get("avatarIndex");
             Integer rupturaAmount = (Integer) payload.getOrDefault("rupturaAmount", 0);
-            
+
             if (avatarIndex == null || avatarIndex < 0 || avatarIndex > 3) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Invalid avatar index. Must be 0-3."));
             }
-            
+
             mesaService.recordAvatarDefeat(mesaId, avatarIndex, rupturaAmount);
             return ResponseEntity.ok(Map.of("status", "ok", "message", "Avatar defeat recorded"));
         } catch (Exception e) {
@@ -92,14 +106,17 @@ public class MesaCounterController {
             @PathVariable int mesaId,
             @RequestBody Map<String, Object> payload) {
         try {
+            if (isMesaDisconnected(mesaId)) {
+                return ResponseEntity.ok(Map.of("status", "ok", "message", "mocked"));
+            }
             String heroName = (String) payload.get("heroName");
             Integer threatAmount = (Integer) payload.getOrDefault("threatAmount", 0);
-            
+
             if (heroName == null || heroName.isBlank()) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Hero name is required"));
             }
-            
+
             mesaService.recordHeroDefeat(mesaId, heroName, threatAmount);
             return ResponseEntity.ok(Map.of("status", "ok", "message", "Hero defeat recorded"));
         } catch (Exception e) {
@@ -113,12 +130,20 @@ public class MesaCounterController {
             @PathVariable int mesaId,
             @RequestBody Map<String, Object> payload) {
         try {
+            if (isMesaDisconnected(mesaId)) {
+                return ResponseEntity.ok(Map.of("status", "ok", "message", "mocked"));
+            }
             Integer threatAmount = (Integer) payload.getOrDefault("threatAmount", 0);
-            
+
             mesaService.recordPlanCompletion(mesaId, threatAmount);
             return ResponseEntity.ok(Map.of("status", "ok", "message", "Plan completion recorded"));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(Map.of("error", e.getMessage()));
         }
-    }}
+    }
+
+    private boolean isMesaDisconnected(int mesaId) {
+        return tablesService != null && tablesService.isRegisterTableDisconnected(mesaId);
+    }
+}

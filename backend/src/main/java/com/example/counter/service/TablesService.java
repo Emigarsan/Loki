@@ -118,7 +118,7 @@ public class TablesService {
         int tn = Math.max(0, tableNumber);
         String avatar = String.valueOf(ThreadLocalRandom.current().nextInt(4));
         RegisterTable t = new RegisterTable(id, tn, tableName, difficulty, Math.max(0, players), sanitized, code,
-                Instant.now(), avatar, realityId, realityName);
+                Instant.now(), avatar, realityId, realityName, false);
         registerTables.add(t);
         return t;
     }
@@ -191,6 +191,11 @@ public class TablesService {
         return null;
     }
 
+    public synchronized boolean isRegisterTableDisconnected(int tableNumber) {
+        RegisterTable t = findRegisterByNumber(tableNumber);
+        return t != null && t.disconnected();
+    }
+
     public synchronized RegisterTable findRegisterById(String id) {
         for (RegisterTable t : registerTables) {
             if (t.id().equals(id)) {
@@ -201,7 +206,7 @@ public class TablesService {
     }
 
     public synchronized boolean updateRegisterTable(String id, int tableNumber, String tableName, String difficulty,
-            int players, List<PlayerInfo> playersInfo, String realityId, String realityName) {
+            int players, List<PlayerInfo> playersInfo, String realityId, String realityName, boolean disconnected) {
         for (int i = 0; i < registerTables.size(); i++) {
             RegisterTable t = registerTables.get(i);
             if (t.id().equals(id)) {
@@ -218,7 +223,8 @@ public class TablesService {
                         t.createdAt(),
                         t.avatar(),
                         realityId,
-                        realityName);
+                        realityName,
+                        disconnected);
                 registerTables.set(i, updated);
                 return true;
             }
