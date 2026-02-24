@@ -68,6 +68,13 @@ const getAspectVisual = (aspect) => {
   return { color, background: color };
 };
 
+const getAdamGradient = () => {
+  const colors = Object.values(ASPECT_COLORS);
+  if (!colors || colors.length === 0) return '#C8A233';
+  const stops = colors.map((c, i) => `${c} ${Math.round((i / (colors.length - 1)) * 100)}%`).join(', ');
+  return `linear-gradient(90deg, ${stops})`;
+};
+
 export default function AdminPage() {
   const [state, setState] = useState(null);
   const [error, setError] = useState(null);
@@ -1544,7 +1551,20 @@ export default function AdminPage() {
                                   </span>
                                 ))
                               ) : (
-                                <span className="hero-segment hero-segment--empty">0</span>
+                                hero && hero.toLowerCase().includes('adam warlock') ? (
+                                  <span
+                                    className="hero-segment"
+                                    style={{
+                                      width: '100%',
+                                      background: getAdamGradient()
+                                    }}
+                                    title={"Adam Warlock: mezcla de aspectos"}
+                                  >
+                                    {total}
+                                  </span>
+                                ) : (
+                                  <span className="hero-segment hero-segment--empty">0</span>
+                                )
                               )}
                             </div>
                           </div>
@@ -1930,7 +1950,20 @@ export default function AdminPage() {
                             </span>
                           ))
                         ) : (
-                          <span className="hero-segment hero-segment--empty">0</span>
+                          hero && hero.toLowerCase().includes('adam warlock') ? (
+                            <span
+                              className="hero-segment"
+                              style={{
+                                width: '100%',
+                                background: getAdamGradient()
+                              }}
+                              title={"Adam Warlock: mezcla de aspectos"}
+                            >
+                              {total}
+                            </span>
+                          ) : (
+                            <span className="hero-segment hero-segment--empty">0</span>
+                          )
                         )}
                       </div>
                     </div>
@@ -1991,10 +2024,14 @@ export default function AdminPage() {
                             <span
                               className="hero-segment"
                               style={{
-                                display: 'inline-block',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 minWidth: 90,
                                 textAlign: 'center',
-                                background: visual.background
+                                background: (!aspect || aspect === '') && hero && hero.toLowerCase().includes('adam warlock') ? getAdamGradient() : visual.background,
+                                borderRadius: 999,
+                                padding: '2px 8px'
                               }}
                             >
                               {aspect || '-'}

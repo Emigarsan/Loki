@@ -1,7 +1,7 @@
 {
   "counter" : {
-    "primary" : 988,
-    "tertiary" : 47,
+    "primary" : 1014,
+    "tertiary" : 46,
     "tertiaryMax" : 76,
     "secondaryHeroes" : 28,
     "secondaryPlan" : 18
@@ -69,7 +69,7 @@
       "character" : "Masacre",
       "aspect" : "Justicia"
     }, {
-      "character" : "Star-Lord",
+      "character" : "Starlord",
       "aspect" : "Masacrismo"
     }, {
       "character" : "Mapache Cohete",
@@ -223,7 +223,7 @@
       "aspect" : "Protección"
     }, {
       "character" : "Adam Warlock",
-      "aspect" : "Justicia"
+      "aspect" : ""
     } ],
     "code" : "TST10",
     "createdAt" : 1771500600.000000000,
@@ -297,7 +297,7 @@
       "character" : "Pantera Negra (T'Challa)",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Protección"
     } ],
     "code" : "TST14",
@@ -372,7 +372,7 @@
       "character" : "Capitán América",
       "aspect" : "Liderazgo"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Agresividad"
     } ],
     "code" : "TST19",
@@ -673,7 +673,7 @@
       "aspect" : "Masacrismo"
     }, {
       "character" : "Adam Warlock",
-      "aspect" : "Agresividad"
+      "aspect" : ""
     } ],
     "code" : "TST35",
     "createdAt" : 1771501950.000000000,
@@ -719,7 +719,7 @@
       "character" : "Nick Furia",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Woman",
+      "character" : "Spiderwoman",
       "aspect" : "Protección-Liderazgo"
     }, {
       "character" : "Tormenta",
@@ -744,7 +744,7 @@
       "character" : "Viuda Negra",
       "aspect" : "Protección"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Justicia"
     }, {
       "character" : "Veneno",
@@ -819,7 +819,7 @@
       "character" : "Ms. Marvel",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Protección"
     }, {
       "character" : "Capitán América",
@@ -995,11 +995,11 @@
       "c1" : 0,
       "c2" : 0,
       "c3" : 0,
-      "avatar0" : 2,
-      "avatar1" : 2,
-      "avatar2" : 1,
+      "avatar0" : 1,
+      "avatar1" : 1,
+      "avatar2" : 0,
       "avatar3" : 0,
-      "rupturaTotal" : 63,
+      "rupturaTotal" : 47,
       "threatFromHeroes" : 2,
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
@@ -1014,16 +1014,14 @@
       "c1" : 0,
       "c2" : 0,
       "c3" : 0,
-      "avatar0" : 3,
+      "avatar0" : 2,
       "avatar1" : 0,
       "avatar2" : 0,
-      "avatar3" : 1,
-      "rupturaTotal" : 55,
-      "threatFromHeroes" : 1,
+      "avatar3" : 0,
+      "rupturaTotal" : 45,
+      "threatFromHeroes" : 0,
       "threatFromPlan" : 1,
-      "defeatedHeroes" : {
-        "Hulkling" : 1
-      },
+      "defeatedHeroes" : { },
       "tableName" : null,
       "realityName" : null,
       "sectorId" : null
@@ -1611,6 +1609,7 @@
     }
   },
   "mesaEvents" : [ ],
+  "avatarDefeats" : [ ],
   "sectorStates" : {
     "1" : {
       "mesaId" : 1,
@@ -1647,13 +1646,13 @@
       "mangog" : {
         "key" : "mangog",
         "activeMesaId" : null,
-        "value" : 30,
+        "value" : 8,
         "defeated" : false
       },
       "gate" : {
         "key" : "gate",
         "activeMesaId" : null,
-        "value" : 21,
+        "value" : 5,
         "defeated" : false
       }
     },
@@ -1744,6 +1743,21 @@
         "key" : "gate",
         "activeMesaId" : null,
         "value" : 2,
+        "defeated" : false
+      }
+    },
+    "11" : {
+      "mesaId" : 11,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
         "defeated" : false
       }
     },
@@ -2185,5 +2199,5 @@
   },
   "qrEventEnabled" : true,
   "qrFreegameEnabled" : false,
-  "ts" : 1771968201033
+  "ts" : 1771972316294
 }

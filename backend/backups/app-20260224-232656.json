@@ -1,6 +1,6 @@
 {
   "counter" : {
-    "primary" : 954,
+    "primary" : 1014,
     "tertiary" : 46,
     "tertiaryMax" : 76,
     "secondaryHeroes" : 28,
@@ -69,7 +69,7 @@
       "character" : "Masacre",
       "aspect" : "Justicia"
     }, {
-      "character" : "Star-Lord",
+      "character" : "Starlord",
       "aspect" : "Masacrismo"
     }, {
       "character" : "Mapache Cohete",
@@ -297,7 +297,7 @@
       "character" : "Pantera Negra (T'Challa)",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Protección"
     } ],
     "code" : "TST14",
@@ -372,7 +372,7 @@
       "character" : "Capitán América",
       "aspect" : "Liderazgo"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Agresividad"
     } ],
     "code" : "TST19",
@@ -719,7 +719,7 @@
       "character" : "Nick Furia",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Woman",
+      "character" : "Spiderwoman",
       "aspect" : "Protección-Liderazgo"
     }, {
       "character" : "Tormenta",
@@ -744,7 +744,7 @@
       "character" : "Viuda Negra",
       "aspect" : "Protección"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Justicia"
     }, {
       "character" : "Veneno",
@@ -819,7 +819,7 @@
       "character" : "Ms. Marvel",
       "aspect" : "Agresividad"
     }, {
-      "character" : "Spider-Man (Miles Morales)",
+      "character" : "Spiderman (Miles Morales)",
       "aspect" : "Protección"
     }, {
       "character" : "Capitán América",
@@ -956,6 +956,31 @@
     "realityId" : "sala-roja",
     "realityName" : "Sala Roja",
     "disconnected" : false
+  }, {
+    "id" : "1b2c08c9-ac63-4ca2-bbf9-207cc54bfef8",
+    "tableNumber" : 11,
+    "tableName" : "Guardianes bien tochales",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Adam Warlock",
+      "aspect" : ""
+    }, {
+      "character" : "Drax",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Groot",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "691968",
+    "createdAt" : 1771971899.785711100,
+    "avatar" : "1",
+    "realityId" : "sapiencial",
+    "realityName" : "Sapiencial",
+    "disconnected" : false
   } ],
   "freeGameTables" : [ ],
   "mesaTotals" : {
@@ -997,9 +1022,9 @@
       "c3" : 0,
       "avatar0" : 1,
       "avatar1" : 1,
-      "avatar2" : 1,
-      "avatar3" : 1,
-      "rupturaTotal" : 107,
+      "avatar2" : 0,
+      "avatar3" : 0,
+      "rupturaTotal" : 47,
       "threatFromHeroes" : 2,
       "threatFromPlan" : 1,
       "defeatedHeroes" : {
@@ -1609,19 +1634,7 @@
     }
   },
   "mesaEvents" : [ ],
-  "avatarDefeats" : [ {
-    "avatarName" : "Bellaco",
-    "mesaId" : 3,
-    "mesaNumber" : 3,
-    "rupturaAmount" : 5,
-    "timestamp" : 1771968714482
-  }, {
-    "avatarName" : "Canalla",
-    "mesaId" : 3,
-    "mesaNumber" : 3,
-    "rupturaAmount" : 55,
-    "timestamp" : 1771968723832
-  } ],
+  "avatarDefeats" : [ ],
   "sectorStates" : {
     "1" : {
       "mesaId" : 1,
@@ -1755,6 +1768,21 @@
         "key" : "gate",
         "activeMesaId" : null,
         "value" : 2,
+        "defeated" : false
+      }
+    },
+    "11" : {
+      "mesaId" : 11,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
         "defeated" : false
       }
     },
@@ -2196,5 +2224,5 @@
   },
   "qrEventEnabled" : true,
   "qrFreegameEnabled" : false,
-  "ts" : 1771968980308
+  "ts" : 1771972016291
 }

@@ -27,7 +27,6 @@ public class TablesService {
                 "Spiderman (Peter Parker)",
                 "Capitana Marvel",
                 "Hulka",
-                "Hulkling",
                 "Iron Man",
                 "Pantera Negra (T'Challa)",
                 "Capitán América",
@@ -50,8 +49,7 @@ public class TablesService {
                 "Veneno",
                 "Spectrum",
                 "Adam Warlock",
-                "Hombre Maravilla",
-                "Nebula",
+                "Nébula",
                 "Máquina de Guerra",
                 "Valquiria",
                 "Vision",
@@ -73,7 +71,6 @@ public class TablesService {
                 "Dominó",
                 "Mariposa Mental",
                 "Ángel",
-                "Tigra",
                 "X-23",
                 "Masacre",
                 "Bishop",
@@ -87,8 +84,11 @@ public class TablesService {
                 "Pantera Negra (Shuri)",
                 "Seda",
                 "Halcón",
+                "Soldado de Invierno",
+                "Tigra",
+                "Hulkling",
                 "Hércules",
-                "Soldado de Invierno");
+                "Hombre Maravilla");
         registerAspects = List.of(
                 "Agresividad",
                 "Justicia",

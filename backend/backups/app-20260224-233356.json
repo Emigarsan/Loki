@@ -1,0 +1,18 @@
+{
+  "counter" : {
+    "primary" : 4000,
+    "tertiary" : 0,
+    "tertiaryMax" : 100,
+    "secondaryHeroes" : 0,
+    "secondaryPlan" : 0
+  },
+  "registerTables" : [ ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "mesaEvents" : [ ],
+  "avatarDefeats" : [ ],
+  "sectorStates" : { },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1771972436183
+}

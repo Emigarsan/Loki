@@ -32,7 +32,7 @@
         }
       ],
       "code": "TST01",
-      "createdAt": 1771500000.0,
+      "createdAt": 1771500000,
       "avatar": "0",
       "realityId": "tierra-salvaje",
       "realityName": "Tierra Salvaje",
@@ -63,7 +63,7 @@
         }
       ],
       "code": "TST02",
-      "createdAt": 1771500075.0,
+      "createdAt": 1771500075,
       "avatar": "1",
       "realityId": "sala-roja",
       "realityName": "Sala Roja"
@@ -84,7 +84,7 @@
           "aspect": "Justicia"
         },
         {
-          "character": "Star-Lord",
+          "character": "Starlord",
           "aspect": "Masacrismo"
         },
         {
@@ -93,7 +93,7 @@
         }
       ],
       "code": "TST03",
-      "createdAt": 1771500150.0,
+      "createdAt": 1771500150,
       "avatar": "2",
       "realityId": "mundo-asesino",
       "realityName": "Mundo Asesino"
@@ -123,7 +123,7 @@
         }
       ],
       "code": "TST04",
-      "createdAt": 1771500225.0,
+      "createdAt": 1771500225,
       "avatar": "3",
       "realityId": "base-gamma",
       "realityName": "Base Gamma"
@@ -153,7 +153,7 @@
         }
       ],
       "code": "TST05",
-      "createdAt": 1771500300.0,
+      "createdAt": 1771500300,
       "avatar": "0",
       "realityId": "zona-negativa",
       "realityName": "Zona negativa"
@@ -183,7 +183,7 @@
         }
       ],
       "code": "TST06",
-      "createdAt": 1771500375.0,
+      "createdAt": 1771500375,
       "avatar": "1",
       "realityId": "hala",
       "realityName": "Hala"
@@ -213,7 +213,7 @@
         }
       ],
       "code": "TST07",
-      "createdAt": 1771500450.0,
+      "createdAt": 1771500450,
       "avatar": "2",
       "realityId": "dimension-azufre",
       "realityName": "Dimensión azufre"
@@ -243,7 +243,7 @@
         }
       ],
       "code": "TST09",
-      "createdAt": 1771500525.0,
+      "createdAt": 1771500525,
       "avatar": "3",
       "realityId": "triskelion",
       "realityName": "Triskelion"
@@ -269,11 +269,11 @@
         },
         {
           "character": "Adam Warlock",
-          "aspect": "Justicia"
+          "aspect": ""
         }
       ],
       "code": "TST10",
-      "createdAt": 1771500600.0,
+      "createdAt": 1771500600,
       "avatar": "0",
       "realityId": "dimension-oscura",
       "realityName": "Dimensión oscura"
@@ -303,7 +303,7 @@
         }
       ],
       "code": "TST12",
-      "createdAt": 1771500675.0,
+      "createdAt": 1771500675,
       "avatar": "1",
       "realityId": "asteroide-m",
       "realityName": "Asteroide M"
@@ -333,7 +333,7 @@
         }
       ],
       "code": "TST13",
-      "createdAt": 1771500750.0,
+      "createdAt": 1771500750,
       "avatar": "2",
       "realityId": "madripoor",
       "realityName": "Madripoor"
@@ -358,12 +358,12 @@
           "aspect": "Agresividad"
         },
         {
-          "character": "Spider-Man (Miles Morales)",
+          "character": "Spiderman (Miles Morales)",
           "aspect": "Protección"
         }
       ],
       "code": "TST14",
-      "createdAt": 1771500825.0,
+      "createdAt": 1771500825,
       "avatar": "3",
       "realityId": "klyntar",
       "realityName": "Klyntar"
@@ -393,7 +393,7 @@
         }
       ],
       "code": "TST16",
-      "createdAt": 1771500900.0,
+      "createdAt": 1771500900,
       "avatar": "0",
       "realityId": "avalon",
       "realityName": "Avalon"
@@ -423,7 +423,7 @@
         }
       ],
       "code": "TST17",
-      "createdAt": 1771500975.0,
+      "createdAt": 1771500975,
       "avatar": "1",
       "realityId": "sakaar",
       "realityName": "Sakaar"
@@ -448,12 +448,12 @@
           "aspect": "Liderazgo"
         },
         {
-          "character": "Spider-Man (Miles Morales)",
+          "character": "Spiderman (Miles Morales)",
           "aspect": "Agresividad"
         }
       ],
       "code": "TST19",
-      "createdAt": 1771501050.0,
+      "createdAt": 1771501050,
       "avatar": "2",
       "realityId": "el-pico",
       "realityName": "El Pico"
@@ -483,7 +483,7 @@
         }
       ],
       "code": "TST20",
-      "createdAt": 1771501125.0,
+      "createdAt": 1771501125,
       "avatar": "3",
       "realityId": "rigel-3",
       "realityName": "Rigel-3"
@@ -496,7 +496,7 @@
       "players": 4,
       "playersInfo": [
         {
-          "character": "Nebula",
+          "character": "Nébula",
           "aspect": "Liderazgo"
         },
         {
@@ -513,7 +513,7 @@
         }
       ],
       "code": "TST21",
-      "createdAt": 1771501200.0,
+      "createdAt": 1771501200,
       "avatar": "0",
       "realityId": "espacio-profundo",
       "realityName": "Espacio profundo"
@@ -543,7 +543,7 @@
         }
       ],
       "code": "TST23",
-      "createdAt": 1771501275.0,
+      "createdAt": 1771501275,
       "avatar": "1",
       "realityId": "krakoa",
       "realityName": "Krakoa"
@@ -573,7 +573,7 @@
         }
       ],
       "code": "TST24",
-      "createdAt": 1771501350.0,
+      "createdAt": 1771501350,
       "avatar": "2",
       "realityId": "tierra-salvaje",
       "realityName": "Tierra Salvaje"
@@ -603,7 +603,7 @@
         }
       ],
       "code": "TST26",
-      "createdAt": 1771501425.0,
+      "createdAt": 1771501425,
       "avatar": "3",
       "realityId": "sala-roja",
       "realityName": "Sala Roja"
@@ -633,7 +633,7 @@
         }
       ],
       "code": "TST27",
-      "createdAt": 1771501500.0,
+      "createdAt": 1771501500,
       "avatar": "0",
       "realityId": "mundo-asesino",
       "realityName": "Mundo Asesino"
@@ -663,7 +663,7 @@
         }
       ],
       "code": "TST28",
-      "createdAt": 1771501575.0,
+      "createdAt": 1771501575,
       "avatar": "1",
       "realityId": "base-gamma",
       "realityName": "Base Gamma"
@@ -693,7 +693,7 @@
         }
       ],
       "code": "TST30",
-      "createdAt": 1771501650.0,
+      "createdAt": 1771501650,
       "avatar": "2",
       "realityId": "zona-negativa",
       "realityName": "Zona negativa"
@@ -723,7 +723,7 @@
         }
       ],
       "code": "TST31",
-      "createdAt": 1771501725.0,
+      "createdAt": 1771501725,
       "avatar": "3",
       "realityId": "hala",
       "realityName": "Hala"
@@ -753,7 +753,7 @@
         }
       ],
       "code": "TST33",
-      "createdAt": 1771501800.0,
+      "createdAt": 1771501800,
       "avatar": "0",
       "realityId": "dimension-azufre",
       "realityName": "Dimensión azufre"
@@ -783,7 +783,7 @@
         }
       ],
       "code": "TST34",
-      "createdAt": 1771501875.0,
+      "createdAt": 1771501875,
       "avatar": "1",
       "realityId": "triskelion",
       "realityName": "Triskelion"
@@ -809,11 +809,11 @@
         },
         {
           "character": "Adam Warlock",
-          "aspect": "Agresividad"
+          "aspect": ""
         }
       ],
       "code": "TST35",
-      "createdAt": 1771501950.0,
+      "createdAt": 1771501950,
       "avatar": "2",
       "realityId": "dimension-oscura",
       "realityName": "Dimensión oscura"
@@ -843,7 +843,7 @@
         }
       ],
       "code": "TST37",
-      "createdAt": 1771502025.0,
+      "createdAt": 1771502025,
       "avatar": "3",
       "realityId": "asteroide-m",
       "realityName": "Asteroide M"
@@ -864,7 +864,7 @@
           "aspect": "Agresividad"
         },
         {
-          "character": "Spider-Woman",
+          "character": "Spiderwoman",
           "aspect": "Protección-Liderazgo"
         },
         {
@@ -873,7 +873,7 @@
         }
       ],
       "code": "TST38",
-      "createdAt": 1771502100.0,
+      "createdAt": 1771502100,
       "avatar": "0",
       "realityId": "madripoor",
       "realityName": "Madripoor"
@@ -894,7 +894,7 @@
           "aspect": "Protección"
         },
         {
-          "character": "Spider-Man (Miles Morales)",
+          "character": "Spiderman (Miles Morales)",
           "aspect": "Justicia"
         },
         {
@@ -903,7 +903,7 @@
         }
       ],
       "code": "TST40",
-      "createdAt": 1771502175.0,
+      "createdAt": 1771502175,
       "avatar": "1",
       "realityId": "klyntar",
       "realityName": "Klyntar"
@@ -933,7 +933,7 @@
         }
       ],
       "code": "TST41",
-      "createdAt": 1771502250.0,
+      "createdAt": 1771502250,
       "avatar": "2",
       "realityId": "avalon",
       "realityName": "Avalon"
@@ -963,7 +963,7 @@
         }
       ],
       "code": "TST42",
-      "createdAt": 1771502325.0,
+      "createdAt": 1771502325,
       "avatar": "3",
       "realityId": "sakaar",
       "realityName": "Sakaar"
@@ -984,7 +984,7 @@
           "aspect": "Agresividad"
         },
         {
-          "character": "Spider-Man (Miles Morales)",
+          "character": "Spiderman (Miles Morales)",
           "aspect": "Protección"
         },
         {
@@ -993,7 +993,7 @@
         }
       ],
       "code": "TST44",
-      "createdAt": 1771502400.0,
+      "createdAt": 1771502400,
       "avatar": "0",
       "realityId": "el-pico",
       "realityName": "El Pico"
@@ -1023,7 +1023,7 @@
         }
       ],
       "code": "TST45",
-      "createdAt": 1771502475.0,
+      "createdAt": 1771502475,
       "avatar": "1",
       "realityId": "rigel-3",
       "realityName": "Rigel-3"
@@ -1048,12 +1048,12 @@
           "aspect": "Masacrismo"
         },
         {
-          "character": "Nebula",
+          "character": "Nébula",
           "aspect": "Agresividad"
         }
       ],
       "code": "TST47",
-      "createdAt": 1771502550.0,
+      "createdAt": 1771502550,
       "avatar": "2",
       "realityId": "espacio-profundo",
       "realityName": "Espacio profundo"
@@ -1083,7 +1083,7 @@
         }
       ],
       "code": "TST48",
-      "createdAt": 1771502625.0,
+      "createdAt": 1771502625,
       "avatar": "3",
       "realityId": "krakoa",
       "realityName": "Krakoa"
@@ -1113,7 +1113,7 @@
         }
       ],
       "code": "TST49",
-      "createdAt": 1771502700.0,
+      "createdAt": 1771502700,
       "avatar": "0",
       "realityId": "tierra-salvaje",
       "realityName": "Tierra Salvaje"
@@ -1143,7 +1143,7 @@
         }
       ],
       "code": "TST50",
-      "createdAt": 1771502775.0,
+      "createdAt": 1771502775,
       "avatar": "1",
       "realityId": "sala-roja",
       "realityName": "Sala Roja"
@@ -1399,7 +1399,7 @@
       "threatFromHeroes": 1,
       "threatFromPlan": 0,
       "defeatedHeroes": {
-        "Nebula": 1
+        "Nébula": 1
       }
     },
     "23": {
