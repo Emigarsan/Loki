@@ -85,6 +85,40 @@ export function EventView({ mesaId = null } = {}) {
   const [planCompletionModalVisible, setPlanCompletionModalVisible] = useState(false);
   const [mesaPlayersInfo, setMesaPlayersInfo] = useState([]);
 
+  // Lock background scroll when any modal is open to avoid double-scrolling/glitches on mobile.
+  useEffect(() => {
+    const anyModalOpen = !!(
+      modalMessage ||
+      primaryNoticeVisible ||
+      avatarModalVisible ||
+      defeatModalVisible ||
+      heroDefeatModalVisible ||
+      planCompletionModalVisible
+    );
+
+    if (anyModalOpen) {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.dataset.scrollLock = String(scrollY);
+      document.body.style.overflow = 'hidden';
+    } else {
+      const prev = parseInt(document.body.dataset.scrollLock || '0', 10);
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, prev);
+      delete document.body.dataset.scrollLock;
+    }
+
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.overflow = '';
+      delete document.body.dataset.scrollLock;
+    };
+  }, [modalMessage, primaryNoticeVisible, avatarModalVisible, defeatModalVisible, heroDefeatModalVisible, planCompletionModalVisible]);
+
   const normalizeState = useCallback(
     (data) => {
       if (!data || typeof data !== 'object') {

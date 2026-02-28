@@ -2,6 +2,7 @@
 
 :root {
   font-family: 'Inter', sans-serif;
+  --vh: 1vh;
   /* Public palette variables */
   --color-background: #073D24;
   --color-background-alt: #003F46;
@@ -37,8 +38,7 @@ html {
 
 body {
   margin: 0;
-  height: 100vh;
-  height: 100dvh;
+  min-height: calc(var(--vh, 1vh) * 100);
   overflow: hidden;
   background: linear-gradient(135deg, var(--color-background), var(--color-background-alt));
   position: relative;
@@ -49,7 +49,7 @@ body {
 }
 
 #root {
-  height: 100%;
+  min-height: calc(var(--vh, 1vh) * 100);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -1962,8 +1962,7 @@ button[aria-disabled="true"] {
   border-radius: 1.5rem;
   padding: 2rem 2.5rem;
   max-width: min(90vw, 420px);
-  max-height: calc(90vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(90dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(var(--vh, 1vh) * 100 * 0.9 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
