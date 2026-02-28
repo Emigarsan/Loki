@@ -1,0 +1,1285 @@
+{
+  "counter" : {
+    "primary" : 20,
+    "primaryMax" : 20,
+    "tertiary" : 0,
+    "tertiaryMax" : 0,
+    "secondaryHeroes" : 0,
+    "secondaryPlan" : 0
+  },
+  "registerTables" : [ {
+    "id" : "test-mesa-001",
+    "tableNumber" : 1,
+    "tableName" : "Los Capas",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Ironheart",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Iron Man",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "SP//dr",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST01",
+    "createdAt" : 1771500075.000000000,
+    "avatar" : "0",
+    "realityId" : "latveria",
+    "realityName" : "Latveria",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-002",
+    "tableNumber" : 2,
+    "tableName" : "Liga de la Siesta",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Coloso",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Mariposa Mental",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Gatasombra",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST02",
+    "createdAt" : 1771500150.000000000,
+    "avatar" : "0",
+    "realityId" : "isla-muir",
+    "realityName" : "Isla Muir",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-003",
+    "tableNumber" : 3,
+    "tableName" : "Héroes con Café",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Drax",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hércules",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST03",
+    "createdAt" : 1771500225.000000000,
+    "avatar" : "1",
+    "realityId" : "avalon",
+    "realityName" : "Avalon",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-004",
+    "tableNumber" : 4,
+    "tableName" : "Los que Llegan Tarde",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Nick Furia",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Vision",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST04",
+    "createdAt" : 1771500300.000000000,
+    "avatar" : "0",
+    "realityId" : "dimension-azufre",
+    "realityName" : "Dimensión azufre",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-005",
+    "tableNumber" : 5,
+    "tableName" : "Super Despistados",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Veneno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST05",
+    "createdAt" : 1771500375.000000000,
+    "avatar" : "3",
+    "realityId" : "triskelion",
+    "realityName" : "Triskelion",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-006",
+    "tableNumber" : 6,
+    "tableName" : "Traje Arrugado",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Peter Parker)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Avispa",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hércules",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST06",
+    "createdAt" : 1771500450.000000000,
+    "avatar" : "0",
+    "realityId" : "la-mansion-de-los-vengadores",
+    "realityName" : "La mansión de los Vengadores",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-007",
+    "tableNumber" : 7,
+    "tableName" : "Equipo Anti-Alarmas",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Coloso",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "X-23",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST07",
+    "createdAt" : 1771500525.000000000,
+    "avatar" : "0",
+    "realityId" : "krakoa",
+    "realityName" : "Krakoa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-008",
+    "tableNumber" : 8,
+    "tableName" : "Multiverso-máticos",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Hulkling",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Drax",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST08",
+    "createdAt" : 1771500600.000000000,
+    "avatar" : "3",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-009",
+    "tableNumber" : 9,
+    "tableName" : "Los Saltarines",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magneto",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Protección"
+    }, {
+      "character" : "X-23",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST09",
+    "createdAt" : 1771500675.000000000,
+    "avatar" : "0",
+    "realityId" : "krakoa",
+    "realityName" : "Krakoa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-010",
+    "tableNumber" : 10,
+    "tableName" : "Comando Sargento",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Gatasombra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Halcón",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hombre Hormiga",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST10",
+    "createdAt" : 1771500750.000000000,
+    "avatar" : "1",
+    "realityId" : "wundagore",
+    "realityName" : "Wundagore",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-011",
+    "tableNumber" : 11,
+    "tableName" : "Los que No Vuelan",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Iron Man",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Spiderwoman",
+      "aspect" : "Agresividad-Protección"
+    }, {
+      "character" : "Capitana Marvel",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST11",
+    "createdAt" : 1771500825.000000000,
+    "avatar" : "3",
+    "realityId" : "la-mansion-de-los-vengadores",
+    "realityName" : "La mansión de los Vengadores",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-012",
+    "tableNumber" : 12,
+    "tableName" : "Patrulla del Sándwich",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Gamora",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Pícara",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST12",
+    "createdAt" : 1771500900.000000000,
+    "avatar" : "0",
+    "realityId" : "titan",
+    "realityName" : "Titán",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-013",
+    "tableNumber" : 13,
+    "tableName" : "Puños Felices",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Peter Parker)",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Ghost-Spider",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Spidercerdo",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Seda",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST13",
+    "createdAt" : 1771500975.000000000,
+    "avatar" : "1",
+    "realityId" : "loom-world",
+    "realityName" : "Loom World",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-014",
+    "tableNumber" : 14,
+    "tableName" : "Guardia del Sofá",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spidercerdo",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST14",
+    "createdAt" : 1771501050.000000000,
+    "avatar" : "3",
+    "realityId" : "rigel-3",
+    "realityName" : "Rigel-3",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-015",
+    "tableNumber" : 15,
+    "tableName" : "Escuadrón Calcetín",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Masacre",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST15",
+    "createdAt" : 1771501125.000000000,
+    "avatar" : "1",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-016",
+    "tableNumber" : 16,
+    "tableName" : "Rompe-WiFi",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Drax",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST16",
+    "createdAt" : 1771501200.000000000,
+    "avatar" : "2",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-017",
+    "tableNumber" : 17,
+    "tableName" : "Brigada del Chiste Malo",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Ghost-Spider",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spectrum",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Hombre Hormiga",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST17",
+    "createdAt" : 1771501275.000000000,
+    "avatar" : "3",
+    "realityId" : "nueva-york",
+    "realityName" : "Nueva York",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-018",
+    "tableNumber" : 18,
+    "tableName" : "Capa Holgada",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Peter Parker)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "SP//dr",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Ghost-Spider",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST18",
+    "createdAt" : 1771501350.000000000,
+    "avatar" : "3",
+    "realityId" : "loom-world",
+    "realityName" : "Loom World",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-019",
+    "tableNumber" : 19,
+    "tableName" : "Sociedad del Sombrero",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spidercerdo",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST19",
+    "createdAt" : 1771501425.000000000,
+    "avatar" : "1",
+    "realityId" : "rigel-3",
+    "realityName" : "Rigel-3",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-020",
+    "tableNumber" : 20,
+    "tableName" : "Hermanos del Bocadillo",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Mercurio",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Capitana Marvel",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Spectrum",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hércules",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST20",
+    "createdAt" : 1771501500.000000000,
+    "avatar" : "0",
+    "realityId" : "la-mansion-de-los-vengadores",
+    "realityName" : "La mansión de los Vengadores",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-021",
+    "tableNumber" : 21,
+    "tableName" : "Super Capas",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST21",
+    "createdAt" : 1771501575.000000000,
+    "avatar" : "0",
+    "realityId" : "klyntar",
+    "realityName" : "Klyntar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-022",
+    "tableNumber" : 22,
+    "tableName" : "Mega Sándwich",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "María Hill",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Starlord",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST22",
+    "createdAt" : 1771501650.000000000,
+    "avatar" : "3",
+    "realityId" : "espacio-profundo",
+    "realityName" : "Espacio profundo",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-023",
+    "tableNumber" : 23,
+    "tableName" : "Ultra Siesta",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Gatasombra",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST23",
+    "createdAt" : 1771501725.000000000,
+    "avatar" : "3",
+    "realityId" : "dimension-azufre",
+    "realityName" : "Dimensión azufre",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-024",
+    "tableNumber" : 24,
+    "tableName" : "Súper Calcetín",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Mercurio",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST24",
+    "createdAt" : 1771501800.000000000,
+    "avatar" : "1",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-025",
+    "tableNumber" : 25,
+    "tableName" : "Hiper Café",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "SP//dr",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Seda",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Ghost-Spider",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST25",
+    "createdAt" : 1771501875.000000000,
+    "avatar" : "0",
+    "realityId" : "loom-world",
+    "realityName" : "Loom World",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-026",
+    "tableNumber" : 26,
+    "tableName" : "Mini Sombrero",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitana Marvel",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Tormenta",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Spectrum",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Nova",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST26",
+    "createdAt" : 1771501950.000000000,
+    "avatar" : "2",
+    "realityId" : "xandar",
+    "realityName" : "Xandar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-027",
+    "tableNumber" : 27,
+    "tableName" : "Turbo Bocadillo",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Mercurio",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spiderwoman",
+      "aspect" : "Agresividad-Masacrismo"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Hombre de Hielo",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST27",
+    "createdAt" : 1771502025.000000000,
+    "avatar" : "0",
+    "realityId" : "madrid",
+    "realityName" : "Madrid",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-028",
+    "tableNumber" : 28,
+    "tableName" : "Neo Sofá",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Rondador Nocturno",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Pícara",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST28",
+    "createdAt" : 1771502100.000000000,
+    "avatar" : "2",
+    "realityId" : "titan",
+    "realityName" : "Titán",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-029",
+    "tableNumber" : 29,
+    "tableName" : "Retro Puños",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST29",
+    "createdAt" : 1771502175.000000000,
+    "avatar" : "0",
+    "realityId" : "klyntar",
+    "realityName" : "Klyntar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-030",
+    "tableNumber" : 30,
+    "tableName" : "Proto Traje",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Ironheart",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Iron Man",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "SP//dr",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST30",
+    "createdAt" : 1771502250.000000000,
+    "avatar" : "0",
+    "realityId" : "latveria",
+    "realityName" : "Latveria",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-031",
+    "tableNumber" : 31,
+    "tableName" : "Super Patrulla",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Tormenta",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hércules",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST31",
+    "createdAt" : 1771502325.000000000,
+    "avatar" : "1",
+    "realityId" : "madrid",
+    "realityName" : "Madrid",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-032",
+    "tableNumber" : 32,
+    "tableName" : "Mega Brigada",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "X-23",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Coloso",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Magneto",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST32",
+    "createdAt" : 1771502400.000000000,
+    "avatar" : "1",
+    "realityId" : "krakoa",
+    "realityName" : "Krakoa",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-033",
+    "tableNumber" : 33,
+    "tableName" : "Ultra Escuadrón",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magneto",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Nébula",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Ojo de Halcón",
+      "aspect" : "Agresividad"
+    } ],
+    "code" : "TST33",
+    "createdAt" : 1771502475.000000000,
+    "avatar" : "3",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-034",
+    "tableNumber" : 34,
+    "tableName" : "Súper Comando",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Drax",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulka",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST34",
+    "createdAt" : 1771502550.000000000,
+    "avatar" : "0",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-035",
+    "tableNumber" : 35,
+    "tableName" : "Hiper Guardia",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Viuda Negra",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Nick Furia",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Spiderwoman",
+      "aspect" : "Agresividad-Justicia"
+    }, {
+      "character" : "Tormenta",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST35",
+    "createdAt" : 1771502625.000000000,
+    "avatar" : "2",
+    "realityId" : "madripoor",
+    "realityName" : "Madripoor",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-036",
+    "tableNumber" : 36,
+    "tableName" : "Mini Capas",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitán América",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Cable",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Ms. Marvel",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "María Hill",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST36",
+    "createdAt" : 1771502700.000000000,
+    "avatar" : "3",
+    "realityId" : "el-pico",
+    "realityName" : "El Pico",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-037",
+    "tableNumber" : 37,
+    "tableName" : "Turbo Sándwich",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cíclope",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Starlord",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Capitán América",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Cable",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST37",
+    "createdAt" : 1771502775.000000000,
+    "avatar" : "1",
+    "realityId" : "el-pico",
+    "realityName" : "El Pico",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-038",
+    "tableNumber" : 38,
+    "tableName" : "Neo Siesta",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Cable",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Bishop",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Mapache Cohete",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST38",
+    "createdAt" : 1771502850.000000000,
+    "avatar" : "2",
+    "realityId" : "mundo-asesino",
+    "realityName" : "Mundo Asesino",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-039",
+    "tableNumber" : 39,
+    "tableName" : "Retro Calcetín",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Drax",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Gamora",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Hulkling",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST39",
+    "createdAt" : 1771502925.000000000,
+    "avatar" : "1",
+    "realityId" : "base-gamma",
+    "realityName" : "Base Gamma",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-040",
+    "tableNumber" : 40,
+    "tableName" : "Proto Café",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Capitán América",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Cíclope",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Valquiria",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST40",
+    "createdAt" : 1771503000.000000000,
+    "avatar" : "3",
+    "realityId" : "madrid",
+    "realityName" : "Madrid",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-041",
+    "tableNumber" : 41,
+    "tableName" : "Super Sombrero",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Magneto",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Masacre",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Mercurio",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST41",
+    "createdAt" : 1771503075.000000000,
+    "avatar" : "2",
+    "realityId" : "asteroide-m",
+    "realityName" : "Asteroide M",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-042",
+    "tableNumber" : 42,
+    "tableName" : "Mega Bocadillo",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Halcón",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hombre Hormiga",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Dominó",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Valquiria",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST42",
+    "createdAt" : 1771503150.000000000,
+    "avatar" : "0",
+    "realityId" : "wundagore",
+    "realityName" : "Wundagore",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-043",
+    "tableNumber" : 43,
+    "tableName" : "Ultra Sofá",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Fénix",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hulk",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Bruja Escarlata",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST43",
+    "createdAt" : 1771503225.000000000,
+    "avatar" : "1",
+    "realityId" : "sala-blanca",
+    "realityName" : "Sala blanca",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-044",
+    "tableNumber" : 44,
+    "tableName" : "Súper Puños",
+    "difficulty" : "Experto",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Tormenta",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Spiderwoman",
+      "aspect" : "Protección-Liderazgo"
+    }, {
+      "character" : "María Hill",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST44",
+    "createdAt" : 1771503300.000000000,
+    "avatar" : "0",
+    "realityId" : "madripoor",
+    "realityName" : "Madripoor",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-045",
+    "tableNumber" : 45,
+    "tableName" : "Hiper Traje",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Nick Furia",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Spiderwoman",
+      "aspect" : "Agresividad-Liderazgo"
+    }, {
+      "character" : "Tormenta",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST45",
+    "createdAt" : 1771503375.000000000,
+    "avatar" : "0",
+    "realityId" : "madripoor",
+    "realityName" : "Madripoor",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-046",
+    "tableNumber" : 46,
+    "tableName" : "Mini Patrulla",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spidercerdo",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Bishop",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Magik",
+      "aspect" : "Protección"
+    } ],
+    "code" : "TST46",
+    "createdAt" : 1771503450.000000000,
+    "avatar" : "3",
+    "realityId" : "limbo",
+    "realityName" : "Limbo",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-047",
+    "tableNumber" : 47,
+    "tableName" : "Turbo Brigada",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Cable",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Soldado de Invierno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Veneno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Máquina de Guerra",
+      "aspect" : "Masacrismo"
+    } ],
+    "code" : "TST47",
+    "createdAt" : 1771503525.000000000,
+    "avatar" : "1",
+    "realityId" : "triskelion",
+    "realityName" : "Triskelion",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-048",
+    "tableNumber" : 48,
+    "tableName" : "Neo Escuadrón",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Veneno",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Spiderman (Miles Morales)",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Justicia"
+    }, {
+      "character" : "Viuda Negra",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST48",
+    "createdAt" : 1771503600.000000000,
+    "avatar" : "0",
+    "realityId" : "klyntar",
+    "realityName" : "Klyntar",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-049",
+    "tableNumber" : 49,
+    "tableName" : "Retro Comando",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Spectrum",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Hombre Maravilla",
+      "aspect" : "Protección"
+    }, {
+      "character" : "Capitana Marvel",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Gambito",
+      "aspect" : "Liderazgo"
+    } ],
+    "code" : "TST49",
+    "createdAt" : 1771503675.000000000,
+    "avatar" : "2",
+    "realityId" : "hala",
+    "realityName" : "Hala",
+    "disconnected" : false
+  }, {
+    "id" : "test-mesa-050",
+    "tableNumber" : 50,
+    "tableName" : "Proto Guardia",
+    "difficulty" : "Normal",
+    "players" : 4,
+    "playersInfo" : [ {
+      "character" : "Tigra",
+      "aspect" : "Liderazgo"
+    }, {
+      "character" : "Lobezno",
+      "aspect" : "Agresividad"
+    }, {
+      "character" : "Pantera Negra (T'Challa)",
+      "aspect" : "Masacrismo"
+    }, {
+      "character" : "Pantera Negra (Shuri)",
+      "aspect" : "Justicia"
+    } ],
+    "code" : "TST50",
+    "createdAt" : 1771503750.000000000,
+    "avatar" : "1",
+    "realityId" : "tierra-salvaje",
+    "realityName" : "Tierra Salvaje",
+    "disconnected" : false
+  } ],
+  "freeGameTables" : [ ],
+  "mesaTotals" : { },
+  "avatarDefeats" : [ ],
+  "specialDefeats" : [ ],
+  "sectorStates" : {
+    "1" : {
+      "mesaId" : 1,
+      "mangog" : {
+        "key" : "mangog",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      },
+      "gate" : {
+        "key" : "gate",
+        "activeMesaId" : null,
+        "value" : 0,
+        "defeated" : false
+      }
+    }
+  },
+  "qrEventEnabled" : false,
+  "qrFreegameEnabled" : false,
+  "ts" : 1772025694010
+}

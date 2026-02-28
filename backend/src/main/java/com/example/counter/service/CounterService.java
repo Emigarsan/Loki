@@ -10,6 +10,7 @@ public class CounterService {
     public static final int TERTIARY_MAX_DEFAULT_VALUE = 100;
 
     private int primary = PRIMARY_DEFAULT_VALUE;
+    private int primaryMax = PRIMARY_DEFAULT_VALUE;
     private int tertiary = TERTIARY_DEFAULT_VALUE;
     private int tertiaryMax = TERTIARY_MAX_DEFAULT_VALUE;
     private int secondaryHeroes = 0;
@@ -21,7 +22,22 @@ public class CounterService {
 
     // New setters for exact values (used by Admin)
     public synchronized CounterState setPrimary(int value) {
-        primary = Math.max(0, value);
+        int normalized = Math.max(0, value);
+        primary = primaryMax > 0 ? Math.min(normalized, primaryMax) : normalized;
+        return snapshot();
+    }
+
+    public synchronized CounterState setPrimaryMax(int value) {
+        primaryMax = Math.max(0, value);
+        if (primary > primaryMax) {
+            primary = primaryMax;
+        }
+        return snapshot();
+    }
+
+    public synchronized CounterState setPrimaryMaxAndCurrent(int value) {
+        primaryMax = Math.max(0, value);
+        primary = primaryMax;
         return snapshot();
     }
 
@@ -58,7 +74,7 @@ public class CounterService {
     }
 
     private CounterState snapshot() {
-        return new CounterState(primary, tertiary, tertiaryMax, secondaryHeroes, secondaryPlan);
+        return new CounterState(primary, primaryMax, tertiary, tertiaryMax, secondaryHeroes, secondaryPlan);
     }
 
 }

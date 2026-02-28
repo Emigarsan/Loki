@@ -268,7 +268,7 @@ export const REALITIES_DATA = {
       "Ojo de Halcón",
       "Mercurio",
       "Bruja Escarlata",
-      "Nebula",
+      "Nébula",
       "Vision",
       "Pícara",
       "Masacre",
@@ -289,7 +289,7 @@ export const REALITIES_DATA = {
     "selectableHeroes": [
       "Viuda Negra",
       "Gambito",
-      "Spider-Woman",
+      "Spiderwoman",
       "María Hill",
       "Tormenta",
       "Nick Furia"
@@ -324,7 +324,7 @@ export const REALITIES_DATA = {
     "image": "/realities/titan.jpg",
     "selectableHeroes": [
       "Gamora",
-      "Nebula",
+      "Nébula",
       "Rondador Nocturno",
       "Pícara"
     ],
@@ -527,7 +527,7 @@ export const REALITIES_DATA = {
     "selectableHeroes": [
       "Star-Lord",
       "Nick Furia",
-      "Nebula",
+      "Nébula",
       "María Hill",
       "Dominó"
     ],
@@ -560,9 +560,9 @@ export const REALITIES_DATA = {
     "name": "Loom World",
     "description": "La Red de la Vida y el Destino se tensa.\nLos tótems araña han sido marcados… y los Herederos han salido de caza.\nCada salto entre realidades deja un hilo atrás. Cada decisión vibra en la red.\nAquí no luchan solos. Luchan conectados. Porque cuando cae uno, toda la red lo siente.",
     "image": "/realities/loom-world.jpg",
-    "selectableHeroes": ["Spider-Man (Peter Parker)", "Spiderwoman", "Spiderman (Miles Morales)", "Ghost-Spider", "SP//dr", "Spidercerdo", "Seda"],
+    "selectableHeroes": ["Spiderman (Peter Parker)", "Spiderwoman", "Spiderman (Miles Morales)", "Ghost-Spider", "SP//dr", "Spidercerdo", "Seda"],
     "mandatoryModulars": ["Los Herederos"],
-    "specialRules": "Spiderman Peter Parker es obligatorio. Spider-Man (Peter Parker) empieza la partida con la mejora Guerrero de la Gran Red en juego. Esta mejora no cuenta para el límite mínimo de cartas del mazo, ya que gana la palabra clave Permanente."
+    "specialRules": "Spiderman Peter Parker es obligatorio. Spiderman (Peter Parker) empieza la partida con la mejora Guerrero de la Gran Red en juego. Esta mejora no cuenta para el límite mínimo de cartas del mazo, ya que gana la palabra clave Permanente."
   },
   "la-mansion-de-los-vengadores": {
     "id": "la-mansion-de-los-vengadores",
@@ -590,6 +590,36 @@ export const REALITIES_DATA = {
     "selectableHeroes": ["Ms. Marvel", "Spiderman (Miles Morales)", "Nova", "Ironheart"],
     "mandatoryModulars": ["Científico IMA", "Riesgo extremo"],
     "specialRules": "Ms. Marvel es obligatoria. Joystick pierde la palabra clave Victoria."
+  },
+  "escuela-charles-xavier": {
+    "id": "escuela-charles-xavier",
+    "name": "Escuela Charles Xavier",
+    "description": "Aquí no solo se enseña a controlar poderes. Aquí se aprende a pertenecer.\nLa Escuela Charles Xavier ha sido hogar antes que cuartel, familia antes que ejército. Un lugar donde los distintos encontraron un nombre común… mutantes. Pero incluso las familias son puestas a prueba cuando el miedo vuelve a llamar la puerta. Y cuando amenazan a uno, responden todos.\nNo luchan por aceptación. Luchan por existir. Y esta vez… no darán ni un paso atrás.",
+    "image": "/realities/escuela-charles-xavier.jpg",
+    "selectableHeroes": [
+      "Ángel",
+      "Bishop",
+      "Cable",
+      "Cíclope",
+      "Coloso",
+      "Dominó",
+      "Fénix",
+      "Gambito",
+      "Pícara",
+      "Gatasombra",
+      "Hombre de Hielo",
+      "Júbilo",
+      "Lobezno",
+      "Magik",
+      "Magneto",
+      "Mariposa Mental",
+      "Masacre",
+      "Rondador Nocturno",
+      "Tormenta",
+      "X-23"
+    ],
+    "mandatoryModulars": ["Genosha", "Tolerancia Cero"],
+    "specialRules": "Cíclope es obligatorio. El plan secundario Tolerancia Cero gana la palabra clave Permanente."
   },
   "madrid": {
     "id": "madrid",

@@ -14,13 +14,14 @@ com\example\counter\service\sector\SectorService$SectorInfo.class
 com\example\counter\service\CounterService.class
 com\example\counter\service\snapshot\SnapshotService$SnapshotData.class
 com\example\counter\controller\TablesController.class
-com\example\counter\service\mesa\MesaCounterService$Event.class
 com\example\counter\service\model\FreeGameTable.class
 com\example\counter\service\snapshot\SnapshotService.class
 com\example\counter\service\mesa\MesaCounterService.class
 com\example\counter\service\mesa\MesaCounterService$TotalesMesa.class
 com\example\counter\controller\CounterController.class
 com\example\counter\controller\SpaController.class
+com\example\counter\service\mesa\MesaCounterService$AvatarDefeat.class
+com\example\counter\service\mesa\MesaCounterService$SpecialDefeat.class
 com\example\counter\service\sector\SectorService$IndicatorState.class
 com\example\counter\service\model\RegisterTable.class
 com\example\counter\service\model\PlayerInfo.class

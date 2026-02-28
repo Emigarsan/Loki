@@ -307,11 +307,13 @@ public class TablesService {
             if (aspect == null)
                 aspect = "";
 
+            character = normalizeRegisterCharacter(character);
+
             if (equalsIgnoreCase(character, "Adam Warlock")) {
                 // Adam Warlock: aspecto vacío y bloqueado
                 aspect = "";
-            } else if (equalsIgnoreCase(character, "Spider-Woman")) {
-                // Spider-Woman: debe estar en la lista combinada, si no, limpiar
+            } else if (equalsIgnoreCase(character, "Spiderwoman")) {
+                // Spiderwoman: debe estar en la lista combinada, si no, limpiar
                 if (!containsIgnoreCase(registerSpiderwomanAspects, aspect)) {
                     aspect = "";
                 }
@@ -324,6 +326,20 @@ public class TablesService {
             out.add(new PlayerInfo(character, aspect));
         }
         return out;
+    }
+
+    private String normalizeRegisterCharacter(String character) {
+        if (character == null) {
+            return "";
+        }
+        String normalized = character.trim();
+        if (normalized.equalsIgnoreCase("Spider-Woman")
+                || normalized.equalsIgnoreCase("SpiderWoman")
+                || normalized.equalsIgnoreCase("Spider Woman")
+                || normalized.equalsIgnoreCase("Spiderwoman")) {
+            return "Spiderwoman";
+        }
+        return normalized;
     }
 
     private String safeTrim(String s) {

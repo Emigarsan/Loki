@@ -3,8 +3,8 @@ package com.example.counter.service.snapshot;
 import com.example.counter.service.CounterService;
 import com.example.counter.service.TablesService;
 import com.example.counter.service.mesa.MesaCounterService;
-import com.example.counter.service.mesa.MesaCounterService.Event;
 import com.example.counter.service.mesa.MesaCounterService.AvatarDefeat;
+import com.example.counter.service.mesa.MesaCounterService.SpecialDefeat;
 import com.example.counter.service.mesa.MesaCounterService.TotalesMesa;
 import com.example.counter.service.model.CounterState;
 import com.example.counter.service.model.FreeGameTable;
@@ -84,8 +84,8 @@ public class SnapshotService {
         public List<RegisterTable> registerTables;
         public List<FreeGameTable> freeGameTables;
         public Map<Integer, TotalesMesa> mesaTotals;
-        public List<Event> mesaEvents;
         public List<AvatarDefeat> avatarDefeats;
+        public List<SpecialDefeat> specialDefeats;
         public Map<Integer, SectorService.MesaIndicators> sectorStates;
         public boolean qrEventEnabled;
         public boolean qrFreegameEnabled;
@@ -157,8 +157,8 @@ public class SnapshotService {
         data.qrEventEnabled = tablesService.isEventQrEnabled();
         data.qrFreegameEnabled = tablesService.isFreegameQrEnabled();
         data.mesaTotals = mesaService.getTotalesSnapshot();
-        data.mesaEvents = mesaService.getEventosSnapshot();
         data.avatarDefeats = mesaService.getAvatarDefeatsSnapshot();
+        data.specialDefeats = mesaService.getSpecialDefeatsSnapshot();
         data.sectorStates = sectorService.getSnapshot();
         data.ts = System.currentTimeMillis();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(out.toFile(), data);
@@ -199,6 +199,10 @@ public class SnapshotService {
         if (data == null)
             return;
         if (data.counter != null) {
+            Integer rawPrimaryMax = data.counter.primaryMax;
+            if (rawPrimaryMax != null) {
+                counterService.setPrimaryMax(Math.max(0, rawPrimaryMax));
+            }
             counterService.setPrimary(Math.max(0, data.counter.primary));
             counterService.setTertiary(Math.max(0, data.counter.tertiary));
             Integer rawMax = data.counter.tertiaryMax;
@@ -213,7 +217,7 @@ public class SnapshotService {
                 counterService.setSecondaryPlan(Math.max(0, secondaryPlan));
             }
         }
-        mesaService.restore(data.mesaTotals, data.mesaEvents, data.avatarDefeats);
+        mesaService.restore(data.mesaTotals, data.avatarDefeats, data.specialDefeats);
         sectorService.restore(data.sectorStates);
         tablesService.restore(data.registerTables, data.freeGameTables);
         tablesService.setEventQrEnabled(data.qrEventEnabled);

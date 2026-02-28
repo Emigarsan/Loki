@@ -62,11 +62,6 @@ public class MesaCounterController {
         return ResponseEntity.ok(totales);
     }
 
-    @GetMapping("/events")
-    public ResponseEntity<List<MesaCounterService.Event>> events() {
-        return ResponseEntity.ok(mesaService.getEventosSnapshot());
-    }
-
     @GetMapping("/last-avatar-defeats")
     public ResponseEntity<List<MesaCounterService.AvatarDefeat>> lastAvatarDefeats() {
         return ResponseEntity.ok(mesaService.getAvatarDefeatsLatestFirst());
@@ -75,6 +70,11 @@ public class MesaCounterController {
     @GetMapping("/avatar-defeats")
     public ResponseEntity<List<MesaCounterService.AvatarDefeat>> avatarDefeats() {
         return ResponseEntity.ok(mesaService.getAvatarDefeatsLatestFirst());
+    }
+
+    @GetMapping("/special-defeats")
+    public ResponseEntity<List<MesaCounterService.SpecialDefeat>> specialDefeats() {
+        return ResponseEntity.ok(mesaService.getSpecialDefeatsLatestFirst());
     }
 
     @PostMapping("/{mesaId}/avatar-defeat")

@@ -7,6 +7,17 @@ export default function RealitySelector({ onConfirm, onCancel }) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   const realitiesData = REALITIES_DATA;
+  const allHeroes = Array.from(new Set(
+    Object.values(realitiesData)
+      .flatMap((reality) => Array.isArray(reality?.selectableHeroes) ? reality.selectableHeroes : [])
+      .filter(Boolean)
+  ));
+
+  const resolveSelectableHeroes = (value) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string' && value.trim().toLowerCase() === 'cualquiera') return allHeroes;
+    return [];
+  };
   // Obtener las IDs en el orden definido en el objeto
   const realityIds = Object.keys(realitiesData);
   const realities = realityIds.map((id, idx) => ({ ...realitiesData[id], id, number: idx + 1 }));
@@ -25,7 +36,7 @@ export default function RealitySelector({ onConfirm, onCancel }) {
       onConfirm({
         realityId: selectedReality,
         realityName: realityData.name,
-        selectableHeroes: realityData.selectableHeroes,
+        selectableHeroes: resolveSelectableHeroes(realityData.selectableHeroes),
         mandatoryModulars: realityData.mandatoryModulars,
         specialRules: realityData.specialRules
       });
@@ -97,7 +108,7 @@ export default function RealitySelector({ onConfirm, onCancel }) {
               <div className="reality-section">
                 <h3>Héroes Seleccionables</h3>
                 <div className="heroes-list">
-                  {realityData.selectableHeroes.map((hero) => (
+                  {resolveSelectableHeroes(realityData.selectableHeroes).map((hero) => (
                     <span key={hero} className="hero-badge">
                       {hero}
                     </span>

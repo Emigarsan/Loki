@@ -12,18 +12,46 @@ const ASPECT_COLORS = {
   'Masacrismo': '#FF69B4'
 };
 
-const CONSTELLATION_NAMES = [
-  'Andrómeda', 'Casiopea', 'Orión', 'Pegaso', 'Draco',
-  'Hércules', 'Lyra', 'Cygnus', 'Aquila', 'Fénix',
-  'Escorpio', 'Leo', 'Tauro', 'Géminis', 'Virgo',
-  'Libra', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis',
-  'Aries', 'Cáncer', 'Perseo', 'Auriga', 'Boötes'
+const CELESTIAL_NAMES = [
+  'Arishem el Juez',
+  'Ashema la que escucha',
+  'Devron el Experimentador',
+  'Eson el Buscador',
+  'Exitar el Exterminador',
+  'Gamiel el Manipulador',
+  'Gammenon el Recolector',
+  'Groffon el Regurgitador',
+  'Hargen el Medidor',
+  'Jemiah el Analizador',
+  'Nezarr el Calculador',
+  'Oneg el Sondeador',
+  'Scathan el Aprobador',
+  'Tefral el Supervisor',
+  'Zgreb el Aspirante',
+  'Ziran el Probador'
 ];
 
 const getSectorName = (sectorId) => {
   if (!sectorId || sectorId < 1) return 'Desconocido';
-  const index = (sectorId - 1) % CONSTELLATION_NAMES.length;
-  return CONSTELLATION_NAMES[index];
+  const index = (sectorId - 1) % CELESTIAL_NAMES.length;
+  return CELESTIAL_NAMES[index];
+};
+
+const getSectorLabel = (sectorId) => `${getSectorName(sectorId)} (#${sectorId})`;
+
+const renderSectorLabelStack = (sectorId) => {
+  const label = getSectorLabel(sectorId);
+  const openParenIdx = label.lastIndexOf(' (#');
+  const withoutNumber = openParenIdx > 0 ? label.slice(0, openParenIdx) : label;
+  const numberTag = openParenIdx > 0 ? label.slice(openParenIdx + 2, -1) : `#${sectorId}`;
+  const [firstWord, ...rest] = withoutNumber.split(' ');
+  return (
+    <span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.1 }}>
+      <span>{firstWord}</span>
+      <span style={{ fontSize: '0.85em' }}>{rest.join(' ')}</span>
+      <span style={{ color: '#C8A233', fontWeight: 'bold', fontSize: '0.85em' }}>{numberTag}</span>
+    </span>
+  );
 };
 
 const SPECIAL_AVATAR_SPECS = [
@@ -75,10 +103,21 @@ const getAdamGradient = () => {
   return `linear-gradient(90deg, ${stops})`;
 };
 
+const normalizeHeroName = (heroName) => {
+  const value = (heroName || '').trim();
+  if (!value) return '';
+  const lower = value.toLowerCase();
+  if (lower === 'spider-woman' || lower === 'spiderwoman' || lower === 'spider woman') {
+    return 'Spiderwoman';
+  }
+  return value;
+};
+
 export default function AdminPage() {
   const [state, setState] = useState(null);
   const [error, setError] = useState(null);
   const [pVal, setPVal] = useState('');
+  const [primaryMaxVal, setPrimaryMaxVal] = useState('');
   const [tVal, setTVal] = useState('');
   const [maxThreatVal, setMaxThreatVal] = useState('');
   const [adminKey, setAdminKey] = useState('');
@@ -88,6 +127,7 @@ export default function AdminPage() {
   const [qrFlags, setQrFlags] = useState({ event: false });
   const [mesaSummary, setMesaSummary] = useState({});
   const [avatarDefeats, setAvatarDefeats] = useState([]);
+  const [specialAvatarDefeats, setSpecialAvatarDefeats] = useState([]);
   const [tab, setTab] = useState('mod');
   const [statsTab, setStatsTab] = useState('avatares');
   const [backups, setBackups] = useState({ dir: '', writable: true, files: [] });
@@ -149,7 +189,10 @@ export default function AdminPage() {
   }, [avatarDefeats, avatarDefeatMesaFilter, avatarDefeatNameFilter]);
 
   const trackedSpecialAvatarDefeats = useMemo(() => {
-    return (avatarDefeats || [])
+    const source = (specialAvatarDefeats && specialAvatarDefeats.length > 0)
+      ? specialAvatarDefeats
+      : (avatarDefeats || []);
+    return source
       .map((defeat) => {
         const name = (defeat?.avatarName || '').trim();
         if (!name) return null;
@@ -163,7 +206,7 @@ export default function AdminPage() {
         };
       })
       .filter(Boolean);
-  }, [avatarDefeats]);
+  }, [avatarDefeats, specialAvatarDefeats]);
 
   const sectorSummaryRows = useMemo(() => {
     const sectorData = {};
@@ -286,6 +329,7 @@ export default function AdminPage() {
     const load = () => {
       fetch('/api/mesas/summary').then(r => r.ok ? r.json() : {}).then(setMesaSummary).catch(() => { });
       fetch('/api/mesas/avatar-defeats').then(r => r.ok ? r.json() : []).then(setAvatarDefeats).catch(() => { });
+      fetch('/api/mesas/special-defeats').then(r => r.ok ? r.json() : []).then(setSpecialAvatarDefeats).catch(() => setSpecialAvatarDefeats([]));
     };
     load();
     const id = setInterval(load, 3000);
@@ -394,12 +438,21 @@ export default function AdminPage() {
     }).then(fetchState);
   };
 
-  const applyRecommendedPrimary = () => {
-    setPVal(String(recommendedPrimaryMax));
-    fetch(`${API_BASE}/primary/set`, {
+  const setPrimaryMax = (syncCurrent = true) => {
+    const n = Math.max(0, parseInt(primaryMaxVal, 10) || 0);
+    fetch(`${API_BASE}/primary/max/set`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
-      body: JSON.stringify({ value: recommendedPrimaryMax })
+      body: JSON.stringify({ value: n, syncCurrent })
+    }).then(fetchState);
+  };
+
+  const applyRecommendedPrimaryMax = () => {
+    setPrimaryMaxVal(String(recommendedPrimaryMax));
+    fetch(`${API_BASE}/primary/max/set`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': adminKey },
+      body: JSON.stringify({ value: recommendedPrimaryMax, syncCurrent: true })
     }).then(fetchState);
   };
 
@@ -411,6 +464,13 @@ export default function AdminPage() {
       body: JSON.stringify({ value: recommendedTertiaryMax })
     }).then(fetchState);
   };
+
+  useEffect(() => {
+    if (!isAuthed) return;
+    if (tab !== 'max') return;
+    if (primaryMaxVal.trim() !== '') return;
+    setPrimaryMaxVal(String(recommendedPrimaryMax));
+  }, [isAuthed, tab, primaryMaxVal, recommendedPrimaryMax]);
 
   const handleEditTable = (table) => {
     setEditingTable({
@@ -557,24 +617,37 @@ export default function AdminPage() {
   const heroesStatsData = useMemo(() => {
     const heroTotals = {};
     const heroAspects = {};
+    const heroMesas = {};
     const aspectCount = {};
     const combos = {};
+    const comboMesas = {};
 
     (tables.register || []).forEach((table) => {
+      const mesaNumber = Number(table?.tableNumber);
+      const hasMesaNumber = Number.isFinite(mesaNumber);
       (table.playersInfo || []).forEach((player) => {
-        if (!player.character) return;
+        const normalizedHero = normalizeHeroName(player?.character);
+        if (!normalizedHero) return;
 
-        heroTotals[player.character] = (heroTotals[player.character] || 0) + 1;
+        heroTotals[normalizedHero] = (heroTotals[normalizedHero] || 0) + 1;
+        if (hasMesaNumber) {
+          if (!heroMesas[normalizedHero]) heroMesas[normalizedHero] = new Set();
+          heroMesas[normalizedHero].add(mesaNumber);
+        }
 
         if (player.aspect && player.aspect !== 'No aplica') {
-          const aspects = heroAspects[player.character] || {};
+          const aspects = heroAspects[normalizedHero] || {};
           aspects[player.aspect] = (aspects[player.aspect] || 0) + 1;
-          heroAspects[player.character] = aspects;
+          heroAspects[normalizedHero] = aspects;
 
           aspectCount[player.aspect] = (aspectCount[player.aspect] || 0) + 1;
 
-          const comboKey = `${player.character} | ${player.aspect}`;
+          const comboKey = `${normalizedHero} | ${player.aspect}`;
           combos[comboKey] = (combos[comboKey] || 0) + 1;
+          if (hasMesaNumber) {
+            if (!comboMesas[comboKey]) comboMesas[comboKey] = new Set();
+            comboMesas[comboKey].add(mesaNumber);
+          }
         }
       });
     });
@@ -583,6 +656,10 @@ export default function AdminPage() {
       .sort((a, b) => b[1] - a[1])
       .map(([hero, total]) => {
         const aspectBreakdown = heroAspects[hero] || {};
+        const mesas = Array.from(heroMesas[hero] || []).sort((a, b) => a - b);
+        const mesasTooltip = mesas.length > 0
+          ? `Mesas (${mesas.length}): ${mesas.join(', ')}`
+          : 'Sin mesas registradas';
         const segments = Object.entries(aspectBreakdown)
           .sort((a, b) => b[1] - a[1])
           .map(([aspect, count]) => {
@@ -596,7 +673,7 @@ export default function AdminPage() {
             };
           });
 
-        return { hero, total, segments, aspectBreakdown };
+        return { hero, total, segments, aspectBreakdown, mesas, mesasTooltip };
       });
 
     const totalAspectCount = Object.values(aspectCount).reduce((sum, count) => sum + count, 0);
@@ -609,12 +686,22 @@ export default function AdminPage() {
       });
 
     const comboEntries = Object.entries(combos).sort((a, b) => b[1] - a[1]);
+    const comboMesaTooltipMap = Object.fromEntries(
+      comboEntries.map(([combo]) => {
+        const mesas = Array.from(comboMesas[combo] || []).sort((a, b) => a - b);
+        const tooltip = mesas.length > 0
+          ? `Mesas (${mesas.length}): ${mesas.join(', ')}`
+          : 'Sin mesas registradas';
+        return [combo, tooltip];
+      })
+    );
 
     return {
       heroRows,
       topHeroRows: heroRows.slice(0, 10),
       aspectRows,
       comboEntries,
+      comboMesaTooltipMap,
       topComboRows: comboEntries.slice(0, 10),
       modalComboRows: comboEntries.slice(0, 15),
       topCombo: comboEntries[0] || null
@@ -623,11 +710,12 @@ export default function AdminPage() {
 
   const allSelectableHeroes = useMemo(() => {
     const backendCatalog = Array.isArray(backendHeroes)
-      ? backendHeroes.filter(Boolean)
+      ? backendHeroes.map(normalizeHeroName).filter(Boolean)
       : [];
 
     const fallbackCatalog = Object.values(REALITIES_DATA || {})
       .flatMap((reality) => Array.isArray(reality?.selectableHeroes) ? reality.selectableHeroes : [])
+      .map(normalizeHeroName)
       .filter(Boolean);
 
     const sourceCatalog = backendCatalog.length > 0 ? backendCatalog : fallbackCatalog;
@@ -724,7 +812,7 @@ export default function AdminPage() {
 
     const rows = rowsToExport.map((defeat, index) => ({
       '#': index + 1,
-      Sector: getSectorName(defeat.sectorId),
+      Sector: getSectorLabel(defeat.sectorId),
       Mesa: `Mesa ${defeat.mesaId ?? '-'}`,
       Avatar: defeat.specialAvatarLabel || defeat.avatarName || '-',
       Timestamp: formatAvatarDefeatTimestamp(defeat.timestamp)
@@ -804,7 +892,7 @@ export default function AdminPage() {
     }
 
     const rows = rowsToExport.map((row) => ({
-      Sector: `${getSectorName(row.sectorId)} (#${row.sectorId})`,
+      Sector: getSectorLabel(row.sectorId),
       Mesas: row.mesas.length,
       Ruptura: row.rupturaTotal,
       Amenaza_Heroes: row.threatFromHeroes,
@@ -889,16 +977,28 @@ export default function AdminPage() {
             <section className="counter-card">
               <h3>Vida Loki Dios de las Mentiras</h3>
               <div className="counter-value">{state.primary}</div>
-              <p className="field-hint">
-                Recomendado (20 × jugadores: {totalPlayers}): {recommendedPrimaryMax}
-              </p>
               <div className="form">
                 <label>
                   Fijar a
                   <input type="number" inputMode="numeric" placeholder="0" value={pVal} min={0} onChange={(e) => setPVal(e.target.value)} />
                 </label>
                 <button onClick={setExact('primary', pVal)}>Guardar</button>
-                <button onClick={applyRecommendedPrimary}>Usar recomendado</button>
+              </div>
+            </section>
+
+            <section className="counter-card">
+              <h3>Vida Loki máxima</h3>
+              <div className="counter-value">{state.primaryMax ?? state.primary ?? 0}</div>
+              <p className="field-hint">
+                Recomendado (20 × jugadores: {totalPlayers}): {recommendedPrimaryMax}
+              </p>
+              <div className="form">
+                <label>
+                  Fijar a
+                  <input type="number" inputMode="numeric" placeholder={String(recommendedPrimaryMax)} value={primaryMaxVal} min={0} onChange={(e) => setPrimaryMaxVal(e.target.value)} />
+                </label>
+                <button onClick={() => setPrimaryMax(true)}>Guardar y aplicar al valor actual</button>
+                <button onClick={applyRecommendedPrimaryMax}>Usar recomendado</button>
               </div>
             </section>
 
@@ -915,7 +1015,7 @@ export default function AdminPage() {
             </section>
 
             <section className="counter-card">
-              <h3>Amenaza maxima</h3>
+              <h3>Amenaza máxima</h3>
               <div className="counter-value">{state.tertiaryMax ?? 0}</div>
               <p className="field-hint">
                 Recomendado (2 × mesas: {totalTables}): {recommendedTertiaryMax}
@@ -1049,7 +1149,7 @@ export default function AdminPage() {
               <div className="admin-tables-layout">
                 <div className="admin-tables-header">
                   <button onClick={() => download('/api/admin/export/event.xlsx', 'event.xlsx')}>Exportar XLSX (Event)</button>
-                  <button onClick={() => download('/api/admin/export/mesas_totales.xlsx', 'mesas_totales.xlsx')}>Exportar XLSX (Totales por contador)</button>
+                  <button onClick={() => download('/api/admin/export/mesas_totales.xlsx', 'mesas_totales.xlsx')}>Exportar XLSX (Totales por mesa)</button>
                   <label className="admin-toggle">
                     <input
                       type="checkbox"
@@ -1123,8 +1223,7 @@ export default function AdminPage() {
                                   {isFirstInSector && (
                                     <td rowSpan={rowspan} style={{ verticalAlign: 'middle', textAlign: 'center' }}>
                                       <div className="mesa-main-cell">
-                                        <strong>{getSectorName(t.sectorId)}</strong>
-                                        <span style={{ color: '#C8A233', fontWeight: 'bold', fontSize: '0.85em' }}>#{t.sectorId}</span>
+                                        <strong>{renderSectorLabelStack(t.sectorId)}</strong>
                                       </div>
                                     </td>
                                   )}
@@ -1267,8 +1366,7 @@ export default function AdminPage() {
                                   {isFirstInSector && (
                                     <td rowSpan={rowspan} style={{ verticalAlign: 'middle', textAlign: 'center' }}>
                                       <div className="mesa-main-cell">
-                                        <strong>{getSectorName(sectorId)}</strong>
-                                        <span style={{ color: '#C8A233', fontWeight: 'bold', fontSize: '0.85em' }}>#{sectorId}</span>
+                                        <strong>{renderSectorLabelStack(sectorId)}</strong>
                                       </div>
                                     </td>
                                   )}
@@ -1430,7 +1528,7 @@ export default function AdminPage() {
                               <tbody>
                                 {trackedSpecialAvatarDefeats.map((defeat, idx) => (
                                   <tr key={`special-${idx}`}>
-                                    <td>{getSectorName(defeat.sectorId)}</td>
+                                    <td>{renderSectorLabelStack(defeat.sectorId)}</td>
                                     <td>Mesa {defeat.mesaId}</td>
                                     <td>{defeat.specialAvatarLabel || defeat.avatarName}</td>
                                     <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
@@ -1530,11 +1628,11 @@ export default function AdminPage() {
                       <span className="stat-badge" title={unusedHeroesTooltip}>{unusedHeroes.length}</span>
                     </div>
                     <div className="stat-list">
-                      {heroesStatsData.topHeroRows.map(({ hero, total, segments }) => (
+                      {heroesStatsData.topHeroRows.map(({ hero, total, segments, mesasTooltip }) => (
                         <div className="stat-row" key={hero}>
                           <div className="stat-row__label">{hero}</div>
                           <div className="hero-bar-row">
-                            <span className="hero-total">{total}</span>
+                            <span className="hero-total" title={mesasTooltip}>{total}</span>
                             <div className="hero-bar">
                               {segments.length > 0 ? (
                                 segments.map((segment) => (
@@ -1604,9 +1702,10 @@ export default function AdminPage() {
                             {(() => {
                               const [hero, aspect] = combo.split(' | ');
                               const visual = getAspectVisual(aspect);
+                              const comboTooltip = heroesStatsData.comboMesaTooltipMap?.[combo] || 'Sin mesas registradas';
                               return (
                                 <>
-                                  <span className="combo-name">{hero || '-'}</span>
+                                  <span className="combo-name" title={comboTooltip}>{hero || '-'}</span>
                                   <span
                                     className="hero-segment"
                                     style={{
@@ -1619,13 +1718,14 @@ export default function AdminPage() {
                                       borderRadius: 999,
                                       padding: '2px 10px'
                                     }}
+                                    title={comboTooltip}
                                   >
                                     {aspect || '-'}
                                   </span>
                                 </>
                               );
                             })()}
-                            <span className="stat-badge" style={{ borderRadius: 999 }}>{count}</span>
+                            <span className="stat-badge" style={{ borderRadius: 999 }} title={heroesStatsData.comboMesaTooltipMap?.[combo] || 'Sin mesas registradas'}>{count}</span>
                           </div>
                         ))}
                       </div>
@@ -1650,14 +1750,20 @@ export default function AdminPage() {
                         realityIdToNumber[id] = index + 1;
                       });
 
-                      const realityCount = {};
+                      const realityMap = {};
                       (tables.register || []).forEach((t) => {
                         if (t.realityName && t.realityId) {
                           const key = `${t.realityId}|${t.realityName}`;
-                          realityCount[key] = (realityCount[key] || 0) + 1;
+                          if (!realityMap[key]) {
+                            realityMap[key] = { id: t.realityId, name: t.realityName, count: 0, mesas: [] };
+                          }
+                          realityMap[key].count += 1;
+                          // Prefer a friendly table label: use tableName if present, otherwise Mesa <number>
+                          const mesaLabel = (t.tableName && String(t.tableName).trim()) ? t.tableName : `Mesa ${t.tableNumber ?? ''}`;
+                          realityMap[key].mesas.push({ mesaNumber: t.tableNumber, mesaLabel });
                         }
                       });
-                      const entries = Object.entries(realityCount).sort((a, b) => b[1] - a[1]);
+                      const entries = Object.entries(realityMap).sort((a, b) => (b[1].count || 0) - (a[1].count || 0));
                       return (
                         <>
                           <div className="stat-card__title">Realidades elegidas</div>
@@ -1666,14 +1772,31 @@ export default function AdminPage() {
                             <span className="stat-badge">{entries.length}</span>
                           </div>
                           <div className="stat-reality-grid">
-                            {entries.map(([key, count]) => {
-                              const [id, name] = key.split('|');
+                            {entries.map(([key, data]) => {
+                              const id = data.id;
+                              const name = data.name;
+                              const count = data.count || 0;
+                              const mesas = Array.isArray(data.mesas) ? data.mesas : [];
                               const realityNumber = realityIdToNumber[id] || '?';
                               return (
                                 <div className="stat-reality-card" key={key}>
                                   <div className="stat-reality-title">Realidad #{realityNumber}: {name}</div>
                                   <div className="stat-reality-meta">{id}</div>
-                                  <span className="stat-badge">{count}</span>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                                    <span className="stat-badge">{count}</span>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                      {mesas.map((m, idx) => (
+                                        <span
+                                          key={`${key}-mesa-${idx}`}
+                                          className="stat-reality-chip"
+                                          title={m.mesaLabel}
+                                          style={{ fontSize: '0.65rem', padding: '1px 4px', lineHeight: 1.1 }}
+                                        >
+                                          {m.mesaLabel}{(m.mesaNumber || m.mesaNumber === 0) ? ` (#${m.mesaNumber})` : ''}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
                                 </div>
                               );
                             })}
@@ -1742,7 +1865,7 @@ export default function AdminPage() {
                       <div className="stat-mesa-grid stat-mesa-grid--compact">
                         {sectorSummaryRows.map((sector) => (
                           <div className="stat-mesa-card stat-mesa-card--compact" key={`sector-${sector.sectorId}`}>
-                            <div className="stat-mesa-title">{getSectorName(sector.sectorId)} #{sector.sectorId}</div>
+                            <div className="stat-mesa-title">{renderSectorLabelStack(sector.sectorId)}</div>
                             <div className="stat-row__meta" style={{ marginBottom: 8 }}>
                               <span>Mesas</span>
                               <span className="stat-badge">{sector.mesas.length}</span>
@@ -1879,7 +2002,7 @@ export default function AdminPage() {
                     {trackedSpecialAvatarDefeats.map((defeat, idx) => (
                       <tr key={`${defeat.timestamp}-${defeat.mesaId}-${idx}`}>
                         <td>{idx + 1}</td>
-                        <td>{getSectorName(defeat.sectorId)}</td>
+                        <td>{renderSectorLabelStack(defeat.sectorId)}</td>
                         <td>Mesa {defeat.mesaId}</td>
                         <td>{defeat.specialAvatarLabel || defeat.avatarName}</td>
                         <td>{formatAvatarDefeatTimestamp(defeat.timestamp)}</td>
@@ -1929,11 +2052,11 @@ export default function AdminPage() {
 
             {heroesStatsData.heroRows.length > 0 ? (
               <div className="stat-list">
-                {heroesStatsData.heroRows.map(({ hero, total, segments }) => (
+                {heroesStatsData.heroRows.map(({ hero, total, segments, mesasTooltip }) => (
                   <div className="stat-row" key={hero}>
                     <div className="stat-row__label">{hero}</div>
                     <div className="hero-bar-row">
-                      <span className="hero-total">{total}</span>
+                      <span className="hero-total" title={mesasTooltip}>{total}</span>
                       <div className="hero-bar">
                         {segments.length > 0 ? (
                           segments.map((segment) => (
@@ -2016,8 +2139,9 @@ export default function AdminPage() {
                     {heroesStatsData.comboEntries.map(([combo, count], idx) => {
                       const [hero, aspect] = combo.split(' | ');
                       const visual = getAspectVisual(aspect);
+                      const comboTooltip = heroesStatsData.comboMesaTooltipMap?.[combo] || 'Sin mesas registradas';
                       return (
-                        <tr key={`${combo}-${idx}`}>
+                        <tr key={`${combo}-${idx}`} title={comboTooltip}>
                           <td>{idx + 1}</td>
                           <td>{hero || '-'}</td>
                           <td>
@@ -2033,11 +2157,12 @@ export default function AdminPage() {
                                 borderRadius: 999,
                                 padding: '2px 8px'
                               }}
+                              title={comboTooltip}
                             >
                               {aspect || '-'}
                             </span>
                           </td>
-                          <td>{count}</td>
+                          <td title={comboTooltip}>{count}</td>
                         </tr>
                       );
                     })}

@@ -99,7 +99,7 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
                 <span className="field-label-title">Aspecto</span>
                 {(() => {
                   const isAdam = p.character === 'Adam Warlock';
-                  const isSW = p.character === 'Spider-Woman';
+                  const isSW = p.character === 'Spiderwoman';
                   const options = isSW ? swAspects : aspects;
                   return (
                     <select

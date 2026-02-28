@@ -10,27 +10,6 @@ import java.util.*;
 @Service
 public class MesaCounterService {
 
-    public static class Event {
-        public final String uuid;
-        public final int mesaId;
-        public final int contador; // 1..3
-        public final int delta; // positive increments, negative decrements
-        public final long ts;
-
-        @JsonCreator
-        public Event(@JsonProperty("uuid") String uuid,
-                @JsonProperty("mesaId") int mesaId,
-                @JsonProperty("contador") int contador,
-                @JsonProperty("delta") int delta,
-                @JsonProperty("ts") long ts) {
-            this.uuid = uuid;
-            this.mesaId = mesaId;
-            this.contador = contador;
-            this.delta = delta;
-            this.ts = ts;
-        }
-    }
-
     public static class AvatarDefeat {
         public String avatarName;
         public int mesaId;
@@ -52,10 +31,31 @@ public class MesaCounterService {
         }
     }
 
+    public static class SpecialDefeat {
+        public String key;
+        public String avatarName;
+        public int mesaId;
+        public int mesaNumber;
+        public int rupturaAmount;
+        public long timestamp;
+
+        @JsonCreator
+        public SpecialDefeat(@JsonProperty("key") String key,
+                @JsonProperty("avatarName") String avatarName,
+                @JsonProperty("mesaId") int mesaId,
+                @JsonProperty("mesaNumber") int mesaNumber,
+                @JsonProperty("rupturaAmount") int rupturaAmount,
+                @JsonProperty("timestamp") long timestamp) {
+            this.key = key;
+            this.avatarName = avatarName;
+            this.mesaId = mesaId;
+            this.mesaNumber = mesaNumber;
+            this.rupturaAmount = rupturaAmount;
+            this.timestamp = timestamp;
+        }
+    }
+
     public static class TotalesMesa {
-        public int c1;
-        public int c2;
-        public int c3;
         // New structure for avatar defeats and threat tracking
         public int avatar0; // Granuja defeats
         public int avatar1; // Bribón defeats
@@ -75,15 +75,13 @@ public class MesaCounterService {
     }
 
     private final Map<Integer, TotalesMesa> totales = new HashMap<>();
-    private final Set<String> processed = new HashSet<>();
-    private final List<Event> eventos = new ArrayList<>();
     private final List<AvatarDefeat> avatarDefeats = new ArrayList<>();
+    private final List<SpecialDefeat> specialDefeats = new ArrayList<>();
 
     public synchronized void clearAll() {
         totales.clear();
-        processed.clear();
-        eventos.clear();
         avatarDefeats.clear();
+        specialDefeats.clear();
     }
 
     public synchronized Map<Integer, TotalesMesa> getTotalesSnapshot() {
@@ -91,10 +89,6 @@ public class MesaCounterService {
         for (var e : totales.entrySet()) {
             TotalesMesa t = new TotalesMesa();
             TotalesMesa src = e.getValue();
-            // Copy legacy counters
-            t.c1 = src.c1;
-            t.c2 = src.c2;
-            t.c3 = src.c3;
             // Copy new structure
             t.avatar0 = src.avatar0;
             t.avatar1 = src.avatar1;
@@ -112,52 +106,73 @@ public class MesaCounterService {
         return copy;
     }
 
-    public synchronized List<Event> getEventosSnapshot() {
-        return new ArrayList<>(eventos);
-    }
-
     public synchronized List<AvatarDefeat> getAvatarDefeatsLatestFirst() {
         List<AvatarDefeat> copy = new ArrayList<>(avatarDefeats);
         Collections.reverse(copy); // Return in reverse order (most recent first)
-        return copy;
+        // Exclude special named defeats from general avatar defeats (e.g., Mangog,
+        // Portal)
+        Set<String> special = new HashSet<>(Arrays.asList("Mangog", "Portal entre dos mundos"));
+        List<AvatarDefeat> filtered = new ArrayList<>();
+        for (AvatarDefeat a : copy) {
+            if (a == null || a.avatarName == null)
+                continue;
+            if (special.contains(a.avatarName.trim()))
+                continue;
+            filtered.add(a);
+        }
+        return filtered;
     }
 
     public synchronized List<AvatarDefeat> getAvatarDefeatsSnapshot() {
-        return new ArrayList<>(avatarDefeats);
-    }
-
-    public synchronized boolean applyEvent(String uuid, int mesaId, int contador, int delta, Long ts) {
-        if (uuid == null || uuid.isBlank())
-            return false;
-        if (contador < 1 || contador > 3)
-            return false;
-        if (processed.contains(uuid))
-            return true; // idempotente
-
-        TotalesMesa t = totales.computeIfAbsent(Math.max(0, mesaId), k -> new TotalesMesa());
-        switch (contador) {
-            case 1 -> t.c1 += delta;
-            case 2 -> t.c2 += delta;
-            case 3 -> t.c3 += delta;
+        List<AvatarDefeat> copy = new ArrayList<>(avatarDefeats);
+        Set<String> special = new HashSet<>(Arrays.asList("Mangog", "Portal entre dos mundos"));
+        List<AvatarDefeat> filtered = new ArrayList<>();
+        for (AvatarDefeat a : copy) {
+            if (a == null || a.avatarName == null)
+                continue;
+            if (special.contains(a.avatarName.trim()))
+                continue;
+            filtered.add(a);
         }
-        processed.add(uuid);
-        long when = ts != null ? ts : Instant.now().toEpochMilli();
-        eventos.add(new Event(uuid, mesaId, contador, delta, when));
-        return true;
+        return filtered;
     }
 
-    public synchronized void restore(Map<Integer, TotalesMesa> totalesRestored, List<Event> eventosRestored,
-            List<AvatarDefeat> avatarDefeatsRestored) {
+    public synchronized List<SpecialDefeat> getSpecialDefeatsLatestFirst() {
+        List<SpecialDefeat> copy = new ArrayList<>(specialDefeats);
+        Collections.reverse(copy);
+        return copy;
+    }
+
+    public synchronized List<SpecialDefeat> getSpecialDefeatsSnapshot() {
+        return new ArrayList<>(specialDefeats);
+    }
+
+    private boolean isSpecialAvatarName(String avatarName) {
+        if (avatarName == null)
+            return false;
+        String normalized = avatarName.trim().toLowerCase();
+        return "mangog".equals(normalized) || "portal entre dos mundos".equals(normalized);
+    }
+
+    private String getSpecialKeyFromName(String avatarName) {
+        if (avatarName == null)
+            return "special";
+        String normalized = avatarName.trim().toLowerCase();
+        if ("mangog".equals(normalized))
+            return "mangog";
+        if ("portal entre dos mundos".equals(normalized))
+            return "portal";
+        return "special";
+    }
+
+    public synchronized void restore(Map<Integer, TotalesMesa> totalesRestored,
+            List<AvatarDefeat> avatarDefeatsRestored, List<SpecialDefeat> specialDefeatsRestored) {
         clearAll();
         if (totalesRestored != null) {
             for (var e : totalesRestored.entrySet()) {
                 TotalesMesa t = new TotalesMesa();
                 TotalesMesa s = e.getValue();
                 if (s != null) {
-                    // Copy legacy counters
-                    t.c1 = s.c1;
-                    t.c2 = s.c2;
-                    t.c3 = s.c3;
                     // Copy new structure
                     t.avatar0 = s.avatar0;
                     t.avatar1 = s.avatar1;
@@ -174,15 +189,35 @@ public class MesaCounterService {
                 totales.put(e.getKey(), t);
             }
         }
-        if (eventosRestored != null) {
-            for (Event ev : eventosRestored) {
-                if (ev != null && ev.uuid != null)
-                    processed.add(ev.uuid);
-            }
-            eventos.addAll(eventosRestored);
-        }
         if (avatarDefeatsRestored != null) {
-            avatarDefeats.addAll(avatarDefeatsRestored);
+            for (AvatarDefeat defeat : avatarDefeatsRestored) {
+                if (defeat == null || defeat.avatarName == null) {
+                    continue;
+                }
+                if (isSpecialAvatarName(defeat.avatarName)) {
+                    specialDefeats.add(new SpecialDefeat(
+                            getSpecialKeyFromName(defeat.avatarName),
+                            defeat.avatarName,
+                            defeat.mesaId,
+                            defeat.mesaNumber,
+                            Math.max(1, defeat.rupturaAmount),
+                            defeat.timestamp));
+                } else {
+                    defeat.rupturaAmount = Math.max(1, defeat.rupturaAmount);
+                    avatarDefeats.add(defeat);
+                }
+            }
+        }
+        if (specialDefeatsRestored != null) {
+            for (SpecialDefeat defeat : specialDefeatsRestored) {
+                if (defeat == null)
+                    continue;
+                defeat.rupturaAmount = Math.max(1, defeat.rupturaAmount);
+                if (defeat.key == null || defeat.key.isBlank()) {
+                    defeat.key = getSpecialKeyFromName(defeat.avatarName);
+                }
+                specialDefeats.add(defeat);
+            }
         }
     }
 
@@ -218,11 +253,12 @@ public class MesaCounterService {
             default -> "Unknown";
         };
 
-        // Add rupture counters to total
-        t.rupturaTotal += Math.max(0, rupturaAmount);
+        // Add rupture counters to total (minimum 1)
+        t.rupturaTotal += Math.max(1, rupturaAmount);
 
-        // Record individual defeat event
-        AvatarDefeat defeat = new AvatarDefeat(avatarName, mesaId, mesaId, rupturaAmount, Instant.now().toEpochMilli());
+        // Record individual defeat event (store rupturaAmount >= 1)
+        AvatarDefeat defeat = new AvatarDefeat(avatarName, mesaId, mesaId, Math.max(1, rupturaAmount),
+                Instant.now().toEpochMilli());
         avatarDefeats.add(defeat);
     }
 
@@ -239,11 +275,22 @@ public class MesaCounterService {
             return;
         }
         int normalizedMesaId = Math.max(0, mesaId);
+        String cleanName = avatarName.trim();
+        if (isSpecialAvatarName(cleanName)) {
+            specialDefeats.add(new SpecialDefeat(
+                    getSpecialKeyFromName(cleanName),
+                    cleanName,
+                    normalizedMesaId,
+                    normalizedMesaId,
+                    Math.max(1, rupturaAmount),
+                    Instant.now().toEpochMilli()));
+            return;
+        }
         avatarDefeats.add(new AvatarDefeat(
-                avatarName.trim(),
+                cleanName,
                 normalizedMesaId,
                 normalizedMesaId,
-                Math.max(0, rupturaAmount),
+                Math.max(1, rupturaAmount),
                 Instant.now().toEpochMilli()));
     }
 

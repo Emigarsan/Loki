@@ -132,16 +132,20 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         Map<Integer, MesaCounterService.TotalesMesa> map = mesaCounterService.getTotalesSnapshot();
         StringJoiner sj = new StringJoiner("\n");
-        sj.add("mesa,c1,c2,c3");
+        sj.add("mesa,avatar0,avatar1,avatar2,avatar3,rupturaTotal,threatFromHeroes,threatFromPlan");
         map.entrySet().stream()
                 .sorted((a, b) -> Integer.compare(a.getKey(), b.getKey()))
                 .forEach(e -> {
                     var t = e.getValue();
                     sj.add(String.join(",",
                             String.valueOf(e.getKey()),
-                            String.valueOf(t == null ? 0 : t.c1),
-                            String.valueOf(t == null ? 0 : t.c2),
-                            String.valueOf(t == null ? 0 : t.c3)));
+                            String.valueOf(t == null ? 0 : t.avatar0),
+                            String.valueOf(t == null ? 0 : t.avatar1),
+                            String.valueOf(t == null ? 0 : t.avatar2),
+                            String.valueOf(t == null ? 0 : t.avatar3),
+                            String.valueOf(t == null ? 0 : t.rupturaTotal),
+                            String.valueOf(t == null ? 0 : t.threatFromHeroes),
+                            String.valueOf(t == null ? 0 : t.threatFromPlan)));
                 });
         String csv = sj.toString() + "\n";
         return csvResponse(csv, "mesas_totales.csv");

@@ -4,6 +4,7 @@ const API_BASE = '/api/counter';
 
 const initialState = {
   primary: 4000,
+  primaryMax: 4000,
   tertiary: 0
 };
 
@@ -25,6 +26,33 @@ const GROUP_NAMES = {
   2: 'Fuerza dominante',
   3: 'Retirada fingida'
 };
+
+const CELESTIAL_NAMES = [
+  'Arishem el Juez',
+  'Ashema la que escucha',
+  'Devron el Experimentador',
+  'Eson el Buscador',
+  'Exitar el Exterminador',
+  'Gamiel el Manipulador',
+  'Gammenon el Recolector',
+  'Groffon el Regurgitador',
+  'Hargen el Medidor',
+  'Jemiah el Analizador',
+  'Nezarr el Calculador',
+  'Oneg el Sondeador',
+  'Scathan el Aprobador',
+  'Tefral el Supervisor',
+  'Zgreb el Aspirante',
+  'Ziran el Probador'
+];
+
+const getSectorName = (sectorId) => {
+  if (!sectorId || sectorId < 1) return 'Desconocido';
+  const index = (sectorId - 1) % CELESTIAL_NAMES.length;
+  return CELESTIAL_NAMES[index];
+};
+
+const getSectorLabel = (sectorId) => `${getSectorName(sectorId)} (#${sectorId})`;
 
 const getAvatarData = (index) => {
   if (index === null || index === undefined) return AVATARS[0];
@@ -73,6 +101,7 @@ export function EventView({ mesaId = null } = {}) {
 
       return {
         primary: sanitizeCounter(data.primary, initialState.primary),
+        primaryMax: sanitizeCounter(data.primaryMax, initialState.primaryMax),
         tertiary: sanitizeCounter(data.tertiary, initialState.tertiary)
       };
     },
@@ -193,9 +222,7 @@ export function EventView({ mesaId = null } = {}) {
   useEffect(() => {
     if (previousTertiary.current !== state.tertiary) {
       if (state.tertiary === 0) {
-        // Lock tertiary immediately when it reaches 0 and open modal
         setTertiaryLocked(true);
-        setModalMessage('Alto, habeis derrotado el Plan Secundario, escucha las instrucciones de los coordinadores');
       }
       previousTertiary.current = state.tertiary;
     }
@@ -204,12 +231,12 @@ export function EventView({ mesaId = null } = {}) {
   useEffect(() => {
     if (!mesaId) return;
     if (!mesaDifficultyLoaded) return;
-    const primaryHalf = Math.floor(initialState.primary / 2);
+    const primaryHalf = Math.floor((state.primaryMax ?? initialState.primaryMax) / 2);
     if (!primaryNoticeShown && state.primary <= primaryHalf) {
       setPrimaryNoticeVisible(true);
       setPrimaryNoticeShown(true);
     }
-  }, [mesaId, mesaDifficultyLoaded, primaryNoticeShown, state.primary]);
+  }, [mesaId, mesaDifficultyLoaded, primaryNoticeShown, state.primary, state.primaryMax]);
 
   const closeModal = useCallback(() => {
     setModalMessage(null);
@@ -612,7 +639,7 @@ export function EventView({ mesaId = null } = {}) {
 
       {mesaId && sectorState && (
         <section className="counter-card counter-card--sector">
-          <h2>Sector {sectorState.sectorId}</h2>
+          <h2>{getSectorLabel(sectorState.sectorId)}</h2>
           <div className="sector-grid">
             {(sectorState.mesas || []).map((mesaNumber) => (
               <div

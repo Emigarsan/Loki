@@ -34,7 +34,15 @@ public class CounterController {
 
     @GetMapping
     public ResponseEntity<CounterState> getCurrentState() {
-        return ResponseEntity.ok(counterService.getState());
+        CounterState current = counterService.getState();
+        int currentPrimaryMax = current.primaryMax == null ? 0 : current.primaryMax;
+        if (current.primary == 4000 && currentPrimaryMax == 4000) {
+            int recommended = getRecommendedPrimaryMax();
+            if (recommended > 0 && recommended != 4000) {
+                return ResponseEntity.ok(counterService.setPrimaryMaxAndCurrent(recommended));
+            }
+        }
+        return ResponseEntity.ok(current);
     }
 
     // --- Exact setters for Admin ---
@@ -45,6 +53,18 @@ public class CounterController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         int value = sanitizeValue(payload);
         return ResponseEntity.ok(counterService.setPrimary(value));
+    }
+
+    @PostMapping("/primary/max/set")
+    public ResponseEntity<CounterState> setPrimaryMax(@RequestBody Map<String, Object> payload,
+            @org.springframework.web.bind.annotation.RequestHeader(value = "X-Admin-Secret", required = false) String secret) {
+        if (!isAdmin(secret))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        int value = sanitizeObjectValue(payload, "value");
+        boolean syncCurrent = parseBoolean(payload == null ? null : payload.get("syncCurrent"), true);
+        return ResponseEntity.ok(syncCurrent
+                ? counterService.setPrimaryMaxAndCurrent(value)
+                : counterService.setPrimaryMax(value));
     }
 
     @PostMapping("/tertiary/set")
@@ -89,8 +109,52 @@ public class CounterController {
         return mesaId == null || !tablesService.isRegisterTableDisconnected(mesaId);
     }
 
+    private int getRecommendedPrimaryMax() {
+        if (tablesService == null || tablesService.listRegister() == null) {
+            return 0;
+        }
+        int totalPlayers = tablesService.listRegister().stream()
+                .mapToInt(table -> Math.max(0, table.players()))
+                .sum();
+        return totalPlayers * 20;
+    }
+
     private int sanitizeValue(Map<String, Integer> payload) {
         return Math.max(0, payload.getOrDefault("value", 0));
+    }
+
+    private int sanitizeObjectValue(Map<String, Object> payload, String key) {
+        if (payload == null) {
+            return 0;
+        }
+        Object raw = payload.get(key);
+        if (raw instanceof Number number) {
+            return Math.max(0, number.intValue());
+        }
+        if (raw instanceof String str) {
+            try {
+                return Math.max(0, Integer.parseInt(str));
+            } catch (NumberFormatException ignored) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    private boolean parseBoolean(Object value, boolean defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Boolean bool) {
+            return bool;
+        }
+        if (value instanceof String str) {
+            return Boolean.parseBoolean(str);
+        }
+        if (value instanceof Number number) {
+            return number.intValue() != 0;
+        }
+        return defaultValue;
     }
 
     private boolean isAdmin(String secret) {
