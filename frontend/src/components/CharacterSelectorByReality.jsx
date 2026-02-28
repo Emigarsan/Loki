@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CharacterSelector from './CharacterSelector.jsx';
 
 export default function CharacterSelectorByReality({ selectableHeroes, aspects = [], swAspects = [], onConfirm, onCancel }) {
+  const enableHeroSearch = false;
   const [players, setPlayers] = useState(
     Array(1).fill(null).map(() => ({ character: '', aspect: '' }))
   );
@@ -88,12 +89,29 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
             <div key={idx} className="player-row">
               <label className="field-label">
                 <span className="field-label-title">Personaje {idx + 1}</span>
-                <CharacterSelector
-                  value={p.character}
-                  options={selectableHeroes}
-                  onChange={(next) => handleCharacterChange(idx, next)}
-                  placeholder="Busca héroe"
-                />
+                {enableHeroSearch ? (
+                  <CharacterSelector
+                    value={p.character}
+                    options={selectableHeroes}
+                    onChange={(next) => handleCharacterChange(idx, next)}
+                    placeholder="Busca héroe"
+                  />
+                ) : (
+                  <select
+                    value={p.character}
+                    onChange={(e) => handleCharacterChange(idx, e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona héroe
+                    </option>
+                    {selectableHeroes.map((hero) => (
+                      <option key={hero} value={hero}>
+                        {hero}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </label>
               <label className="field-label">
                 <span className="field-label-title">Aspecto</span>
