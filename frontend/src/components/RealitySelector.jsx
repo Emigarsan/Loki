@@ -18,6 +18,23 @@ export default function RealitySelector({ onConfirm, onCancel }) {
     if (typeof value === 'string' && value.trim().toLowerCase() === 'cualquiera') return allHeroes;
     return [];
   };
+
+  useEffect(() => {
+    const current = parseInt(document.body.dataset.popupLockCount || '0', 10) || 0;
+    document.body.dataset.popupLockCount = String(current + 1);
+    document.body.classList.add('popup-scroll-lock');
+
+    return () => {
+      const next = Math.max(0, (parseInt(document.body.dataset.popupLockCount || '1', 10) || 1) - 1);
+      if (next === 0) {
+        delete document.body.dataset.popupLockCount;
+        document.body.classList.remove('popup-scroll-lock');
+      } else {
+        document.body.dataset.popupLockCount = String(next);
+      }
+    };
+  }, []);
+
   // Obtener las IDs en el orden definido en el objeto
   const realityIds = Object.keys(realitiesData);
   const realities = realityIds.map((id, idx) => ({ ...realitiesData[id], id, number: idx + 1 }));

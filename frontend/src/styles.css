@@ -2560,9 +2560,7 @@ h3,
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at top, rgba(200, 162, 51, 0.18), transparent 45%),
-    rgba(0, 0, 0, 0.76);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2572,7 +2570,14 @@ h3,
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
   padding-left: max(1rem, env(safe-area-inset-left));
   padding-right: max(1rem, env(safe-area-inset-right));
-  backdrop-filter: blur(4px);
+  overflow: hidden;
+  overscroll-behavior: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.popup-scroll-lock #root {
+  overflow: hidden;
 }
 
 .modal-content {
@@ -2582,9 +2587,10 @@ h3,
     linear-gradient(145deg, rgba(20, 20, 20, 0.96), rgba(7, 61, 36, 0.8));
   border: 1px solid rgba(200, 162, 51, 0.45);
   border-radius: 1.35rem;
-  max-height: calc(90vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(90dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   width: 100%;
   max-width: 700px;
   padding: 2rem;
@@ -2860,12 +2866,18 @@ h3,
   }
 
   .modal-content {
-    padding: 1.5rem;
-    max-width: 95%;
+    padding: 1rem;
+    max-width: 94%;
+    border-radius: 1rem;
+    font-size: 0.92rem;
   }
 
   .modal-content h2 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
+  }
+
+  .modal-content h3 {
+    font-size: 0.98rem;
   }
 
   .reality-image-container {
@@ -2888,8 +2900,14 @@ h3,
 
   .hero-badge,
   .modular-badge {
-    font-size: 0.72rem;
-    padding: 0.3rem 0.6rem;
+    font-size: 0.66rem;
+    padding: 0.24rem 0.5rem;
+  }
+
+  .reality-section p,
+  .modal-content.reality-selector .field-label-title,
+  .form-actions button {
+    font-size: 0.82rem;
   }
 }
 
