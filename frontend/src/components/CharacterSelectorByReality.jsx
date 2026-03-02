@@ -83,7 +83,7 @@ export default function CharacterSelectorByReality({ selectableHeroes, aspects =
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay popup-fullscreen">
       <div className="modal-content character-selector-by-reality">
         <form className="form" onSubmit={(e) => e.preventDefault()}>
           {/* Número de jugadores */}

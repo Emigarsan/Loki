@@ -61,7 +61,7 @@ export default function RealitySelector({ onConfirm, onCancel }) {
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay popup-fullscreen">
       <div
         className={`modal-content reality-selector${realityData?.image ? ' reality-selector--with-bg' : ''}`}
         style={realityData?.image ? { '--reality-bg-image': `url(${realityData.image})` } : undefined}

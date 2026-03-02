@@ -126,7 +126,7 @@ export const REALITIES_DATA = {
     ],
     "mandatoryModulars": [
       "Zzax",
-      "Electro"
+      "Alta tensión"
     ],
     "specialRules": ""
   },

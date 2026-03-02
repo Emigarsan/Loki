@@ -2580,6 +2580,18 @@ body.popup-scroll-lock #root {
   overflow: hidden;
 }
 
+.modal-overlay.popup-fullscreen {
+  inset: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 .modal-content {
   background:
     radial-gradient(circle at top left, rgba(200, 162, 51, 0.12), transparent 55%),
@@ -2595,6 +2607,28 @@ body.popup-scroll-lock #root {
   max-width: 700px;
   padding: 2rem;
   box-shadow: 0 22px 40px rgba(0, 0, 0, 0.38);
+}
+
+.modal-overlay.popup-fullscreen .modal-content.reality-selector,
+.modal-overlay.popup-fullscreen .modal-content.character-selector-by-reality {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  margin: 0;
+  padding: 1rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.modal-overlay.popup-fullscreen .modal-content.reality-selector .form,
+.modal-overlay.popup-fullscreen .modal-content.character-selector-by-reality .form {
+  min-height: 100%;
 }
 
 .modal-content--stats {
@@ -2870,6 +2904,12 @@ body.popup-scroll-lock #root {
     max-width: 94%;
     border-radius: 1rem;
     font-size: 0.92rem;
+  }
+
+  .modal-overlay.popup-fullscreen .modal-content.reality-selector,
+  .modal-overlay.popup-fullscreen .modal-content.character-selector-by-reality {
+    padding: 0.85rem;
+    font-size: 0.88rem;
   }
 
   .modal-content h2 {
